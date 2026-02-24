@@ -1,0 +1,110 @@
+<div class="space-y-8 font-sans h-full pb-10">
+  <div
+    class="flex flex-col md:flex-row md:items-center justify-between gap-4 animate-slide-in-left"
+  >
+    <div>
+      <h2 class="text-3xl font-black text-gray-800 tracking-tight">Clients & Brands</h2>
+      <p class="text-gray-500 font-medium">
+        Manage your factory's external clients and their logos
+      </p>
+    </div>
+  </div>
+
+  <div
+    class="bg-white/90 backdrop-blur-xl border border-white/60 rounded-3xl p-6 shadow-xl animate-fade-in-up"
+  >
+    <h3 class="text-lg font-black text-gray-800 mb-4">Add New Client</h3>
+
+    <div class="flex flex-col md:flex-row gap-4 items-end">
+      <div class="flex-1 w-full">
+        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+          >Client Name *</label
+        >
+        <input
+          type="text"
+          [(ngModel)]="newClientName"
+          placeholder="e.g. Bata, Apex"
+          class="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black font-bold text-gray-800 transition-all"
+        />
+      </div>
+
+      <div class="flex-1 w-full">
+        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+          >Brand Logo (Optional)</label
+        >
+
+        <input
+          type="file"
+          (change)="onFileSelected($event)"
+          accept="image/*"
+          class="w-full px-4 py-2 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 transition-all cursor-pointer"
+        />
+      </div>
+
+      <button
+        (click)="saveClient()"
+        [disabled]="isSubmitting || !newClientName.trim()"
+        class="px-8 py-3 bg-black hover:bg-gray-800 disabled:bg-gray-400 text-white font-bold rounded-xl shadow-lg transition-all active:scale-95 whitespace-nowrap h-[52px]"
+      >
+        {{ isSubmitting ? 'Uploading to Cloudinary...' : 'Save Client' }}
+      </button>
+    </div>
+  </div>
+
+  <div
+    *ngIf="clients.length > 0"
+    class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 animate-fade-in-up"
+  >
+    <div
+      *ngFor="let client of clients"
+      class="bg-white/60 backdrop-blur-xl border border-white/50 rounded-3xl p-5 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col items-center group"
+    >
+      <div
+        class="h-24 w-24 rounded-full overflow-hidden mb-4 bg-white flex items-center justify-center border-4 border-gray-50 shadow-sm relative"
+      >
+        <img
+          *ngIf="client.logoUrl"
+          [src]="client.logoUrl"
+          alt="{{ client.name }}"
+          class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+        />
+
+        <svg
+          *ngIf="!client.logoUrl"
+          class="w-10 h-10 text-gray-300"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+          ></path>
+        </svg>
+      </div>
+
+      <h3 class="text-lg font-bold text-gray-800 text-center w-full truncate">{{ client.name }}</h3>
+    </div>
+  </div>
+
+  <div
+    *ngIf="clients.length === 0"
+    class="flex flex-col items-center justify-center p-12 bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl animate-fade-in-up"
+  >
+    <div
+      class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4 shadow-inner"
+    >
+      <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+        ></path>
+      </svg>
+    </div>
+    <p class="text-gray-500 font-bold">No clients added yet. Add your first brand above!</p>
+  </div>
+</div>

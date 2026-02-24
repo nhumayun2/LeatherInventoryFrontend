@@ -1,0 +1,75 @@
+<div class="space-y-8 font-sans h-full pb-10">
+  
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="animate-slide-in-left">
+      <h2 class="text-3xl font-black text-gray-800 tracking-tight">Product Catalog</h2>
+      <p class="text-gray-500 font-medium">Manage your product categories</p>
+    </div>
+    
+    <button (click)="openModal()" class="group flex items-center gap-2 px-6 py-3 bg-black hover:bg-gray-800 text-white rounded-2xl shadow-xl transition-all active:scale-95 animate-slide-in-right">
+      <svg class="w-5 h-5 group-hover:rotate-90 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+      <span class="font-bold">New Category</span>
+    </button>
+  </div>
+
+  <div class="relative group animate-fade-in-up" style="animation-delay: 100ms;">
+    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+      <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+    </div>
+    <input type="text" placeholder="Search categories..." 
+           class="w-full pl-11 pr-4 py-4 bg-white/40 backdrop-blur-md border border-white/60 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/30 text-gray-800 shadow-sm transition-all">
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+    <div *ngFor="let product of products; let i = index"
+         (mouseenter)="startCycling(product)"
+         (mouseleave)="stopCycling(product)"
+         (click)="viewProductDesigns(product.id)" 
+         class="group relative bg-white/60 backdrop-blur-xl border border-white/50 rounded-3xl p-4 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer animate-fade-in-up"
+         [style.animation-delay]="i * 100 + 'ms'"> 
+      
+      <div class="h-64 w-full rounded-2xl overflow-hidden relative mb-4 bg-gray-100">
+         <img [src]="product.designs && product.designs.length > 0 ? product.designs[product.currentImageIndex].imageUrl : 'https://placehold.co/600x400?text=No+Image'" 
+              alt="Product Design" 
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 animate-fade-in">
+         
+         <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5" *ngIf="product.designs && product.designs.length > 1">
+           <span *ngFor="let design of product.designs; let dIndex = index"
+                 class="w-2 h-2 rounded-full transition-all duration-300 shadow-sm"
+                 [ngClass]="dIndex === product.currentImageIndex ? 'bg-white w-4' : 'bg-white/50'">
+           </span>
+         </div>
+
+         <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      </div>
+
+      <div class="px-2 pb-2">
+        <div class="flex justify-between items-start mb-2">
+           <div>
+             <p class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-1">{{ product.category }}</p>
+             <h3 class="text-2xl font-black text-gray-800 leading-tight">{{ product.name }}</h3>
+           </div>
+           
+           <span class="text-lg font-bold text-gray-900" *ngIf="product.designs && product.designs.length > 0">
+             ${{ product.designs[product.currentImageIndex].price }}
+           </span>
+        </div>
+        
+        <p class="text-sm text-gray-500 font-medium mb-4">
+          {{ product.designs ? product.designs.length : 0 }} Designs Available
+        </p>
+
+        <button class="w-full py-3 rounded-xl bg-gray-50 group-hover:bg-black group-hover:text-white text-gray-700 font-bold text-sm transition-colors duration-300 flex items-center justify-center gap-2 pointer-events-none">
+          View All Designs
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<app-product-modal *ngIf="isModalOpen" (close)="closeModal()" (save)="handleSave($event)"></app-product-modal>

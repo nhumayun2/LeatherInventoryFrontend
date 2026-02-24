@@ -1,0 +1,155 @@
+<div class="space-y-8 font-sans h-full pb-10">
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="flex items-center gap-4 animate-slide-in-left">
+      <button
+        (click)="goBack()"
+        class="p-3 bg-white/50 hover:bg-white text-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all backdrop-blur-md border border-white/60"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M10 19l-7-7m0 0l7-7m-7 7h18"
+          ></path>
+        </svg>
+      </button>
+
+      <div>
+        <h2 class="text-3xl font-black text-gray-800 tracking-tight">Design Variations</h2>
+        <p class="text-gray-500 font-medium">Manage specific items in production</p>
+      </div>
+    </div>
+
+    <button
+      *ngIf="designs.length > 0"
+      (click)="openModal()"
+      class="group flex items-center gap-2 px-6 py-3 bg-black hover:bg-gray-800 text-white rounded-2xl shadow-xl transition-all active:scale-95 animate-slide-in-right"
+    >
+      <svg
+        class="w-5 h-5 group-hover:rotate-90 transition-transform"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 4v16m8-8H4"
+        ></path>
+      </svg>
+      <span class="font-bold">New Design</span>
+    </button>
+  </div>
+
+  <div
+    *ngIf="designs.length === 0"
+    class="flex flex-col items-center justify-center p-12 bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl shadow-sm animate-fade-in-up"
+  >
+    <div
+      class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4 shadow-inner"
+    >
+      <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.5"
+          d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+        ></path>
+      </svg>
+    </div>
+    <h3 class="text-xl font-black text-gray-800">No designs yet</h3>
+    <p class="text-gray-500 mt-2 mb-6 text-center max-w-md font-medium">
+      This product category doesn't have any specific designs assigned to it yet.
+    </p>
+
+    <button
+      (click)="openModal()"
+      class="px-6 py-3 bg-black hover:bg-gray-800 text-white font-bold rounded-xl shadow-xl transition-all active:scale-95"
+    >
+      + Add First Design
+    </button>
+  </div>
+
+  <div
+    *ngIf="designs.length > 0"
+    class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 animate-fade-in-up"
+  >
+    <div
+      *ngFor="let design of designs"
+      (click)="goToDesignDetails(design.id)"
+      class="bg-white/60 backdrop-blur-xl border border-white/50 rounded-3xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer group"
+    >
+      <div class="h-56 w-full rounded-2xl overflow-hidden mb-4 bg-gray-100 relative">
+        <div class="absolute top-3 left-3 z-10">
+          <span
+            class="px-3 py-1 text-[10px] font-bold text-white uppercase tracking-wider bg-black/60 backdrop-blur-md rounded-full border border-white/20"
+          >
+            {{ design.status }}
+          </span>
+        </div>
+
+        <img
+          [src]="
+            design.imageUrls && design.imageUrls.length > 0
+              ? design.imageUrls[0]
+              : 'https://placehold.co/600x400?text=No+Image'
+          "
+          alt="{{ design.designName }}"
+          class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+        />
+      </div>
+
+      <div class="flex-1 px-2">
+        <div class="flex justify-between items-start mb-1">
+          <h3 class="text-xl font-bold text-gray-800 leading-tight">{{ design.designName }}</h3>
+          <span class="text-xl font-black text-gray-900">${{ design.price }}</span>
+        </div>
+        <p class="text-xs font-bold text-gray-400 mb-4">SKU: {{ design.sku }}</p>
+
+        <div class="grid grid-cols-2 gap-3 mb-2">
+          <div
+            class="bg-white/50 rounded-xl p-3 border border-white/60 flex flex-col justify-center"
+          >
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Client</p>
+            <div class="flex items-center gap-2">
+              <div
+                *ngIf="design.client?.logoUrl"
+                class="w-6 h-6 rounded-full bg-white border border-gray-200 flex items-center justify-center overflow-hidden shrink-0 shadow-sm"
+              >
+                <img
+                  [src]="design.client.logoUrl"
+                  [alt]="design.client.name"
+                  class="w-full h-full object-contain p-0.5"
+                />
+              </div>
+              <p class="text-sm font-bold text-gray-700 truncate">
+                {{ design.client?.name || 'In-House' }}
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="bg-white/50 rounded-xl p-3 border border-white/60 flex flex-col justify-center"
+          >
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">
+              Ready Stock
+            </p>
+            <p class="text-sm font-bold text-green-600">
+              {{ design.quantityReady }} {{ design.unit }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-design-modal
+  *ngIf="isModalOpen"
+  [productId]="productId"
+  (close)="closeModal()"
+  (save)="handleSaveDesign($event)"
+>
+</app-design-modal>
