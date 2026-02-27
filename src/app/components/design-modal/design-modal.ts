@@ -13,14 +13,20 @@ import { Client } from '../../services/client';
 export class DesignModal implements OnInit {
   @Input() productId!: number;
 
+  // 🌟 NEW: Catch the existing design data if we are editing
+  @Input() design: any = null;
+
   @Output() close = new EventEmitter<void>();
   @Output() save = new EventEmitter<any>();
 
   clients: any[] = [];
 
-  // Replaced single File with Arrays for files and their visual previews
   selectedImages: File[] = [];
   previewUrls: string[] = [];
+
+  // 🌟 NEW: Track edit mode and existing images
+  isEditMode = false;
+  existingImageUrls: string[] = [];
 
   tags: string[] = [];
   features: string[] = [];
@@ -28,11 +34,12 @@ export class DesignModal implements OnInit {
   currentFeature: string = '';
 
   designData = {
+    id: 0, // Needed for updates to tell the backend which item to edit
     productId: 0,
     designName: '',
     sku: '',
     price: 0,
-    clientId: null,
+    clientId: null as number | null,
     status: 'In Production',
     quantityReady: 0,
     quantityInProduction: 0,
@@ -45,6 +52,32 @@ export class DesignModal implements OnInit {
 
   ngOnInit() {
     this.loadClients();
+
+    // 🌟 NEW: Pre-fill the form if we are in Edit Mode!
+    if (this.design) {
+      this.isEditMode = true;
+      this.designData = {
+        id: this.design.id,
+        productId: this.design.productId,
+        designName: this.design.designName,
+        sku: this.design.sku || '',
+        price: this.design.price,
+        clientId: this.design.clientId || null,
+        status: this.design.status || 'In Production',
+        quantityReady: this.design.quantityReady || 0,
+        quantityInProduction: this.design.quantityInProduction || 0,
+        quantityDamaged: this.design.quantityDamaged || 0,
+        unit: this.design.unit || 'pcs',
+        specifications: this.design.specifications || '',
+      };
+
+      // Load existing arrays using the spread operator [...] so we don't mutate the original data
+      this.tags = this.design.tags ? [...this.design.tags] : [];
+      this.features = this.design.features ? [...this.design.features] : [];
+
+      // Keep track of the images already saved in the database
+      this.existingImageUrls = this.design.imageUrls ? [...this.design.imageUrls] : [];
+    }
   }
 
   loadClients() {
@@ -58,17 +91,14 @@ export class DesignModal implements OnInit {
     this.close.emit();
   }
 
-  // Handles multiple files and generates preview URLs for the UI
   onFileSelected(event: any) {
     const input = event.target as HTMLInputElement;
     if (input && input.files && input.files.length > 0) {
-      // Convert the FileList object to a standard Javascript Array
       const files = Array.from(input.files);
 
       files.forEach((file) => {
         this.selectedImages.push(file);
 
-        // Use FileReader to create a temporary preview URL for the thumbnail
         const reader = new FileReader();
         reader.onload = (e: any) => {
           this.previewUrls.push(e.target.result);
@@ -76,12 +106,10 @@ export class DesignModal implements OnInit {
         reader.readAsDataURL(file);
       });
 
-      // Clear the input value so the user can select the same file again if they remove it
       input.value = '';
     }
   }
 
-  // Allows the user to remove an image before saving
   removeImage(index: number) {
     this.selectedImages.splice(index, 1);
     this.previewUrls.splice(index, 1);
@@ -127,11 +155,6 @@ export class DesignModal implements OnInit {
       features: this.features,
     };
 
-    // emit "files" (plural) instead of a single file
     this.save.emit({ data: payloadData, files: this.selectedImages });
   }
 }
-
-// Prepare Invoice
-// Prepare Challan
-// Prepare Quotation

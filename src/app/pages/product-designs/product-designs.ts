@@ -17,6 +17,9 @@ export class ProductDesigns implements OnInit {
 
   isModalOpen = false;
 
+  // Track which design is currently being edited
+  selectedDesignToEdit: any = null;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -57,31 +60,67 @@ export class ProductDesigns implements OnInit {
     this.router.navigate(['/products']);
   }
 
-  openModal() {
+  //accepts an optional design to edit
+  openModal(design?: any, event?: Event) {
+    if (event) event.stopPropagation(); // Prevents navigating to the details page
+
+    this.selectedDesignToEdit = design || null;
     this.isModalOpen = true;
   }
 
   closeModal() {
     this.isModalOpen = false;
+    this.selectedDesignToEdit = null;
   }
 
-  // 🌟 CHANGED: Now expects payload.files (an array) instead of a single file
+  // Routes to either Update or Create based on the ID
   handleSaveDesign(payload: any) {
     const designData = payload.data || payload;
-    const imageFiles = payload.files || undefined; // Grab the array of files!
+    const imageFiles = payload.files || undefined;
 
     designData.productId = this.productId;
 
-    // Pass the array of files to our updated Product service
-    this.productService.createDesign(designData, imageFiles).subscribe({
-      next: (savedDesignFromDb) => {
-        console.log('Saved new design from backend:', savedDesignFromDb);
-        this.designs.unshift(savedDesignFromDb);
-        this.closeModal();
-      },
-      error: (err) => {
-        console.error('Failed to save new design:', err);
-      },
-    });
+    if (designData.id && designData.id > 0) {
+      // --- UPDATE EXISTING ---
+      this.productService.updateDesign(designData.id, designData, imageFiles).subscribe({
+        next: () => {
+          // The backend PUT returns 204 No Content.
+          // To get the fresh Cloudinary URLs for any newly added images reload the list!
+          this.loadDesignsForThisProduct();
+          this.closeModal();
+        },
+        error: (err) => {
+          console.error('Failed to update design:', err);
+        },
+      });
+    } else {
+      // --- CREATE NEW ---
+      this.productService.createDesign(designData, imageFiles).subscribe({
+        next: (savedDesignFromDb) => {
+          console.log('Saved new design from backend:', savedDesignFromDb);
+          this.designs.unshift(savedDesignFromDb);
+          this.closeModal();
+        },
+        error: (err) => {
+          console.error('Failed to save new design:', err);
+        },
+      });
+    }
+  }
+
+  // Delete a product design
+  deleteDesign(id: number, event: Event) {
+    if (event) event.stopPropagation();
+
+    // Browser confirmation prompt to prevent accidental clicks
+    if (confirm('Are you sure you want to delete this design? This action cannot be undone.')) {
+      this.productService.deleteDesign(id).subscribe({
+        next: () => {
+          // Remove the deleted design from the UI array instantly
+          this.designs = this.designs.filter((d) => d.id !== id);
+        },
+        error: (err) => console.error('Failed to delete design', err),
+      });
+    }
   }
 }

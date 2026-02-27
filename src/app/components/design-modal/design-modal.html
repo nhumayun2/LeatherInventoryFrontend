@@ -5,7 +5,9 @@
     class="bg-white/90 backdrop-blur-xl border border-white/60 rounded-3xl p-8 shadow-2xl w-full max-w-2xl animate-slide-in-up my-auto"
   >
     <div class="flex justify-between items-center mb-6 border-b border-gray-200/50 pb-4">
-      <h2 class="text-2xl font-black text-gray-800 tracking-tight">Add New Design</h2>
+      <h2 class="text-2xl font-black text-gray-800 tracking-tight">
+        {{ isEditMode ? 'Edit Design' : 'Add New Design' }}
+      </h2>
       <button (click)="closeModal()" class="text-gray-400 hover:text-gray-800 transition-colors">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -31,22 +33,39 @@
         />
       </div>
 
-      <div>
-        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
-          >Product Images</label
+      <div class="bg-white/50 border border-gray-200 rounded-2xl p-4">
+        <div
+          *ngIf="isEditMode && existingImageUrls.length > 0"
+          class="mb-4 pb-4 border-b border-gray-200/60"
         >
+          <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">
+            Current Images Saved
+          </label>
+          <div class="flex flex-wrap gap-2">
+            <div
+              *ngFor="let url of existingImageUrls"
+              class="relative w-14 h-14 rounded-lg overflow-hidden border border-gray-200 shadow-sm opacity-80"
+            >
+              <img [src]="url" class="w-full h-full object-cover" />
+            </div>
+          </div>
+        </div>
+
+        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+          {{ isEditMode ? 'Add More Images (Optional)' : 'Product Images' }}
+        </label>
         <input
           type="file"
           (change)="onFileSelected($event)"
           accept="image/*"
           multiple
-          class="w-full px-4 py-2 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all cursor-pointer"
+          class="w-full px-4 py-2 bg-white/70 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all cursor-pointer"
         />
 
         <div *ngIf="previewUrls.length > 0" class="flex flex-wrap gap-3 mt-4 animate-fade-in-up">
           <div
             *ngFor="let url of previewUrls; let i = index"
-            class="relative w-20 h-20 rounded-xl overflow-hidden border border-gray-200 shadow-sm group"
+            class="relative w-20 h-20 rounded-xl overflow-hidden border border-blue-200 shadow-sm group ring-2 ring-blue-100"
           >
             <img [src]="url" class="w-full h-full object-cover" />
             <button
@@ -205,7 +224,7 @@
 
       <div class="p-4 bg-gray-50 rounded-2xl border border-gray-100">
         <label class="block text-xs font-black text-gray-800 uppercase tracking-wider mb-3"
-          >Initial Factory Inventory</label
+          >Factory Inventory Status</label
         >
         <div class="grid grid-cols-3 gap-3">
           <div>
@@ -247,7 +266,7 @@
         (click)="saveDesign()"
         class="px-6 py-3 bg-black hover:bg-gray-800 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-95"
       >
-        Save Design
+        {{ isEditMode ? 'Update Design' : 'Save Design' }}
       </button>
     </div>
   </div>

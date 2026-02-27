@@ -5,14 +5,15 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class Client {
-  private apiUrl = 'https://localhost:7201/api/Clients';
+export class Employee {
+  private apiUrl = 'https://localhost:7201/api/Employees';
 
   constructor(private http: HttpClient) {}
 
-  getClients(searchQuery?: string): Observable<any[]> {
+  getEmployees(searchQuery?: string): Observable<any[]> {
     let params = new HttpParams();
 
+    // search term is provided, append it to the URL
     if (searchQuery) {
       params = params.set('search', searchQuery);
     }
@@ -20,19 +21,19 @@ export class Client {
     return this.http.get<any[]>(this.apiUrl, { params });
   }
 
-  getClient(id: number): Observable<any> {
+  getEmployee(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 
-  createClient(clientFormData: FormData): Observable<any> {
-    return this.http.post<any>(this.apiUrl, clientFormData);
+  createEmployee(employeeData: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl, employeeData);
   }
 
-  updateClient(id: number, clientFormData: FormData): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}`, clientFormData);
+  updateEmployee(id: number, employeeData: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, employeeData);
   }
 
-  deleteClient(id: number): Observable<any> {
+  deleteEmployee(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 }

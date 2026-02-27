@@ -1,116 +1,148 @@
-import { Component, ChangeDetectorRef, OnInit } from '@angular/core'; // 1. Import ChangeDetectorRef
+import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductModal } from '../../components/product-modal/product-modal';
-import { Product } from '../../services/product'; // 2. Import our ProductService
+import { Product } from '../../services/product';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [CommonModule, ProductModal], 
+  imports: [CommonModule, ProductModal],
   templateUrl: './products.html',
-  styleUrl: './products.css'
+  styleUrl: './products.css',
 })
 export class Products implements OnInit {
+  isModalOpen = false;
+  products: any[] = [];
 
-isModalOpen = false;
-  
-  // Start with an empty array
-  products: any[] = []; 
+  // 🌟 NEW: Track which product is currently being edited
+  selectedProductToEdit: any = null;
 
-  // Inject our Service
   constructor(
     private cdr: ChangeDetectorRef,
     private productService: Product,
-    private router: Router
+    private router: Router,
   ) {}
 
-  // This runs automatically when the page loads
   ngOnInit() {
     this.loadProducts();
   }
 
   loadProducts() {
-    // Call the service, subscribe to the response
     this.productService.getProducts().subscribe({
       next: (data) => {
-        console.log("Real data from backend:", data); // Check console!
+        console.log('Real data from backend:', data);
         this.products = data;
-        
-        // We need to add our UI properties (timers, etc) to the real data
-        this.products.forEach(p => {
+
+        this.products.forEach((p) => {
           p.currentImageIndex = 0;
           p.intervalId = null;
-          // If the product has no designs yet from the DB, give it a placeholder
           if (!p.designs || p.designs.length === 0) {
-            p.designs = [{ imageUrl: 'https://placehold.co/600x400?text=No+Design+Yet' }];
+            // Updated placeholder to use the new imageUrls array structure
+            p.designs = [{ imageUrls: ['https://placehold.co/600x400?text=No+Design+Yet'] }];
           }
         });
       },
       error: (err) => {
-        console.error("Failed to load products", err);
-      }
+        console.error('Failed to load products', err);
+      },
     });
   }
 
-  viewProductDesigns(productId: number){
+  viewProductDesigns(productId: number) {
     this.router.navigate(['/products', productId]);
   }
 
-  openModal() {
+  // 🌟 CHANGED: Now accepts an optional product to edit
+  openModal(product?: any, event?: Event) {
+    if (event) event.stopPropagation(); // Prevents navigating to the designs page
+
+    this.selectedProductToEdit = product || null;
     this.isModalOpen = true;
   }
 
   closeModal() {
     this.isModalOpen = false;
+    this.selectedProductToEdit = null;
   }
 
-  handleSave(newProduct: any) {
-    this.productService.createProduct(newProduct).subscribe({
-      next: (savedProductFromDb) => {
-        console.log("Saved product from backend:", savedProductFromDb);
+  // 🌟 CHANGED: Routes to either Update or Create based on the ID
+  handleSave(categoryData: any) {
+    // We map the capitalized UI fields back to the standard lowercase JSON format
+    const payload = {
+      name: categoryData.Name,
+      description: categoryData.Description,
+    };
 
-        savedProductFromDb.currentImageIndex = 0;
-        savedProductFromDb.intervalId = null;
-        savedProductFromDb.designs = [{ imageUrl: 'https://placehold.co/600x400?text=No+Design+Yet' }];
+    if (categoryData.id && categoryData.id > 0) {
+      // --- UPDATE EXISTING ---
+      const updatePayload = { id: categoryData.id, ...payload };
 
-        this.products.unshift(savedProductFromDb);
-        this.closeModal();
-      },
-      error: (err) => {
-        console.error("Failed to save new product", err);
-      }
-    });
+      this.productService.updateProduct(categoryData.id, updatePayload).subscribe({
+        next: () => {
+          // Update the local array so the UI changes instantly without refreshing
+          const index = this.products.findIndex((p) => p.id === categoryData.id);
+          if (index !== -1) {
+            this.products[index].name = categoryData.Name;
+            this.products[index].description = categoryData.Description;
+          }
+          this.closeModal();
+        },
+        error: (err) => console.error('Failed to update product', err),
+      });
+    } else {
+      // --- CREATE NEW ---
+      this.productService.createProduct(payload).subscribe({
+        next: (savedProductFromDb) => {
+          console.log('Saved product from backend:', savedProductFromDb);
+          savedProductFromDb.currentImageIndex = 0;
+          savedProductFromDb.intervalId = null;
+          savedProductFromDb.designs = [
+            { imageUrls: ['https://placehold.co/600x400?text=No+Design+Yet'] },
+          ];
+
+          this.products.unshift(savedProductFromDb);
+          this.closeModal();
+        },
+        error: (err) => console.error('Failed to save new product', err),
+      });
+    }
   }
 
-  // --- FIXED HOVER LOGIC ---
-  
+  // 🌟 NEW: Delete a product
+  deleteProduct(id: number, event: Event) {
+    if (event) event.stopPropagation();
+
+    // Browser confirmation prompt to prevent accidental clicks
+    if (
+      confirm(
+        'Are you sure you want to delete this category? All designs inside it will be permanently lost.',
+      )
+    ) {
+      this.productService.deleteProduct(id).subscribe({
+        next: () => {
+          // Remove the deleted product from the UI array
+          this.products = this.products.filter((p) => p.id !== id);
+        },
+        error: (err) => console.error('Failed to delete product', err),
+      });
+    }
+  }
+
   startCycling(product: any) {
-    // If a timer is already running, don't start another one
     if (product.intervalId) return;
 
-    // console.log('Started cycling:', product.name); // Debugging
-
-    // Store the timer on THIS specific product
     product.intervalId = setInterval(() => {
-      
-      // Update the index
       product.currentImageIndex = (product.currentImageIndex + 1) % product.designs.length;
-      
-      // FORCE ANGULAR TO UPDATE THE SCREEN
-      this.cdr.detectChanges(); 
-
-    }, 1200); // 1.2 seconds speed
+      this.cdr.detectChanges();
+    }, 1200);
   }
 
   stopCycling(product: any) {
-    // Clear the specific timer for this product
     if (product.intervalId) {
       clearInterval(product.intervalId);
       product.intervalId = null;
     }
-    
-    // Reset to the first image immediately
     product.currentImageIndex = 0;
   }
 }

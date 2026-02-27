@@ -4,8 +4,8 @@
   >
     <div class="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8">
       <div>
-        <h2 class="text-3xl font-black text-gray-800 tracking-tight mb-1">Brand Clients</h2>
-        <p class="text-gray-500 font-medium">Manage your manufacturing partners and clients</p>
+        <h2 class="text-3xl font-black text-gray-800 tracking-tight mb-1">Employee Directory</h2>
+        <p class="text-gray-500 font-medium">Manage and track employee information</p>
       </div>
 
       <div class="flex items-center gap-3">
@@ -35,7 +35,7 @@
               d="M12 4v16m8-8H4"
             ></path>
           </svg>
-          Add Client
+          Add Employee
         </button>
       </div>
     </div>
@@ -61,9 +61,41 @@
           type="text"
           [(ngModel)]="searchQuery"
           (ngModelChange)="applyFilters()"
-          placeholder="Search by client name..."
+          placeholder="Search by name, role, email, or phone..."
           class="w-full pl-11 pr-4 py-3.5 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-medium placeholder-gray-400 transition-all shadow-sm"
         />
+      </div>
+
+      <div class="relative min-w-[220px]">
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+            ></path>
+          </svg>
+        </div>
+        <select
+          [(ngModel)]="selectedRole"
+          (ngModelChange)="applyFilters()"
+          class="w-full pl-11 pr-10 py-3.5 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-bold appearance-none cursor-pointer transition-all shadow-sm"
+        >
+          <option *ngFor="let role of roles" [value]="role">
+            {{ role === 'All' ? 'All Roles' : role }}
+          </option>
+        </select>
+        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            ></path>
+          </svg>
+        </div>
       </div>
     </div>
 
@@ -74,41 +106,44 @@
             class="text-[10px] font-black text-gray-400 uppercase tracking-wider border-b border-gray-200"
           >
             <th class="pb-4 pl-2">
-              Client / Brand <span class="ml-1 inline-block text-gray-300 font-normal">↑↓</span>
+              Employee <span class="ml-1 inline-block text-gray-300 font-normal">↑↓</span>
             </th>
             <th class="pb-4 px-4">
-              Added On <span class="ml-1 inline-block text-gray-300 font-normal">↑↓</span>
+              Role <span class="ml-1 inline-block text-gray-300 font-normal">↑↓</span>
+            </th>
+            <th class="pb-4 px-4">
+              Email <span class="ml-1 inline-block text-gray-300 font-normal">↑↓</span>
+            </th>
+            <th class="pb-4 px-4">
+              Phone <span class="ml-1 inline-block text-gray-300 font-normal">↑↓</span>
+            </th>
+            <th class="pb-4 px-4">
+              Skills <span class="ml-1 inline-block text-gray-300 font-normal">↑↓</span>
+            </th>
+            <th class="pb-4 px-4">
+              Joined Date <span class="ml-1 inline-block text-gray-300 font-normal">↑↓</span>
+            </th>
+            <th class="pb-4 px-4">
+              Monthly Salary <span class="ml-1 inline-block text-gray-300 font-normal">↑↓</span>
             </th>
             <th class="pb-4 pr-4 text-right w-28">Actions</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-100">
-          <tr *ngIf="filteredClients.length === 0">
-            <td colspan="3" class="py-12 text-center text-gray-500 font-medium">
-              No clients found matching your search.
+          <tr *ngIf="filteredEmployees.length === 0">
+            <td colspan="8" class="py-12 text-center text-gray-500 font-medium">
+              No employees found matching your search criteria.
             </td>
           </tr>
 
           <tr
-            *ngFor="let client of filteredClients; let i = index"
+            *ngFor="let emp of filteredEmployees; let i = index"
             class="hover:bg-gray-50/50 transition-colors group"
           >
             <td class="py-4 pl-2">
               <div class="flex items-center gap-4">
                 <div
-                  *ngIf="client.logoUrl"
-                  class="w-12 h-12 rounded-xl flex items-center justify-center shadow-sm border border-gray-200 overflow-hidden bg-white shrink-0 p-1"
-                >
-                  <img
-                    [src]="client.logoUrl"
-                    [alt]="client.name"
-                    class="w-full h-full object-contain"
-                  />
-                </div>
-
-                <div
-                  *ngIf="!client.logoUrl"
-                  class="w-12 h-12 rounded-xl flex items-center justify-center font-black text-sm shadow-sm shrink-0"
+                  class="w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm shadow-sm"
                   [ngClass]="
                     [
                       'bg-teal-100 text-teal-700',
@@ -120,19 +155,58 @@
                     ][i % 6]
                   "
                 >
-                  {{ getInitials(client.name) }}
+                  {{ getInitials(emp.name) }}
                 </div>
-
                 <div>
-                  <p class="text-base font-bold text-gray-800">{{ client.name }}</p>
-                  <p class="text-[11px] font-bold text-gray-400">ID : {{ client.id }}</p>
+                  <p class="text-sm font-bold text-gray-800">{{ emp.name }}</p>
+                  <p class="text-[11px] font-bold text-gray-400">ID : {{ emp.id }}</p>
                 </div>
               </div>
             </td>
 
             <td class="py-4 px-4">
+              <span class="text-sm font-bold text-gray-600">{{ emp.role }}</span>
+            </td>
+
+            <td class="py-4 px-4">
+              <span class="text-sm font-medium text-gray-500">{{ emp.email || 'N/A' }}</span>
+            </td>
+
+            <td class="py-4 px-4">
+              <span class="text-sm font-medium text-gray-500">{{ emp.phone || 'N/A' }}</span>
+            </td>
+
+            <td class="py-4 px-4">
+              <div class="flex flex-wrap gap-1" *ngIf="emp.skills && emp.skills.length > 0">
+                <span
+                  *ngFor="let skill of emp.skills.slice(0, 2)"
+                  class="px-2.5 py-1 bg-blue-50 text-blue-600 text-[10px] font-bold uppercase tracking-wider rounded-md border border-blue-100"
+                >
+                  {{ skill }}
+                </span>
+                <span
+                  *ngIf="emp.skills.length > 2"
+                  class="px-2 py-1 bg-gray-100 text-gray-500 text-[10px] font-bold rounded-md border border-gray-200"
+                >
+                  +{{ emp.skills.length - 2 }}
+                </span>
+              </div>
+              <span
+                *ngIf="!emp.skills || emp.skills.length === 0"
+                class="text-xs text-gray-400 italic"
+                >None</span
+              >
+            </td>
+
+            <td class="py-4 px-4">
               <span class="text-sm font-medium text-gray-500">{{
-                client.createdDate | date: 'longDate'
+                emp.joinedDate | date: 'mediumDate'
+              }}</span>
+            </td>
+
+            <td class="py-4 px-4">
+              <span class="text-sm font-black text-green-600">{{
+                emp.monthlySalary | currency: 'USD' : 'symbol' : '1.0-0'
               }}</span>
             </td>
 
@@ -142,9 +216,9 @@
                   class="absolute right-0 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none group-hover:pointer-events-auto z-10"
                 >
                   <button
-                    (click)="openModal(client)"
+                    (click)="openModal(emp)"
                     class="p-2 text-blue-500 hover:text-blue-700 bg-white hover:bg-blue-50 border border-gray-200 hover:border-blue-200 rounded-xl shadow-sm transition-all hover:scale-110"
-                    title="Edit Client"
+                    title="Edit Employee"
                   >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
@@ -156,9 +230,9 @@
                     </svg>
                   </button>
                   <button
-                    (click)="deleteClient(client.id)"
+                    (click)="deleteEmployee(emp.id)"
                     class="p-2 text-red-500 hover:text-red-700 bg-white hover:bg-red-50 border border-gray-200 hover:border-red-200 rounded-xl shadow-sm transition-all hover:scale-110"
-                    title="Delete Client"
+                    title="Delete Employee"
                   >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
@@ -189,10 +263,10 @@
   </div>
 </div>
 
-<app-client-modal
+<app-employee-modal
   *ngIf="isModalOpen"
-  [client]="selectedClientToEdit"
+  [employee]="selectedEmployeeToEdit"
   (close)="closeModal()"
   (save)="handleSave($event)"
 >
-</app-client-modal>
+</app-employee-modal>
