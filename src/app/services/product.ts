@@ -27,13 +27,13 @@ export class Product {
     return this.http.post<any>(this.apiUrl, newProductData);
   }
 
-  createDesign(newDesignData: any, imageFiles?: File[]): Observable<any> {
+  createDesign(newDesignData: any, imageFiles?: File[], costingFile?: File): Observable<any> {
     const formData = new FormData();
 
     if (newDesignData.productId) formData.append('productId', newDesignData.productId.toString());
     if (newDesignData.designName) formData.append('designName', newDesignData.designName);
     if (newDesignData.price !== undefined) formData.append('price', newDesignData.price.toString());
-    if (newDesignData.sku) formData.append('sku', newDesignData.sku);
+    if (newDesignData.articleNumber) formData.append('articleNumber', newDesignData.articleNumber);
 
     if (newDesignData.clientId) formData.append('clientId', newDesignData.clientId.toString());
     if (newDesignData.status) formData.append('status', newDesignData.status);
@@ -59,6 +59,10 @@ export class Product {
       });
     }
 
+    if (costingFile) {
+      formData.append('CostingFile', costingFile, costingFile.name);
+    }
+
     return this.http.post<any>(this.designsUrl, formData);
   }
 
@@ -66,20 +70,25 @@ export class Product {
     return this.http.put<any>(`${this.apiUrl}/${id}`, productData);
   }
 
+  // 🌟 RESTORED: The missing deleteProduct method!
   deleteProduct(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 
-  updateDesign(id: number, designData: any, imageFiles?: File[]): Observable<any> {
+  updateDesign(
+    id: number,
+    designData: any,
+    imageFiles?: File[],
+    costingFile?: File,
+  ): Observable<any> {
     const formData = new FormData();
 
-    // The backend UpdateDesignDto requires the ID to be passed in the form data
     formData.append('Id', id.toString());
 
     if (designData.productId) formData.append('productId', designData.productId.toString());
     if (designData.designName) formData.append('designName', designData.designName);
     if (designData.price !== undefined) formData.append('price', designData.price.toString());
-    if (designData.sku) formData.append('sku', designData.sku);
+    if (designData.articleNumber) formData.append('articleNumber', designData.articleNumber);
 
     if (designData.clientId) formData.append('clientId', designData.clientId.toString());
     if (designData.status) formData.append('status', designData.status);
@@ -105,11 +114,14 @@ export class Product {
       });
     }
 
-    // Append any NEW images the user wants to add while editing
     if (imageFiles && imageFiles.length > 0) {
       imageFiles.forEach((file: File) => {
         formData.append('Images', file, file.name);
       });
+    }
+
+    if (costingFile) {
+      formData.append('CostingFile', costingFile, costingFile.name);
     }
 
     return this.http.put<any>(`${this.designsUrl}/${id}`, formData);

@@ -45,7 +45,7 @@ export class ProductDesigns implements OnInit {
         console.log('Designs for product', this.productId, ':', data);
         this.designs = data;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Failed to load designs for product', this.productId, err);
         this.designs = [];
       },
@@ -60,7 +60,7 @@ export class ProductDesigns implements OnInit {
     this.router.navigate(['/products']);
   }
 
-  //accepts an optional design to edit
+  // Accepts an optional design to edit
   openModal(design?: any, event?: Event) {
     if (event) event.stopPropagation(); // Prevents navigating to the details page
 
@@ -73,35 +73,42 @@ export class ProductDesigns implements OnInit {
     this.selectedDesignToEdit = null;
   }
 
-  // Routes to either Update or Create based on the ID
-  handleSaveDesign(payload: any) {
-    const designData = payload.data || payload;
-    const imageFiles = payload.files || undefined;
+  // 🌟 FIXED: Now correctly unwraps the new 3-part payload!
+  handleSaveDesign(payload: {
+    designData: any;
+    imageFiles: File[];
+    costingFile: File | undefined;
+  }) {
+    const designData = payload.designData;
+    const imageFiles = payload.imageFiles;
+    const costingFile = payload.costingFile;
 
     designData.productId = this.productId;
 
     if (designData.id && designData.id > 0) {
       // --- UPDATE EXISTING ---
-      this.productService.updateDesign(designData.id, designData, imageFiles).subscribe({
-        next: () => {
-          // The backend PUT returns 204 No Content.
-          // To get the fresh Cloudinary URLs for any newly added images reload the list!
-          this.loadDesignsForThisProduct();
-          this.closeModal();
-        },
-        error: (err) => {
-          console.error('Failed to update design:', err);
-        },
-      });
+      // 🌟 Passes the costingFile to the service
+      this.productService
+        .updateDesign(designData.id, designData, imageFiles, costingFile)
+        .subscribe({
+          next: () => {
+            this.loadDesignsForThisProduct();
+            this.closeModal();
+          },
+          error: (err: any) => {
+            console.error('Failed to update design:', err);
+          },
+        });
     } else {
       // --- CREATE NEW ---
-      this.productService.createDesign(designData, imageFiles).subscribe({
+      // 🌟 Passes the costingFile to the service
+      this.productService.createDesign(designData, imageFiles, costingFile).subscribe({
         next: (savedDesignFromDb) => {
           console.log('Saved new design from backend:', savedDesignFromDb);
           this.designs.unshift(savedDesignFromDb);
           this.closeModal();
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Failed to save new design:', err);
         },
       });
@@ -112,14 +119,12 @@ export class ProductDesigns implements OnInit {
   deleteDesign(id: number, event: Event) {
     if (event) event.stopPropagation();
 
-    // Browser confirmation prompt to prevent accidental clicks
     if (confirm('Are you sure you want to delete this design? This action cannot be undone.')) {
       this.productService.deleteDesign(id).subscribe({
         next: () => {
-          // Remove the deleted design from the UI array instantly
           this.designs = this.designs.filter((d) => d.id !== id);
         },
-        error: (err) => console.error('Failed to delete design', err),
+        error: (err: any) => console.error('Failed to delete design', err),
       });
     }
   }

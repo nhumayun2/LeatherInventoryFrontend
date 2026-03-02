@@ -1,0 +1,316 @@
+<div *ngIf="loading" class="flex flex-col items-center justify-center h-[60vh] animate-pulse">
+  <div
+    class="w-14 h-14 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mb-4 shadow-lg"
+  ></div>
+  <p class="text-xl font-black text-gray-700 tracking-tight">Gathering Factory Metrics...</p>
+  <p class="text-sm font-medium text-gray-500 mt-1">
+    Calculating real-time inventory and order data
+  </p>
+</div>
+
+<div
+  *ngIf="error"
+  class="bg-red-50/80 backdrop-blur-md border border-red-200 rounded-3xl p-6 text-center shadow-sm max-w-2xl mx-auto mt-10"
+>
+  <svg
+    class="w-12 h-12 text-red-500 mx-auto mb-3"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+    ></path>
+  </svg>
+  <h3 class="text-lg font-black text-red-800">{{ error }}</h3>
+</div>
+
+<div *ngIf="!loading && stats" class="space-y-8 animate-fade-in-up pb-10">
+  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+    <div
+      class="bg-white/60 backdrop-blur-xl border border-white/50 rounded-3xl p-6 shadow-lg relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300 cursor-default"
+    >
+      <div class="flex justify-between items-start mb-2">
+        <p class="text-xs font-bold text-orange-500 uppercase tracking-wider">Active Orders</p>
+        <div
+          class="p-2 bg-orange-100 text-orange-600 rounded-xl group-hover:scale-110 transition-transform"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+            ></path>
+          </svg>
+        </div>
+      </div>
+      <h3 class="text-5xl font-black text-gray-800 tracking-tight">
+        {{ stats.activeOrders }}
+        <span class="text-xl text-gray-400 font-bold">/ {{ stats.totalOrders }}</span>
+      </h3>
+    </div>
+
+    <div
+      class="bg-white/60 backdrop-blur-xl border border-white/50 rounded-3xl p-6 shadow-lg relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300 cursor-default"
+    >
+      <div class="flex justify-between items-start mb-2">
+        <p class="text-xs font-bold text-purple-500 uppercase tracking-wider">Total Designs</p>
+        <div
+          class="p-2 bg-purple-100 text-purple-600 rounded-xl group-hover:scale-110 transition-transform"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+            ></path>
+          </svg>
+        </div>
+      </div>
+      <h3 class="text-5xl font-black text-gray-800 tracking-tight">{{ stats.totalDesigns }}</h3>
+    </div>
+
+    <div
+      class="bg-white/60 backdrop-blur-xl border border-white/50 rounded-3xl p-6 shadow-lg relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300 cursor-default"
+    >
+      <div class="flex justify-between items-start mb-2">
+        <p class="text-xs font-bold text-pink-500 uppercase tracking-wider">Active Clients</p>
+        <div
+          class="p-2 bg-pink-100 text-pink-600 rounded-xl group-hover:scale-110 transition-transform"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+            ></path>
+          </svg>
+        </div>
+      </div>
+      <h3 class="text-5xl font-black text-gray-800 tracking-tight">{{ stats.totalClients }}</h3>
+    </div>
+
+    <div
+      class="bg-white/60 backdrop-blur-xl border border-white/50 rounded-3xl p-6 shadow-lg relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300 cursor-default"
+    >
+      <div class="flex justify-between items-start mb-2">
+        <p class="text-xs font-bold text-green-500 uppercase tracking-wider">Factory Staff</p>
+        <div
+          class="p-2 bg-green-100 text-green-600 rounded-xl group-hover:scale-110 transition-transform"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+            ></path>
+          </svg>
+        </div>
+      </div>
+      <h3 class="text-5xl font-black text-gray-800 tracking-tight">{{ stats.totalEmployees }}</h3>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+    <div
+      class="bg-gradient-to-br from-[#1a1a1a] to-[#2d2d2d] rounded-3xl p-8 shadow-2xl text-white relative overflow-hidden xl:col-span-1 flex flex-col justify-between h-full"
+    >
+      <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/5 rounded-full blur-2xl"></div>
+
+      <div class="relative z-10 mb-8">
+        <h4
+          class="text-sm font-black text-gray-300 uppercase tracking-widest flex items-center gap-2"
+        >
+          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+            ></path>
+          </svg>
+          Global Inventory
+        </h4>
+        <p class="text-xs text-gray-500 font-medium mt-1">Aggregated totals across all designs</p>
+      </div>
+
+      <div class="space-y-6 relative z-10">
+        <div
+          class="flex items-center justify-between bg-white/5 rounded-2xl p-5 border border-white/10 hover:bg-white/10 transition-colors"
+        >
+          <div>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
+              Ready Stock
+            </p>
+            <p class="text-4xl font-black text-[#68D391] tracking-tight">
+              {{ stats.factoryInventory.ready }}
+            </p>
+          </div>
+          <div
+            class="w-14 h-14 rounded-full bg-[#68D391]/10 flex items-center justify-center text-[#68D391] shadow-inner"
+          >
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              ></path>
+            </svg>
+          </div>
+        </div>
+
+        <div
+          class="flex items-center justify-between bg-white/5 rounded-2xl p-5 border border-white/10 hover:bg-white/10 transition-colors"
+        >
+          <div>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
+              In Production
+            </p>
+            <p class="text-4xl font-black text-[#F6E05E] tracking-tight">
+              {{ stats.factoryInventory.inProduction }}
+            </p>
+          </div>
+          <div
+            class="w-14 h-14 rounded-full bg-[#F6E05E]/10 flex items-center justify-center text-[#F6E05E] shadow-inner"
+          >
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+
+        <div
+          class="flex items-center justify-between bg-white/5 rounded-2xl p-5 border border-white/10 hover:bg-white/10 transition-colors"
+        >
+          <div>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
+              Damaged / Rejected
+            </p>
+            <p class="text-4xl font-black text-[#FC8181] tracking-tight">
+              {{ stats.factoryInventory.damaged }}
+            </p>
+          </div>
+          <div
+            class="w-14 h-14 rounded-full bg-[#FC8181]/10 flex items-center justify-center text-[#FC8181] shadow-inner"
+          >
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="bg-white/80 backdrop-blur-xl border border-white/50 rounded-3xl p-8 shadow-lg xl:col-span-2 flex flex-col"
+    >
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h3 class="text-xl font-black text-gray-800 tracking-tight">Recent Orders</h3>
+          <p class="text-sm font-medium text-gray-500 mt-1">Latest activity from your clients</p>
+        </div>
+        <a
+          routerLink="/orders"
+          class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold uppercase tracking-wider rounded-xl transition-colors border border-gray-200/50"
+        >
+          View All
+        </a>
+      </div>
+
+      <div class="flex-1 overflow-x-auto custom-scrollbar">
+        <table class="w-full text-left border-collapse min-w-[600px]">
+          <thead>
+            <tr>
+              <th
+                class="pb-4 pt-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-200/60 w-1/4"
+              >
+                PO Number
+              </th>
+              <th
+                class="pb-4 pt-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-200/60 w-1/4"
+              >
+                Client Name
+              </th>
+              <th
+                class="pb-4 pt-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-200/60 w-1/4"
+              >
+                Order Date
+              </th>
+              <th
+                class="pb-4 pt-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-200/60 w-1/4 text-right pr-4"
+              >
+                Status
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100/80">
+            <tr
+              *ngFor="let order of stats.recentOrders"
+              class="hover:bg-blue-50/40 transition-colors group cursor-pointer"
+              routerLink="/orders"
+            >
+              <td
+                class="py-4 font-black text-gray-800 group-hover:text-blue-600 transition-colors tracking-tight"
+              >
+                {{ order.poNumber }}
+              </td>
+              <td class="py-4 font-bold text-gray-600">
+                {{ order.companyName }}
+              </td>
+              <td class="py-4 font-medium text-gray-500 text-sm">
+                {{ order.orderDate | date: 'mediumDate' }}
+              </td>
+              <td class="py-4 text-right pr-4">
+                <span
+                  class="px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-full border shadow-sm"
+                  [ngClass]="getStatusColor(order.status)"
+                >
+                  {{ order.status }}
+                </span>
+              </td>
+            </tr>
+
+            <tr *ngIf="stats.recentOrders?.length === 0">
+              <td colspan="4" class="py-12 text-center">
+                <div class="inline-flex flex-col items-center justify-center opacity-50">
+                  <svg
+                    class="w-12 h-12 text-gray-400 mb-3"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    ></path>
+                  </svg>
+                  <p class="text-gray-500 font-bold tracking-wide">No recent orders found.</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

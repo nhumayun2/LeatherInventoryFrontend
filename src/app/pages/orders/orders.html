@@ -1,0 +1,246 @@
+<div class="h-full font-sans text-gray-800 pb-10">
+  <div
+    class="bg-white/80 backdrop-blur-xl border border-white/60 rounded-3xl shadow-xl p-8 animate-fade-in-up"
+  >
+    <div class="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8">
+      <div>
+        <h2 class="text-3xl font-black text-gray-800 tracking-tight mb-1">Orders Management</h2>
+        <p class="text-gray-500 font-medium">Track and manage client purchase orders</p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button
+          class="flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-xl text-sm font-bold transition-all shadow-sm active:scale-95"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+            ></path>
+          </svg>
+          Export
+        </button>
+
+        <button
+          (click)="openModal()"
+          class="flex items-center gap-2 px-6 py-2.5 bg-black hover:bg-gray-800 text-white rounded-xl text-sm font-bold shadow-lg transition-all active:scale-95"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="3"
+              d="M12 4v16m8-8H4"
+            ></path>
+          </svg>
+          Create Order
+        </button>
+      </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-4 mb-8">
+      <div class="relative flex-1 group">
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+          <svg
+            class="w-5 h-5 text-gray-400 group-focus-within:text-black transition-colors"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            ></path>
+          </svg>
+        </div>
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          (ngModelChange)="applyFilters()"
+          placeholder="Search by Company or PO Number..."
+          class="w-full pl-11 pr-4 py-3.5 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-medium placeholder-gray-400 transition-all shadow-sm"
+        />
+      </div>
+
+      <div class="relative min-w-[220px]">
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            ></path>
+          </svg>
+        </div>
+        <select
+          [(ngModel)]="selectedStatus"
+          (ngModelChange)="applyFilters()"
+          class="w-full pl-11 pr-10 py-3.5 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-bold appearance-none cursor-pointer transition-all shadow-sm"
+        >
+          <option *ngFor="let status of statuses" [value]="status">
+            {{ status === 'All' ? 'All Statuses' : status }}
+          </option>
+        </select>
+        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            ></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto pb-4 custom-scrollbar">
+      <table class="w-full text-left whitespace-nowrap">
+        <thead>
+          <tr
+            class="text-[10px] font-black text-gray-400 uppercase tracking-wider border-b border-gray-200"
+          >
+            <th class="pb-4 pl-2">
+              Order Info <span class="ml-1 inline-block text-gray-300 font-normal">↑↓</span>
+            </th>
+            <th class="pb-4 px-4">
+              Company <span class="ml-1 inline-block text-gray-300 font-normal">↑↓</span>
+            </th>
+            <th class="pb-4 px-4 text-center">
+              Total Items <span class="ml-1 inline-block text-gray-300 font-normal">↑↓</span>
+            </th>
+            <th class="pb-4 px-4">
+              Order Date <span class="ml-1 inline-block text-gray-300 font-normal">↑↓</span>
+            </th>
+            <th class="pb-4 px-4">
+              Delivery Date <span class="ml-1 inline-block text-gray-300 font-normal">↑↓</span>
+            </th>
+            <th class="pb-4 px-4">
+              Status <span class="ml-1 inline-block text-gray-300 font-normal">↑↓</span>
+            </th>
+            <th class="pb-4 pr-4 text-right w-28">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <tr *ngIf="filteredOrders.length === 0">
+            <td colspan="7" class="py-12 text-center text-gray-500 font-medium">
+              No orders found matching your search criteria.
+            </td>
+          </tr>
+
+          <tr
+            *ngFor="let order of filteredOrders"
+            class="hover:bg-gray-50/50 transition-colors group"
+          >
+            <td class="py-4 pl-2">
+              <div>
+                <p class="text-sm font-black text-gray-800">{{ order.poNumber }}</p>
+                <p class="text-[11px] font-bold text-gray-400 mt-0.5">ID : {{ order.id }}</p>
+              </div>
+            </td>
+
+            <td class="py-4 px-4">
+              <span class="text-sm font-bold text-gray-600">{{ order.companyName }}</span>
+            </td>
+
+            <td class="py-4 px-4 text-center">
+              <span
+                class="inline-flex items-center justify-center px-2.5 py-1 bg-gray-100 text-gray-700 text-[11px] font-black rounded-md border border-gray-200"
+              >
+                {{ getTotalQuantity(order) }}
+              </span>
+            </td>
+
+            <td class="py-4 px-4">
+              <span class="text-sm font-medium text-gray-500">{{
+                order.orderDate | date: 'mediumDate'
+              }}</span>
+            </td>
+
+            <td class="py-4 px-4">
+              <span
+                class="text-sm font-medium"
+                [ngClass]="order.deliveryDate ? 'text-gray-800 font-bold' : 'text-gray-400 italic'"
+              >
+                {{ order.deliveryDate ? (order.deliveryDate | date: 'mediumDate') : 'TBD' }}
+              </span>
+            </td>
+
+            <td class="py-4 px-4">
+              <span
+                class="px-3 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-full border shadow-sm"
+                [ngClass]="{
+                  'bg-yellow-50 text-yellow-600 border-yellow-200': order.status === 'Pending',
+                  'bg-blue-50 text-blue-600 border-blue-200': order.status === 'In Progress',
+                  'bg-green-50 text-green-600 border-green-200': order.status === 'Completed',
+                  'bg-red-50 text-red-600 border-red-200': order.status === 'Cancelled',
+                }"
+              >
+                {{ order.status }}
+              </span>
+            </td>
+
+            <td class="py-4 pr-4 text-right">
+              <div class="relative flex items-center justify-end h-8">
+                <div
+                  class="absolute right-0 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none group-hover:pointer-events-auto z-10"
+                >
+                  <button
+                    (click)="openModal(order)"
+                    class="p-2 text-blue-500 hover:text-blue-700 bg-white hover:bg-blue-50 border border-gray-200 hover:border-blue-200 rounded-xl shadow-sm transition-all hover:scale-110"
+                    title="Edit Order"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                      ></path>
+                    </svg>
+                  </button>
+                  <button
+                    (click)="deleteOrder(order.id)"
+                    class="p-2 text-red-500 hover:text-red-700 bg-white hover:bg-red-50 border border-gray-200 hover:border-red-200 rounded-xl shadow-sm transition-all hover:scale-110"
+                    title="Delete Order"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      ></path>
+                    </svg>
+                  </button>
+                </div>
+
+                <button
+                  class="absolute right-0 p-2 text-gray-400 group-hover:opacity-0 transition-opacity duration-200 z-0"
+                >
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                      d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<app-order-modal
+  *ngIf="isModalOpen"
+  [order]="selectedOrderToEdit"
+  (close)="closeModal()"
+  (save)="handleSave($event)"
+></app-order-modal>

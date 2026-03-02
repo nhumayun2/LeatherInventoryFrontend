@@ -26,7 +26,9 @@
 
       <div>
         <h2 class="text-3xl font-black text-gray-800 tracking-tight">{{ design.designName }}</h2>
-        <p class="text-gray-500 font-medium tracking-wide">SKU: {{ design.sku }}</p>
+        <p class="text-gray-500 font-medium tracking-wide">
+          Article #: {{ design.articleNumber || 'N/A' }}
+        </p>
       </div>
     </div>
 
@@ -55,7 +57,6 @@
             alt="{{ design.designName }}"
             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
           />
-
           <div
             class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300 flex items-center justify-center"
           >
@@ -99,11 +100,54 @@
         <div
           class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 pb-8 border-b border-gray-200/60 gap-6"
         >
-          <div>
-            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Unit Price</p>
-            <div class="flex items-baseline gap-1">
-              <span class="text-5xl font-black text-gray-900">${{ design.price }}</span>
-              <span class="text-sm font-bold text-gray-500">/ {{ design.unit }}</span>
+          <div class="flex-1">
+            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+              Costing Sheet Data
+            </p>
+
+            <div *ngIf="design.costingFilePath" class="flex flex-wrap items-center gap-3">
+              <button
+                (click)="previewCostingFile()"
+                class="flex items-center gap-2 px-5 py-2.5 bg-green-50 hover:bg-green-100 text-green-700 font-bold rounded-xl transition-all border border-green-200 shadow-sm hover:shadow active:scale-95"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  ></path>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  ></path>
+                </svg>
+                Preview Sheet
+              </button>
+              <button
+                (click)="downloadCostingFile()"
+                class="flex items-center gap-2 px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-all border border-gray-200 shadow-sm hover:shadow active:scale-95"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                  ></path>
+                </svg>
+                Download Excel
+              </button>
+            </div>
+
+            <div *ngIf="!design.costingFilePath">
+              <p
+                class="text-sm font-bold text-gray-400 italic bg-gray-50 inline-block px-4 py-2 rounded-lg border border-gray-100"
+              >
+                No Excel costing file attached.
+              </p>
             </div>
           </div>
 
@@ -183,11 +227,6 @@
           <h4 class="text-sm font-black text-gray-300 uppercase tracking-widest">
             Live Factory Inventory
           </h4>
-          <button
-            class="text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors bg-blue-500/10 hover:bg-blue-500/20 px-4 py-2 rounded-xl"
-          >
-            Update Stock
-          </button>
         </div>
 
         <div class="grid grid-cols-3 gap-4 relative z-10">
@@ -211,6 +250,129 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<div
+  *ngIf="isExcelPreviewOpen"
+  class="fixed inset-0 z-[100] flex flex-col bg-gray-50 animate-fade-in"
+>
+  <div
+    class="flex items-center justify-between p-4 bg-white border-b border-gray-200 shadow-sm z-10 relative"
+  >
+    <div class="flex items-center gap-3">
+      <div class="p-2.5 bg-green-100 text-green-700 rounded-xl">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+          ></path>
+        </svg>
+      </div>
+      <div>
+        <h3 class="text-lg font-black text-gray-800 tracking-tight">Costing Sheet Preview</h3>
+        <p class="text-xs font-bold text-gray-500 uppercase">
+          {{ design?.designName }} | Article #{{ design?.articleNumber }}
+        </p>
+      </div>
+    </div>
+    <div class="flex items-center gap-4">
+      <button
+        (click)="downloadCostingFile()"
+        class="flex items-center gap-2 px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition-all shadow hover:shadow-lg active:scale-95"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="3"
+            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+          ></path>
+        </svg>
+        Download File
+      </button>
+      <div class="h-8 w-px bg-gray-200"></div>
+      <button
+        (click)="closeExcelPreview()"
+        class="p-2.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors group"
+      >
+        <svg
+          class="w-7 h-7 group-hover:rotate-90 transition-transform duration-300"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          ></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="flex-1 overflow-auto p-6 custom-scrollbar relative">
+    <div
+      *ngIf="excelLoading"
+      class="absolute inset-0 flex flex-col items-center justify-center bg-gray-50/80 backdrop-blur-sm z-20"
+    >
+      <div
+        class="w-14 h-14 border-4 border-green-200 border-t-green-600 rounded-full animate-spin mb-4 shadow-lg"
+      ></div>
+      <p class="font-black text-xl text-green-800 tracking-tight">Parsing Excel Data...</p>
+      <p class="text-sm font-medium text-green-600 mt-2">Running directly in your browser</p>
+    </div>
+
+    <div
+      *ngIf="!excelLoading && excelData.length > 0"
+      class="inline-block min-w-full align-middle bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden animate-slide-in-up"
+    >
+      <table class="min-w-full divide-y divide-gray-200">
+        <tbody class="divide-y divide-gray-100">
+          <tr
+            *ngFor="let row of excelData; let rIndex = index"
+            class="transition-colors hover:bg-blue-50/50"
+            [ngClass]="{ 'bg-gray-100/80 hover:bg-gray-200/50': rIndex === 0 }"
+          >
+            <td
+              *ngFor="let cell of row; let cIndex = index"
+              class="px-5 py-3 text-sm whitespace-nowrap border-r border-gray-100 last:border-r-0"
+              [ngClass]="{
+                'font-black text-gray-800 uppercase tracking-wider text-xs': rIndex === 0,
+                'font-medium text-gray-600': rIndex !== 0,
+              }"
+            >
+              {{ cell !== undefined && cell !== null ? cell : '' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div
+      *ngIf="!excelLoading && excelData.length === 0"
+      class="flex flex-col items-center justify-center h-full opacity-50"
+    >
+      <svg
+        class="w-20 h-20 text-gray-400 mb-4"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.5"
+          d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
+        ></path>
+      </svg>
+      <p class="font-black text-2xl text-gray-600 tracking-tight">No Data Found</p>
+      <p class="font-medium text-gray-500 mt-2">This Excel sheet appears to be completely empty.</p>
     </div>
   </div>
 </div>

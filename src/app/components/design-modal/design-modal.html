@@ -2,11 +2,11 @@
   class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm animate-fade-in p-4 overflow-y-auto"
 >
   <div
-    class="bg-white/90 backdrop-blur-xl border border-white/60 rounded-3xl p-8 shadow-2xl w-full max-w-2xl animate-slide-in-up my-auto"
+    class="bg-white/90 backdrop-blur-xl border border-white/60 rounded-3xl p-8 shadow-2xl w-full max-w-5xl animate-slide-in-up my-auto max-h-[90vh] overflow-y-auto custom-scrollbar"
   >
     <div class="flex justify-between items-center mb-6 border-b border-gray-200/50 pb-4">
       <h2 class="text-2xl font-black text-gray-800 tracking-tight">
-        {{ isEditMode ? 'Edit Design' : 'Add New Design' }}
+        {{ isEditMode ? 'Edit Product Design' : 'Add New Design' }}
       </h2>
       <button (click)="closeModal()" class="text-gray-400 hover:text-gray-800 transition-colors">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -20,59 +20,275 @@
       </button>
     </div>
 
-    <div class="space-y-5">
-      <div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      <div class="lg:col-span-2">
         <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
           >Design Name *</label
         >
         <input
           type="text"
           [(ngModel)]="designData.designName"
-          placeholder="e.g. Slim Bifold - Brown"
-          class="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-bold transition-all"
+          placeholder="e.g. Classic Bi-Fold Wallet"
+          class="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-bold transition-all shadow-sm"
         />
       </div>
 
-      <div class="bg-white/50 border border-gray-200 rounded-2xl p-4">
-        <div
-          *ngIf="isEditMode && existingImageUrls.length > 0"
-          class="mb-4 pb-4 border-b border-gray-200/60"
+      <div>
+        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+          >Article Number</label
         >
-          <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">
-            Current Images Saved
-          </label>
-          <div class="flex flex-wrap gap-2">
-            <div
-              *ngFor="let url of existingImageUrls"
-              class="relative w-14 h-14 rounded-lg overflow-hidden border border-gray-200 shadow-sm opacity-80"
+        <input
+          type="text"
+          [(ngModel)]="designData.articleNumber"
+          placeholder="e.g. W-104"
+          class="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-bold transition-all shadow-sm"
+        />
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+          >Unit Price</label
+        >
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <span class="text-gray-500 font-bold">$</span>
+          </div>
+          <input
+            type="number"
+            [(ngModel)]="designData.price"
+            placeholder="0.00"
+            min="0"
+            step="0.01"
+            class="w-full pl-8 pr-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-bold transition-all shadow-sm"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+          >Exclusive Client (Optional)</label
+        >
+        <div class="relative">
+          <select
+            [(ngModel)]="designData.clientId"
+            class="w-full pl-4 pr-10 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-bold appearance-none cursor-pointer transition-all shadow-sm"
+          >
+            <option [ngValue]="null">No specific client (General Catalog)</option>
+            <option *ngFor="let client of clientsList" [ngValue]="client.id">
+              {{ client.name }}
+            </option>
+          </select>
+          <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+            <svg
+              class="w-4 h-4 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
             >
-              <img [src]="url" class="w-full h-full object-cover" />
-            </div>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              ></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+          >Status</label
+        >
+        <div class="relative">
+          <select
+            [(ngModel)]="designData.status"
+            class="w-full pl-4 pr-10 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-bold appearance-none cursor-pointer transition-all shadow-sm"
+          >
+            <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+          </select>
+          <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+            <svg
+              class="w-4 h-4 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              ></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+          >Unit</label
+        >
+        <input
+          type="text"
+          [(ngModel)]="designData.unit"
+          placeholder="e.g. pcs, pairs"
+          class="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-bold transition-all shadow-sm"
+        />
+      </div>
+    </div>
+
+    <div class="mb-8">
+      <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+        >Costing Sheet (Excel .xlsx)</label
+      >
+
+      <input
+        type="file"
+        #costingFileInput
+        (change)="onCostingFileSelected($event)"
+        accept=".xlsx, .xls"
+        class="hidden"
+      />
+
+      <div
+        *ngIf="!costingFileName"
+        (click)="costingFileInput.click()"
+        class="w-full border-2 border-dashed border-green-300 hover:border-green-600 rounded-2xl p-6 flex flex-col items-center justify-center cursor-pointer bg-green-50/50 hover:bg-green-50 transition-all group shadow-sm"
+      >
+        <div
+          class="w-12 h-12 mb-3 rounded-full bg-green-100 group-hover:bg-white flex items-center justify-center shadow-sm transition-colors text-green-600"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            ></path>
+          </svg>
+        </div>
+        <p class="text-sm font-bold text-green-800">Click to upload Costing Sheet</p>
+        <p class="text-xs text-green-600 mt-1 font-medium">.xlsx or .xls only</p>
+      </div>
+
+      <div
+        *ngIf="costingFileName"
+        class="w-full flex items-center justify-between bg-green-50 border border-green-200 rounded-xl p-4 shadow-sm"
+      >
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-green-100 text-green-600 rounded-lg">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              ></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm font-bold text-green-800 line-clamp-1">{{ costingFileName }}</p>
+            <p class="text-xs text-green-600 font-medium">Excel Document</p>
           </div>
         </div>
 
-        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
-          {{ isEditMode ? 'Add More Images (Optional)' : 'Product Images' }}
-        </label>
-        <input
-          type="file"
-          (change)="onFileSelected($event)"
-          accept="image/*"
-          multiple
-          class="w-full px-4 py-2 bg-white/70 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all cursor-pointer"
-        />
+        <button
+          (click)="removeCostingFile()"
+          class="p-2 text-red-500 hover:text-white hover:bg-red-500 rounded-lg transition-all"
+          title="Remove File"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+            ></path>
+          </svg>
+        </button>
+      </div>
+    </div>
 
-        <div *ngIf="previewUrls.length > 0" class="flex flex-wrap gap-3 mt-4 animate-fade-in-up">
-          <div
-            *ngFor="let url of previewUrls; let i = index"
-            class="relative w-20 h-20 rounded-xl overflow-hidden border border-blue-200 shadow-sm group ring-2 ring-blue-100"
+    <div class="mb-8">
+      <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+        >Specifications</label
+      >
+      <textarea
+        [(ngModel)]="designData.specifications"
+        rows="3"
+        placeholder="e.g. 100% Genuine Cow Leather, Nylon Thread..."
+        class="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-medium transition-all shadow-sm resize-none"
+      ></textarea>
+    </div>
+
+    <div class="bg-gray-50/50 rounded-2xl p-6 border border-gray-100 mb-8">
+      <h3 class="text-lg font-black text-gray-800 mb-4">Current Inventory Tracking</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div>
+          <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+            >Qty Ready</label
           >
-            <img [src]="url" class="w-full h-full object-cover" />
-            <button
-              (click)="removeImage(i)"
-              class="absolute inset-0 bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm"
-            >
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <input
+            type="number"
+            [(ngModel)]="designData.quantityReady"
+            min="0"
+            class="w-full px-4 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-center text-gray-800 font-bold transition-all shadow-sm"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+            >Qty In Production</label
+          >
+          <input
+            type="number"
+            [(ngModel)]="designData.quantityInProduction"
+            min="0"
+            class="w-full px-4 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-center text-gray-800 font-bold transition-all shadow-sm"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+            >Qty Damaged/Rejected</label
+          >
+          <input
+            type="number"
+            [(ngModel)]="designData.quantityDamaged"
+            min="0"
+            class="w-full px-4 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 text-center text-red-600 font-bold transition-all shadow-sm"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+      <div>
+        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+          >Key Features</label
+        >
+        <div class="flex gap-2 mb-3">
+          <input
+            type="text"
+            [(ngModel)]="newFeature"
+            (keyup.enter)="addFeature()"
+            placeholder="e.g. RFID Blocking"
+            class="flex-1 px-4 py-2 bg-white/50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm font-medium transition-all"
+          />
+          <button
+            (click)="addFeature()"
+            class="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-black transition-colors font-bold text-sm"
+          >
+            Add
+          </button>
+        </div>
+        <div class="flex flex-col gap-2 max-h-40 overflow-y-auto custom-scrollbar">
+          <div
+            *ngFor="let feat of designData.features; let i = index"
+            class="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-lg border border-gray-100 text-sm font-medium text-gray-700"
+          >
+            <span>{{ feat }}</span>
+            <button (click)="removeFeature(i)" class="text-red-400 hover:text-red-600">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -85,177 +301,134 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div>
-          <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
-            >SKU Code</label
-          >
-          <input
-            type="text"
-            [(ngModel)]="designData.sku"
-            placeholder="e.g. WLT-BRN-002"
-            class="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-medium uppercase transition-all"
-          />
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
-            >Price ($)</label
-          >
-          <input
-            type="number"
-            [(ngModel)]="designData.price"
-            placeholder="0.00"
-            class="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-black transition-all"
-          />
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div>
-          <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
-            >Client / Brand</label
-          >
-          <select
-            [(ngModel)]="designData.clientId"
-            class="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-medium transition-all cursor-pointer"
-          >
-            <option [ngValue]="null">No Brand (In-House)</option>
-            <option *ngFor="let client of clients" [ngValue]="client.id">{{ client.name }}</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
-            >Design Status</label
-          >
-          <select
-            [(ngModel)]="designData.status"
-            class="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-medium transition-all cursor-pointer"
-          >
-            <option value="Draft">Draft</option>
-            <option value="In Production">In Production</option>
-            <option value="Active">Active</option>
-            <option value="Archived">Archived</option>
-          </select>
-        </div>
-      </div>
-
       <div>
         <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
-          >Specifications</label
+          >Search Tags</label
         >
-        <input
-          type="text"
-          [(ngModel)]="designData.specifications"
-          placeholder="e.g. Genuine Leather, RFID Protected"
-          class="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-medium transition-all"
-        />
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div>
-          <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
-            >Features</label
+        <div class="flex gap-2 mb-3">
+          <input
+            type="text"
+            [(ngModel)]="newTag"
+            (keyup.enter)="addTag()"
+            placeholder="e.g. summer-collection"
+            class="flex-1 px-4 py-2 bg-white/50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-sm font-medium transition-all"
+          />
+          <button
+            (click)="addTag()"
+            class="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-black transition-colors font-bold text-sm"
           >
-          <div
-            class="p-2 bg-white/50 border border-gray-200 rounded-xl focus-within:ring-2 focus-within:ring-black transition-all flex flex-wrap gap-2 items-center min-h-[50px]"
-          >
-            <span
-              *ngFor="let feature of features; let i = index"
-              class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2 shadow-sm animate-fade-in"
-            >
-              {{ feature }}
-              <button (click)="removeFeature(i)" class="hover:text-purple-900 transition-colors">
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="3"
-                    d="M6 18L18 6M6 6l12 12"
-                  ></path>
-                </svg>
-              </button>
-            </span>
-
-            <input
-              type="text"
-              [(ngModel)]="currentFeature"
-              (keydown.enter)="addFeature($event)"
-              placeholder="Type & press Enter..."
-              class="flex-1 bg-transparent border-none focus:outline-none text-gray-800 font-medium min-w-[120px] text-sm"
-            />
-          </div>
+            Add
+          </button>
         </div>
-
-        <div>
-          <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
-            >Tags</label
-          >
+        <div class="flex flex-wrap gap-2 max-h-40 overflow-y-auto custom-scrollbar">
           <div
-            class="p-2 bg-white/50 border border-gray-200 rounded-xl focus-within:ring-2 focus-within:ring-black transition-all flex flex-wrap gap-2 items-center min-h-[50px]"
+            *ngFor="let tag of designData.tags; let i = index"
+            class="inline-flex items-center gap-1.5 bg-gray-100 hover:bg-gray-200 text-gray-600 px-2.5 py-1 rounded-full text-xs font-bold border border-gray-200 transition-colors"
           >
-            <span
-              *ngFor="let tag of tags; let i = index"
-              class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2 shadow-sm animate-fade-in"
-            >
-              {{ tag }}
-              <button (click)="removeTag(i)" class="hover:text-blue-900 transition-colors">
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="3"
-                    d="M6 18L18 6M6 6l12 12"
-                  ></path>
-                </svg>
-              </button>
-            </span>
-
-            <input
-              type="text"
-              [(ngModel)]="currentTag"
-              (keydown.enter)="addTag($event)"
-              placeholder="Type & press Enter..."
-              class="flex-1 bg-transparent border-none focus:outline-none text-gray-800 font-medium min-w-[120px] text-sm"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div class="p-4 bg-gray-50 rounded-2xl border border-gray-100">
-        <label class="block text-xs font-black text-gray-800 uppercase tracking-wider mb-3"
-          >Factory Inventory Status</label
-        >
-        <div class="grid grid-cols-3 gap-3">
-          <div>
-            <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1">Ready</label>
-            <input
-              type="number"
-              [(ngModel)]="designData.quantityReady"
-              class="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-green-600 font-black text-center"
-            />
-          </div>
-          <div>
-            <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1">In Prod.</label>
-            <input
-              type="number"
-              [(ngModel)]="designData.quantityInProduction"
-              class="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 text-yellow-600 font-black text-center"
-            />
-          </div>
-          <div>
-            <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1">Damaged</label>
-            <input
-              type="number"
-              [(ngModel)]="designData.quantityDamaged"
-              class="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-red-600 font-black text-center"
-            />
+            <span>#{{ tag }}</span>
+            <button (click)="removeTag(i)" class="text-gray-400 hover:text-red-500">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                ></path>
+              </svg>
+            </button>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-200/50">
+    <div class="mb-8">
+      <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+        >Product Images</label
+      >
+
+      <input
+        type="file"
+        #imageInput
+        (change)="onImagesSelected($event)"
+        accept="image/png, image/jpeg, image/webp"
+        multiple
+        class="hidden"
+      />
+
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div
+          (click)="imageInput.click()"
+          class="aspect-square border-2 border-dashed border-gray-300 hover:border-gray-800 rounded-2xl flex flex-col items-center justify-center cursor-pointer bg-white/50 hover:bg-gray-50 transition-all group shadow-sm"
+        >
+          <div
+            class="w-10 h-10 mb-2 rounded-full bg-gray-100 group-hover:bg-white flex items-center justify-center shadow-sm transition-colors"
+          >
+            <svg
+              class="w-5 h-5 text-gray-400 group-hover:text-black transition-colors"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4v16m8-8H4"
+              ></path>
+            </svg>
+          </div>
+          <p class="text-xs font-bold text-gray-600 group-hover:text-black transition-colors">
+            Add Images
+          </p>
+        </div>
+
+        <div
+          *ngFor="let file of selectedImages; let i = index"
+          class="relative aspect-square border border-blue-200 rounded-2xl overflow-hidden bg-blue-50 shadow-sm flex items-center justify-center group p-2"
+        >
+          <p class="text-[10px] text-blue-800 font-bold text-center break-words line-clamp-3">
+            {{ file.name }}
+          </p>
+          <div
+            class="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity"
+          ></div>
+          <button
+            (click)="removeSelectedImage(i)"
+            class="absolute top-2 right-2 p-1.5 bg-white/90 text-red-500 hover:text-white hover:bg-red-500 rounded-lg shadow-sm border border-gray-100 transition-all z-10"
+            title="Remove"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
+          </button>
+        </div>
+
+        <div
+          *ngFor="let url of existingImageUrls"
+          class="relative aspect-square border border-gray-200 rounded-2xl overflow-hidden bg-white shadow-sm flex items-center justify-center group"
+        >
+          <img
+            [src]="url"
+            alt="Existing Image"
+            class="max-h-full max-w-full object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+          />
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3"
+          >
+            <p class="text-white text-[10px] font-bold tracking-wider uppercase drop-shadow-md">
+              Uploaded
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-3 pt-6 border-t border-gray-200/50">
       <button
         (click)="closeModal()"
         class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-all"

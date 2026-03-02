@@ -5,11 +5,13 @@ import { ProductDesigns } from './pages/product-designs/product-designs';
 import { DesignDetails } from './pages/design-details/design-details';
 import { Clients } from './pages/clients/clients';
 import { Employees } from './pages/employees/employees';
+import { Orders } from './pages/orders/orders';
+import { Dashboard } from './pages/dashboard/dashboard';
 
 export const routes: Routes = [
   {
     path: '',
-    component: Home,
+    component: Dashboard,
   },
   {
     path: 'products',
@@ -30,6 +32,14 @@ export const routes: Routes = [
   {
     path: 'employees',
     component: Employees,
+  },
+  {
+    path: 'orders',
+    component: Orders,
+  },
+  {
+    path: 'dashboard',
+    component: Dashboard,
   },
   {
     path: '**',

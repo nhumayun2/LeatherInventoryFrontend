@@ -140,9 +140,11 @@
       <div class="flex-1 px-2">
         <div class="flex justify-between items-start mb-1">
           <h3 class="text-xl font-bold text-gray-800 leading-tight">{{ design.designName }}</h3>
-          <span class="text-xl font-black text-gray-900">${{ design.price }}</span>
+          <span class="text-xl font-black text-green-700">${{ design.price }}</span>
         </div>
-        <p class="text-xs font-bold text-gray-400 mb-4">SKU: {{ design.sku }}</p>
+        <p class="text-xs font-bold text-gray-400 mb-4">
+          Article #: {{ design.articleNumber || 'N/A' }}
+        </p>
 
         <div class="grid grid-cols-2 gap-3 mb-2">
           <div

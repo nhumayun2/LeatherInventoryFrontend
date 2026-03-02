@@ -122,17 +122,6 @@
             <p class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-1">Category</p>
             <h3 class="text-2xl font-black text-gray-800 leading-tight">{{ product.name }}</h3>
           </div>
-
-          <span
-            class="text-lg font-bold text-gray-900"
-            *ngIf="
-              product.designs &&
-              product.designs.length > 0 &&
-              product.designs[product.currentImageIndex].price
-            "
-          >
-            ${{ product.designs[product.currentImageIndex].price }}
-          </span>
         </div>
 
         <p class="text-sm text-gray-500 font-medium mb-4">

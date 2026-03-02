@@ -11,150 +11,157 @@ import { Client } from '../../services/client';
   styleUrl: './design-modal.css',
 })
 export class DesignModal implements OnInit {
-  @Input() productId!: number;
-
-  // 🌟 NEW: Catch the existing design data if we are editing
   @Input() design: any = null;
+  @Input() productId: number = 0; // Needed to know which category this design belongs to
 
   @Output() close = new EventEmitter<void>();
-  @Output() save = new EventEmitter<any>();
 
-  clients: any[] = [];
+  // 🌟 CHANGED: Now emits the design data, the images array, AND the costing file!
+  @Output() save = new EventEmitter<{
+    designData: any;
+    imageFiles: File[];
+    costingFile: File | undefined;
+  }>();
 
-  selectedImages: File[] = [];
-  previewUrls: string[] = [];
-
-  // 🌟 NEW: Track edit mode and existing images
   isEditMode = false;
-  existingImageUrls: string[] = [];
-
-  tags: string[] = [];
-  features: string[] = [];
-  currentTag: string = '';
-  currentFeature: string = '';
+  clientsList: any[] = [];
+  statuses = ['In Production', 'Ready', 'Discontinued'];
 
   designData = {
-    id: 0, // Needed for updates to tell the backend which item to edit
+    id: 0,
     productId: 0,
     designName: '',
-    sku: '',
-    price: 0,
+    articleNumber: '', // 🌟 CHANGED from sku
+    price: 0, // Keeping 0 for the backend, but we will hide this from the HTML!
     clientId: null as number | null,
     status: 'In Production',
+    unit: 'pcs',
+    specifications: '',
     quantityReady: 0,
     quantityInProduction: 0,
     quantityDamaged: 0,
-    unit: 'pcs',
-    specifications: '',
+    features: [] as string[],
+    tags: [] as string[],
   };
+
+  // UI state for dynamic arrays
+  newFeature = '';
+  newTag = '';
+
+  // File handling for Cloudinary Images
+  selectedImages: File[] = [];
+  existingImageUrls: string[] = [];
+
+  // 🌟 NEW: File handling specifically for the Excel Costing File
+  costingFile: File | undefined;
+  costingFileName = '';
 
   constructor(private clientService: Client) {}
 
   ngOnInit() {
-    this.loadClients();
+    this.clientService.getClients().subscribe({
+      next: (data) => (this.clientsList = data),
+      error: (err) => console.error('Failed to load clients', err),
+    });
 
-    // 🌟 NEW: Pre-fill the form if we are in Edit Mode!
     if (this.design) {
       this.isEditMode = true;
       this.designData = {
         id: this.design.id,
         productId: this.design.productId,
-        designName: this.design.designName,
-        sku: this.design.sku || '',
-        price: this.design.price,
+        designName: this.design.designName || '',
+        articleNumber: this.design.articleNumber || '', // 🌟 CHANGED
+        price: this.design.price || 0,
         clientId: this.design.clientId || null,
         status: this.design.status || 'In Production',
+        unit: this.design.unit || 'pcs',
+        specifications: this.design.specifications || '',
         quantityReady: this.design.quantityReady || 0,
         quantityInProduction: this.design.quantityInProduction || 0,
         quantityDamaged: this.design.quantityDamaged || 0,
-        unit: this.design.unit || 'pcs',
-        specifications: this.design.specifications || '',
+        features: this.design.features ? [...this.design.features] : [],
+        tags: this.design.tags ? [...this.design.tags] : [],
       };
 
-      // Load existing arrays using the spread operator [...] so we don't mutate the original data
-      this.tags = this.design.tags ? [...this.design.tags] : [];
-      this.features = this.design.features ? [...this.design.features] : [];
-
-      // Keep track of the images already saved in the database
       this.existingImageUrls = this.design.imageUrls ? [...this.design.imageUrls] : [];
-    }
-  }
 
-  loadClients() {
-    this.clientService.getClients().subscribe({
-      next: (data) => (this.clients = data),
-      error: (err) => console.error('Failed to load clients', err),
-    });
+      // If editing a design that already has a costing file, extract the name for the UI
+      if (this.design.costingFilePath) {
+        this.costingFileName =
+          this.design.costingFilePath.split('/').pop() || 'Existing Costing File';
+      }
+    } else {
+      this.designData.productId = this.productId;
+    }
   }
 
   closeModal() {
     this.close.emit();
   }
 
-  onFileSelected(event: any) {
-    const input = event.target as HTMLInputElement;
-    if (input && input.files && input.files.length > 0) {
-      const files = Array.from(input.files);
-
-      files.forEach((file) => {
-        this.selectedImages.push(file);
-
-        const reader = new FileReader();
-        reader.onload = (e: any) => {
-          this.previewUrls.push(e.target.result);
-        };
-        reader.readAsDataURL(file);
-      });
-
-      input.value = '';
+  // --- Dynamic Arrays Logic ---
+  addFeature() {
+    if (this.newFeature.trim()) {
+      this.designData.features.push(this.newFeature.trim());
+      this.newFeature = '';
     }
   }
-
-  removeImage(index: number) {
-    this.selectedImages.splice(index, 1);
-    this.previewUrls.splice(index, 1);
-  }
-
-  addFeature(event: any) {
-    event.preventDefault();
-    const val = this.currentFeature.trim();
-    if (val && !this.features.includes(val)) {
-      this.features.push(val);
-    }
-    this.currentFeature = '';
-  }
-
   removeFeature(index: number) {
-    this.features.splice(index, 1);
+    this.designData.features.splice(index, 1);
   }
 
-  addTag(event: any) {
-    event.preventDefault();
-    const val = this.currentTag.trim();
-    if (val && !this.tags.includes(val)) {
-      this.tags.push(val);
+  addTag() {
+    if (this.newTag.trim()) {
+      this.designData.tags.push(this.newTag.trim());
+      this.newTag = '';
     }
-    this.currentTag = '';
   }
-
   removeTag(index: number) {
-    this.tags.splice(index, 1);
+    this.designData.tags.splice(index, 1);
   }
 
+  // --- Image Handling Logic ---
+  onImagesSelected(event: any) {
+    const files = Array.from(event.target.files) as File[];
+    this.selectedImages.push(...files);
+  }
+  removeSelectedImage(index: number) {
+    this.selectedImages.splice(index, 1);
+  }
+
+  // --- 🌟 NEW: Excel Costing File Handling Logic ---
+  onCostingFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      // Validate that it is actually an Excel file
+      const extension = file.name.split('.').pop()?.toLowerCase();
+      if (extension === 'xlsx' || extension === 'xls') {
+        this.costingFile = file;
+        this.costingFileName = file.name;
+      } else {
+        alert('Please select a valid Excel file (.xlsx or .xls) for Costing.');
+        event.target.value = ''; // Reset the input
+      }
+    }
+  }
+
+  removeCostingFile() {
+    this.costingFile = undefined;
+    this.costingFileName = '';
+  }
+
+  // --- Save Logic ---
   saveDesign() {
     if (!this.designData.designName.trim()) {
-      alert('Please enter a design name.');
+      alert('Design Name is strictly required.');
       return;
     }
 
-    this.designData.productId = this.productId;
-
-    const payloadData = {
-      ...this.designData,
-      tags: this.tags,
-      features: this.features,
-    };
-
-    this.save.emit({ data: payloadData, files: this.selectedImages });
+    // 🌟 Emit the perfect payload back to the parent component
+    this.save.emit({
+      designData: this.designData,
+      imageFiles: this.selectedImages,
+      costingFile: this.costingFile,
+    });
   }
 }
