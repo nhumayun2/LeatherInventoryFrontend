@@ -1,14 +1,17 @@
 <div
-  class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm animate-fade-in p-4 overflow-y-auto"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-walnut-950/40 backdrop-blur-sm animate-fade-in p-4 overflow-y-auto"
 >
   <div
-    class="bg-white/90 backdrop-blur-xl border border-white/60 rounded-3xl p-8 shadow-2xl w-full max-w-2xl animate-slide-in-up my-auto"
+    class="bg-white/95 backdrop-blur-xl border border-cinnamon-100 rounded-3xl p-8 shadow-2xl w-full max-w-2xl animate-slide-in-up my-auto"
   >
-    <div class="flex justify-between items-center mb-6 border-b border-gray-200/50 pb-4">
-      <h2 class="text-2xl font-black text-gray-800 tracking-tight">
+    <div class="flex justify-between items-center mb-6 border-b border-cinnamon-100 pb-4">
+      <h2 class="text-2xl font-black text-walnut-950 tracking-tight">
         {{ isEditMode ? 'Edit Employee' : 'Add New Employee' }}
       </h2>
-      <button (click)="closeModal()" class="text-gray-400 hover:text-gray-800 transition-colors">
+      <button
+        (click)="closeModal()"
+        class="text-walnut-400 hover:text-walnut-900 transition-colors"
+      >
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
@@ -23,91 +26,91 @@
     <div class="space-y-6">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>
-          <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+          <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
             >Full Name *</label
           >
           <input
             type="text"
             [(ngModel)]="employeeData.name"
             placeholder="e.g. Jane Doe"
-            class="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-bold transition-all"
+            class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold transition-all shadow-sm"
           />
         </div>
         <div>
-          <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+          <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
             >Role *</label
           >
           <input
             type="text"
             [(ngModel)]="employeeData.role"
             placeholder="e.g. Master Craftsman"
-            class="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-medium transition-all"
+            class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-medium transition-all shadow-sm"
           />
         </div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>
-          <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+          <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
             >Email Address</label
           >
           <input
             type="email"
             [(ngModel)]="employeeData.email"
             placeholder="e.g. jane@example.com"
-            class="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-medium transition-all"
+            class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-medium transition-all shadow-sm"
           />
         </div>
         <div>
-          <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+          <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
             >Phone Number</label
           >
           <input
             type="tel"
             [(ngModel)]="employeeData.phone"
             placeholder="e.g. +1 234 567 8900"
-            class="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-medium transition-all"
+            class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-medium transition-all shadow-sm"
           />
         </div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>
-          <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+          <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
             >Monthly Salary ($)</label
           >
           <input
             type="number"
             [(ngModel)]="employeeData.monthlySalary"
             placeholder="0"
-            class="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-black transition-all"
+            class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-black transition-all shadow-sm"
           />
         </div>
         <div>
-          <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+          <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
             >Joined Date</label
           >
           <input
             type="date"
             [(ngModel)]="employeeData.joinedDate"
-            class="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-medium transition-all cursor-pointer"
+            class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-medium transition-all cursor-pointer shadow-sm"
           />
         </div>
       </div>
 
       <div>
-        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+        <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
           >Skills</label
         >
         <div
-          class="p-2 bg-white/50 border border-gray-200 rounded-xl focus-within:ring-2 focus-within:ring-black transition-all flex flex-wrap gap-2 items-center min-h-[54px]"
+          class="p-2 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus-within:ring-2 focus-within:ring-saddle-400 transition-all flex flex-wrap gap-2 items-center min-h-[54px] shadow-sm"
         >
           <span
             *ngFor="let skill of employeeData.skills; let i = index"
-            class="bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 shadow-sm animate-fade-in border border-blue-100"
+            class="bg-saddle-50 text-saddle-700 px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 shadow-sm animate-fade-in border border-saddle-200"
           >
             {{ skill }}
-            <button (click)="removeSkill(i)" class="hover:text-blue-900 transition-colors">
+            <button (click)="removeSkill(i)" class="hover:text-saddle-900 transition-colors">
               <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
@@ -124,22 +127,22 @@
             [(ngModel)]="currentSkill"
             (keydown.enter)="addSkill($event)"
             placeholder="Type a skill & press Enter..."
-            class="flex-1 bg-transparent border-none focus:outline-none text-gray-800 font-medium min-w-[180px] text-sm px-2"
+            class="flex-1 bg-transparent border-none focus:outline-none text-walnut-900 font-medium min-w-[180px] text-sm px-2 placeholder-walnut-400"
           />
         </div>
       </div>
     </div>
 
-    <div class="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-200/50">
+    <div class="flex justify-end gap-3 mt-8 pt-6 border-t border-cinnamon-100">
       <button
         (click)="closeModal()"
-        class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-all"
+        class="px-6 py-3 bg-cinnamon-100 hover:bg-cinnamon-200 text-walnut-800 font-bold rounded-xl transition-all"
       >
         Cancel
       </button>
       <button
         (click)="saveEmployee()"
-        class="px-6 py-3 bg-black hover:bg-gray-800 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-95"
+        class="px-6 py-3 bg-walnut-900 hover:bg-walnut-950 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-95"
       >
         {{ isEditMode ? 'Update Employee' : 'Save Employee' }}
       </button>

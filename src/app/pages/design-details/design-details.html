@@ -1,8 +1,8 @@
 <div *ngIf="!design" class="flex flex-col items-center justify-center h-64 animate-pulse">
   <div
-    class="w-12 h-12 border-4 border-gray-300 border-t-black rounded-full animate-spin mb-4"
+    class="w-12 h-12 border-4 border-saddle-200 border-t-saddle-600 rounded-full animate-spin mb-4"
   ></div>
-  <p class="text-lg font-bold text-gray-500">Loading design details...</p>
+  <p class="text-lg font-bold text-walnut-600">Loading design details...</p>
 </div>
 
 <div *ngIf="design" class="space-y-8 font-sans h-full pb-10">
@@ -12,7 +12,7 @@
     <div class="flex items-center gap-4">
       <button
         (click)="goBackToCategory()"
-        class="p-3 bg-white/50 hover:bg-white text-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all backdrop-blur-md border border-gray-200"
+        class="p-3 bg-white/50 hover:bg-cinnamon-50 text-walnut-800 rounded-xl shadow-sm hover:shadow-md transition-all backdrop-blur-md border border-cinnamon-200/50"
       >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -25,15 +25,15 @@
       </button>
 
       <div>
-        <h2 class="text-3xl font-black text-gray-800 tracking-tight">{{ design.designName }}</h2>
-        <p class="text-gray-500 font-medium tracking-wide">
+        <h2 class="text-3xl font-black text-walnut-950 tracking-tight">{{ design.designName }}</h2>
+        <p class="text-walnut-600 font-medium tracking-wide">
           Article #: {{ design.articleNumber || 'N/A' }}
         </p>
       </div>
     </div>
 
     <span
-      class="px-5 py-2.5 bg-black text-white font-bold uppercase tracking-widest text-[10px] rounded-full shadow-lg shrink-0"
+      class="px-5 py-2.5 bg-walnut-900 text-white font-bold uppercase tracking-widest text-[10px] rounded-full shadow-lg shrink-0"
     >
       {{ design.status }}
     </span>
@@ -43,10 +43,10 @@
     <div class="xl:col-span-6 space-y-4">
       <div
         (click)="openLightbox()"
-        class="bg-white/60 backdrop-blur-xl border border-gray-200 rounded-3xl p-3 shadow-xl cursor-zoom-in group relative"
+        class="bg-white/60 backdrop-blur-xl border border-cinnamon-100 rounded-3xl p-3 shadow-xl cursor-zoom-in group relative"
       >
         <div
-          class="w-full aspect-square md:aspect-[4/3] rounded-2xl overflow-hidden bg-gray-50 flex items-center justify-center relative"
+          class="w-full aspect-square md:aspect-[4/3] rounded-2xl overflow-hidden bg-cinnamon-50 flex items-center justify-center relative"
         >
           <img
             [src]="
@@ -58,10 +58,10 @@
             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
           />
           <div
-            class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300 flex items-center justify-center"
+            class="absolute inset-0 bg-walnut-950/0 group-hover:bg-walnut-950/5 transition-colors duration-300 flex items-center justify-center"
           >
             <div
-              class="bg-white/90 text-gray-800 rounded-full p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg backdrop-blur-sm scale-90 group-hover:scale-100"
+              class="bg-white/90 text-walnut-900 rounded-full p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg backdrop-blur-sm scale-90 group-hover:scale-100"
             >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -86,8 +86,8 @@
           class="w-20 h-20 md:w-24 md:h-24 shrink-0 rounded-2xl overflow-hidden cursor-pointer border-2 transition-all duration-300 shadow-sm"
           [ngClass]="
             i === selectedImageIndex
-              ? 'border-black opacity-100 scale-105'
-              : 'border-transparent opacity-60 hover:opacity-100 bg-white/50'
+              ? 'border-walnut-900 opacity-100 scale-105'
+              : 'border-transparent opacity-60 hover:opacity-100 bg-cinnamon-50/50'
           "
         >
           <img [src]="imgUrl" class="w-full h-full object-cover" />
@@ -96,12 +96,14 @@
     </div>
 
     <div class="xl:col-span-6 space-y-6">
-      <div class="bg-white/80 backdrop-blur-xl border border-gray-100 rounded-3xl p-8 shadow-lg">
+      <div
+        class="bg-white/80 backdrop-blur-xl border border-cinnamon-100 rounded-3xl p-8 shadow-lg"
+      >
         <div
-          class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 pb-8 border-b border-gray-200/60 gap-6"
+          class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 pb-8 border-b border-cinnamon-200/60 gap-6"
         >
           <div class="flex-1">
-            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+            <p class="text-xs font-bold text-walnut-500 uppercase tracking-wider mb-3">
               Costing Sheet Data
             </p>
 
@@ -128,7 +130,7 @@
               </button>
               <button
                 (click)="downloadCostingFile()"
-                class="flex items-center gap-2 px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-all border border-gray-200 shadow-sm hover:shadow active:scale-95"
+                class="flex items-center gap-2 px-5 py-2.5 bg-cinnamon-100 hover:bg-cinnamon-200 text-walnut-800 font-bold rounded-xl transition-all border border-cinnamon-200 shadow-sm hover:shadow active:scale-95"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -144,7 +146,7 @@
 
             <div *ngIf="!design.costingFilePath">
               <p
-                class="text-sm font-bold text-gray-400 italic bg-gray-50 inline-block px-4 py-2 rounded-lg border border-gray-100"
+                class="text-sm font-bold text-walnut-500 italic bg-cinnamon-50 inline-block px-4 py-2 rounded-lg border border-cinnamon-100"
               >
                 No Excel costing file attached.
               </p>
@@ -152,16 +154,16 @@
           </div>
 
           <div class="md:text-right flex flex-col md:items-end">
-            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+            <p class="text-xs font-bold text-walnut-500 uppercase tracking-wider mb-2">
               Client / Brand
             </p>
             <div class="flex items-center gap-3">
-              <span class="text-xl font-black text-gray-800">{{
+              <span class="text-xl font-black text-walnut-900">{{
                 design.client?.name || 'In-House Collection'
               }}</span>
               <div
                 *ngIf="design.client?.logoUrl"
-                class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center overflow-hidden shadow-sm shrink-0"
+                class="w-10 h-10 rounded-full bg-white border border-cinnamon-200 flex items-center justify-center overflow-hidden shadow-sm shrink-0"
               >
                 <img
                   [src]="design.client.logoUrl"
@@ -175,22 +177,22 @@
 
         <div class="space-y-6">
           <div>
-            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+            <h4 class="text-xs font-bold text-walnut-500 uppercase tracking-wider mb-2">
               Description & Specifications
             </h4>
-            <p class="text-gray-800 font-medium text-lg leading-relaxed">
+            <p class="text-walnut-800 font-medium text-lg leading-relaxed">
               {{ design.specifications || 'No specifications provided.' }}
             </p>
           </div>
 
           <div *ngIf="design.features && design.features.length > 0">
-            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 mt-8">
+            <h4 class="text-xs font-bold text-walnut-500 uppercase tracking-wider mb-3 mt-8">
               Key Features
             </h4>
             <div class="flex flex-wrap gap-2">
               <span
                 *ngFor="let feature of design.features"
-                class="px-4 py-2 bg-green-50 border border-green-100 rounded-xl text-sm font-bold text-green-700 shadow-sm flex items-center gap-2"
+                class="px-4 py-2 bg-saddle-50 border border-saddle-100 rounded-xl text-sm font-bold text-saddle-700 shadow-sm flex items-center gap-2"
               >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -206,11 +208,13 @@
           </div>
 
           <div *ngIf="design.tags && design.tags.length > 0">
-            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 mt-8">Tags</h4>
+            <h4 class="text-xs font-bold text-walnut-500 uppercase tracking-wider mb-3 mt-8">
+              Tags
+            </h4>
             <div class="flex flex-wrap gap-2">
               <span
                 *ngFor="let tag of design.tags"
-                class="px-3 py-1.5 bg-gray-100 border border-gray-200 text-gray-600 rounded-full text-xs font-bold tracking-wide hover:bg-gray-200 transition-colors cursor-pointer"
+                class="px-3 py-1.5 bg-cinnamon-100 border border-cinnamon-200 text-walnut-700 rounded-full text-xs font-bold tracking-wide hover:bg-cinnamon-200 transition-colors cursor-pointer"
               >
                 #{{ tag }}
               </span>
@@ -220,33 +224,33 @@
       </div>
 
       <div
-        class="bg-gradient-to-br from-[#1a1a1a] to-[#2d2d2d] rounded-3xl p-8 shadow-2xl text-white relative overflow-hidden"
+        class="bg-gradient-to-br from-walnut-800 to-walnut-950 rounded-3xl p-8 shadow-2xl text-cinnamon-50 relative overflow-hidden"
       >
         <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/5 rounded-full blur-2xl"></div>
         <div class="flex items-center justify-between mb-8 relative z-10">
-          <h4 class="text-sm font-black text-gray-300 uppercase tracking-widest">
+          <h4 class="text-sm font-black text-cinnamon-200 uppercase tracking-widest">
             Live Factory Inventory
           </h4>
         </div>
 
         <div class="grid grid-cols-3 gap-4 relative z-10">
           <div
-            class="bg-white/5 backdrop-blur-md rounded-2xl p-5 border border-white/10 flex flex-col items-center justify-center transition-transform hover:-translate-y-1"
+            class="bg-white/5 backdrop-blur-md rounded-2xl p-5 border border-white/5 flex flex-col items-center justify-center transition-transform hover:-translate-y-1"
           >
             <p class="text-4xl font-black text-[#68D391] mb-2">{{ design.quantityReady }}</p>
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Ready</p>
+            <p class="text-[10px] font-bold text-walnut-300 uppercase tracking-widest">Ready</p>
           </div>
           <div
-            class="bg-white/5 backdrop-blur-md rounded-2xl p-5 border border-white/10 flex flex-col items-center justify-center transition-transform hover:-translate-y-1"
+            class="bg-white/5 backdrop-blur-md rounded-2xl p-5 border border-white/5 flex flex-col items-center justify-center transition-transform hover:-translate-y-1"
           >
             <p class="text-4xl font-black text-[#F6E05E] mb-2">{{ design.quantityInProduction }}</p>
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">In Prod.</p>
+            <p class="text-[10px] font-bold text-walnut-300 uppercase tracking-widest">In Prod.</p>
           </div>
           <div
-            class="bg-white/5 backdrop-blur-md rounded-2xl p-5 border border-white/10 flex flex-col items-center justify-center transition-transform hover:-translate-y-1"
+            class="bg-white/5 backdrop-blur-md rounded-2xl p-5 border border-white/5 flex flex-col items-center justify-center transition-transform hover:-translate-y-1"
           >
             <p class="text-4xl font-black text-[#FC8181] mb-2">{{ design.quantityDamaged }}</p>
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Damaged</p>
+            <p class="text-[10px] font-bold text-walnut-300 uppercase tracking-widest">Damaged</p>
           </div>
         </div>
       </div>
@@ -256,10 +260,10 @@
 
 <div
   *ngIf="isExcelPreviewOpen"
-  class="fixed inset-0 z-[100] flex flex-col bg-gray-50 animate-fade-in"
+  class="fixed inset-0 z-[100] flex flex-col bg-cinnamon-50 animate-fade-in"
 >
   <div
-    class="flex items-center justify-between p-4 bg-white border-b border-gray-200 shadow-sm z-10 relative"
+    class="flex items-center justify-between p-4 bg-white border-b border-cinnamon-200 shadow-sm z-10 relative"
   >
     <div class="flex items-center gap-3">
       <div class="p-2.5 bg-green-100 text-green-700 rounded-xl">
@@ -273,8 +277,8 @@
         </svg>
       </div>
       <div>
-        <h3 class="text-lg font-black text-gray-800 tracking-tight">Costing Sheet Preview</h3>
-        <p class="text-xs font-bold text-gray-500 uppercase">
+        <h3 class="text-lg font-black text-walnut-950 tracking-tight">Costing Sheet Preview</h3>
+        <p class="text-xs font-bold text-walnut-600 uppercase">
           {{ design?.designName }} | Article #{{ design?.articleNumber }}
         </p>
       </div>
@@ -294,10 +298,10 @@
         </svg>
         Download File
       </button>
-      <div class="h-8 w-px bg-gray-200"></div>
+      <div class="h-8 w-px bg-cinnamon-200"></div>
       <button
         (click)="closeExcelPreview()"
-        class="p-2.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors group"
+        class="p-2.5 text-walnut-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors group"
       >
         <svg
           class="w-7 h-7 group-hover:rotate-90 transition-transform duration-300"
@@ -319,7 +323,7 @@
   <div class="flex-1 overflow-auto p-6 custom-scrollbar relative">
     <div
       *ngIf="excelLoading"
-      class="absolute inset-0 flex flex-col items-center justify-center bg-gray-50/80 backdrop-blur-sm z-20"
+      class="absolute inset-0 flex flex-col items-center justify-center bg-cinnamon-50/80 backdrop-blur-sm z-20"
     >
       <div
         class="w-14 h-14 border-4 border-green-200 border-t-green-600 rounded-full animate-spin mb-4 shadow-lg"
@@ -330,21 +334,21 @@
 
     <div
       *ngIf="!excelLoading && excelData.length > 0"
-      class="inline-block min-w-full align-middle bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden animate-slide-in-up"
+      class="inline-block min-w-full align-middle bg-white border border-cinnamon-200 rounded-2xl shadow-sm overflow-hidden animate-slide-in-up"
     >
-      <table class="min-w-full divide-y divide-gray-200">
-        <tbody class="divide-y divide-gray-100">
+      <table class="min-w-full divide-y divide-cinnamon-200">
+        <tbody class="divide-y divide-cinnamon-100">
           <tr
             *ngFor="let row of excelData; let rIndex = index"
-            class="transition-colors hover:bg-blue-50/50"
-            [ngClass]="{ 'bg-gray-100/80 hover:bg-gray-200/50': rIndex === 0 }"
+            class="transition-colors hover:bg-cinnamon-50/80"
+            [ngClass]="{ 'bg-cinnamon-100/80 hover:bg-cinnamon-200/50': rIndex === 0 }"
           >
             <td
               *ngFor="let cell of row; let cIndex = index"
-              class="px-5 py-3 text-sm whitespace-nowrap border-r border-gray-100 last:border-r-0"
+              class="px-5 py-3 text-sm whitespace-nowrap border-r border-cinnamon-100 last:border-r-0"
               [ngClass]="{
-                'font-black text-gray-800 uppercase tracking-wider text-xs': rIndex === 0,
-                'font-medium text-gray-600': rIndex !== 0,
+                'font-black text-walnut-900 uppercase tracking-wider text-xs': rIndex === 0,
+                'font-medium text-walnut-700': rIndex !== 0,
               }"
             >
               {{ cell !== undefined && cell !== null ? cell : '' }}
@@ -359,7 +363,7 @@
       class="flex flex-col items-center justify-center h-full opacity-50"
     >
       <svg
-        class="w-20 h-20 text-gray-400 mb-4"
+        class="w-20 h-20 text-walnut-400 mb-4"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -371,25 +375,27 @@
           d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
         ></path>
       </svg>
-      <p class="font-black text-2xl text-gray-600 tracking-tight">No Data Found</p>
-      <p class="font-medium text-gray-500 mt-2">This Excel sheet appears to be completely empty.</p>
+      <p class="font-black text-2xl text-walnut-900 tracking-tight">No Data Found</p>
+      <p class="font-medium text-walnut-600 mt-2">
+        This Excel sheet appears to be completely empty.
+      </p>
     </div>
   </div>
 </div>
 
 <div
   *ngIf="isLightboxOpen && design.imageUrls && design.imageUrls.length > 0"
-  class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/95 backdrop-blur-xl animate-fade-in"
+  class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-walnut-950/95 backdrop-blur-xl animate-fade-in"
 >
   <div class="absolute top-0 left-0 w-full p-6 flex justify-between items-center z-10">
     <div
-      class="text-white font-bold tracking-widest text-sm bg-black/50 px-4 py-2 rounded-full border border-white/10"
+      class="text-cinnamon-50 font-bold tracking-widest text-sm bg-walnut-900/50 px-4 py-2 rounded-full border border-white/10"
     >
       {{ selectedImageIndex + 1 }} / {{ design.imageUrls.length }}
     </div>
     <button
       (click)="closeLightbox()"
-      class="text-white/70 hover:text-white bg-black/50 hover:bg-white/10 p-3 rounded-full transition-all border border-transparent hover:border-white/20"
+      class="text-cinnamon-50/70 hover:text-white bg-walnut-900/50 hover:bg-white/10 p-3 rounded-full transition-all border border-transparent hover:border-white/20"
     >
       <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
@@ -415,7 +421,7 @@
     <button
       *ngIf="design.imageUrls.length > 1"
       (click)="prevImage($event)"
-      class="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-white/50 hover:text-white hover:scale-110 transition-all p-4 rounded-full hover:bg-white/10"
+      class="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-cinnamon-50/50 hover:text-white hover:scale-110 transition-all p-4 rounded-full hover:bg-white/10"
     >
       <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
@@ -429,7 +435,7 @@
     <button
       *ngIf="design.imageUrls.length > 1"
       (click)="nextImage($event)"
-      class="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-white/50 hover:text-white hover:scale-110 transition-all p-4 rounded-full hover:bg-white/10"
+      class="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-cinnamon-50/50 hover:text-white hover:scale-110 transition-all p-4 rounded-full hover:bg-white/10"
     >
       <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path

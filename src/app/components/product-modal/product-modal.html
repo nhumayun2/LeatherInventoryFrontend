@@ -1,14 +1,17 @@
 <div
-  class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm animate-fade-in"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-walnut-950/40 backdrop-blur-sm animate-fade-in p-4"
 >
   <div
-    class="bg-white/90 backdrop-blur-xl border border-white/60 rounded-3xl p-8 shadow-2xl w-full max-w-md animate-slide-in-up"
+    class="bg-white/95 backdrop-blur-xl border border-cinnamon-100 rounded-3xl p-8 shadow-2xl w-full max-w-md animate-slide-in-up"
   >
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-black text-gray-800 tracking-tight">
+    <div class="flex justify-between items-center mb-6 border-b border-cinnamon-100 pb-4">
+      <h2 class="text-2xl font-black text-walnut-950 tracking-tight">
         {{ isEditMode ? 'Edit Category' : 'Add New Category' }}
       </h2>
-      <button (click)="closeModal()" class="text-gray-400 hover:text-gray-800 transition-colors">
+      <button
+        (click)="closeModal()"
+        class="text-walnut-400 hover:text-walnut-900 transition-colors"
+      >
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
@@ -22,7 +25,7 @@
 
     <div class="space-y-5">
       <div>
-        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+        <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
           >Category Name *</label
         >
 
@@ -30,33 +33,33 @@
           type="text"
           [(ngModel)]="categoryData.Name"
           placeholder="e.g. Leather Satchel"
-          class="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-gray-800 font-medium transition-all"
+          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 focus:border-transparent text-walnut-900 font-bold transition-all shadow-sm"
         />
       </div>
 
       <div>
-        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+        <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
           >Description</label
         >
         <textarea
           [(ngModel)]="categoryData.Description"
           placeholder="Brief description of this category..."
           rows="3"
-          class="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-gray-800 font-medium transition-all resize-none"
+          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 focus:border-transparent text-walnut-900 font-medium transition-all shadow-sm resize-none"
         ></textarea>
       </div>
     </div>
 
-    <div class="flex justify-end gap-3 mt-8">
+    <div class="flex justify-end gap-3 mt-8 pt-6 border-t border-cinnamon-100">
       <button
         (click)="closeModal()"
-        class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-all"
+        class="px-6 py-3 bg-cinnamon-100 hover:bg-cinnamon-200 text-walnut-800 font-bold rounded-xl transition-all"
       >
         Cancel
       </button>
       <button
         (click)="saveCategory()"
-        class="px-6 py-3 bg-black hover:bg-gray-800 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-95"
+        class="px-6 py-3 bg-walnut-900 hover:bg-walnut-950 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-95"
       >
         {{ isEditMode ? 'Update Category' : 'Save Category' }}
       </button>

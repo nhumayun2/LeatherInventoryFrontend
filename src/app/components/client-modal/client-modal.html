@@ -1,14 +1,17 @@
 <div
-  class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm animate-fade-in p-4 overflow-y-auto"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-walnut-950/40 backdrop-blur-sm animate-fade-in p-4 overflow-y-auto"
 >
   <div
-    class="bg-white/90 backdrop-blur-xl border border-white/60 rounded-3xl p-8 shadow-2xl w-full max-w-lg animate-slide-in-up my-auto"
+    class="bg-white/95 backdrop-blur-xl border border-cinnamon-100 rounded-3xl p-8 shadow-2xl w-full max-w-lg animate-slide-in-up my-auto"
   >
-    <div class="flex justify-between items-center mb-6 border-b border-gray-200/50 pb-4">
-      <h2 class="text-2xl font-black text-gray-800 tracking-tight">
+    <div class="flex justify-between items-center mb-6 border-b border-cinnamon-100 pb-4">
+      <h2 class="text-2xl font-black text-walnut-950 tracking-tight">
         {{ isEditMode ? 'Edit Client' : 'Add New Client' }}
       </h2>
-      <button (click)="closeModal()" class="text-gray-400 hover:text-gray-800 transition-colors">
+      <button
+        (click)="closeModal()"
+        class="text-walnut-400 hover:text-walnut-900 transition-colors"
+      >
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
@@ -22,19 +25,19 @@
 
     <div class="space-y-6">
       <div>
-        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+        <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
           >Client / Brand Name *</label
         >
         <input
           type="text"
           [(ngModel)]="clientData.name"
           placeholder="e.g. Karigar Leather"
-          class="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-bold transition-all shadow-sm"
+          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold transition-all shadow-sm"
         />
       </div>
 
       <div>
-        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+        <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
           >Brand Logo</label
         >
 
@@ -49,13 +52,13 @@
         <div
           *ngIf="!imagePreview"
           (click)="fileInput.click()"
-          class="w-full h-40 border-2 border-dashed border-gray-300 hover:border-gray-800 rounded-2xl flex flex-col items-center justify-center cursor-pointer bg-white/50 hover:bg-gray-50 transition-all group shadow-sm"
+          class="w-full h-40 border-2 border-dashed border-cinnamon-300 hover:border-saddle-400 rounded-2xl flex flex-col items-center justify-center cursor-pointer bg-cinnamon-50/30 hover:bg-cinnamon-50/80 transition-all group shadow-sm"
         >
           <div
-            class="w-12 h-12 mb-3 rounded-full bg-gray-100 group-hover:bg-white flex items-center justify-center shadow-sm transition-colors"
+            class="w-12 h-12 mb-3 rounded-full bg-white group-hover:bg-cinnamon-50 flex items-center justify-center shadow-sm transition-colors border border-cinnamon-100"
           >
             <svg
-              class="w-6 h-6 text-gray-400 group-hover:text-black transition-colors"
+              class="w-6 h-6 text-walnut-400 group-hover:text-saddle-600 transition-colors"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -68,15 +71,17 @@
               ></path>
             </svg>
           </div>
-          <p class="text-sm font-bold text-gray-600 group-hover:text-black transition-colors">
+          <p
+            class="text-sm font-bold text-walnut-700 group-hover:text-saddle-700 transition-colors"
+          >
             Click to upload logo
           </p>
-          <p class="text-xs text-gray-400 mt-1 font-medium">PNG, JPG up to 5MB</p>
+          <p class="text-xs text-walnut-500 mt-1 font-medium">PNG, JPG up to 5MB</p>
         </div>
 
         <div
           *ngIf="imagePreview"
-          class="relative w-full h-40 border border-gray-200 rounded-2xl overflow-hidden bg-white shadow-sm flex items-center justify-center group"
+          class="relative w-full h-40 border border-cinnamon-200 rounded-2xl overflow-hidden bg-white shadow-sm flex items-center justify-center group"
         >
           <img
             [src]="imagePreview"
@@ -86,7 +91,7 @@
 
           <button
             (click)="removeImage()"
-            class="absolute top-3 right-3 p-2 bg-white/90 text-red-500 hover:text-white hover:bg-red-500 rounded-xl shadow border border-gray-100 hover:border-red-500 backdrop-blur-sm transition-all z-10"
+            class="absolute top-3 right-3 p-2 bg-white/90 text-red-500 hover:text-white hover:bg-red-500 rounded-xl shadow border border-cinnamon-100 hover:border-red-500 backdrop-blur-sm transition-all z-10"
             title="Remove Logo"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -102,16 +107,16 @@
       </div>
     </div>
 
-    <div class="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-200/50">
+    <div class="flex justify-end gap-3 mt-8 pt-6 border-t border-cinnamon-100">
       <button
         (click)="closeModal()"
-        class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-all"
+        class="px-6 py-3 bg-cinnamon-100 hover:bg-cinnamon-200 text-walnut-800 font-bold rounded-xl transition-all"
       >
         Cancel
       </button>
       <button
         (click)="saveClient()"
-        class="px-6 py-3 bg-black hover:bg-gray-800 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-95"
+        class="px-6 py-3 bg-walnut-900 hover:bg-walnut-950 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-95"
       >
         {{ isEditMode ? 'Update Client' : 'Save Client' }}
       </button>

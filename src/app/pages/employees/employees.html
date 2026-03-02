@@ -1,16 +1,16 @@
-<div class="h-full font-sans text-gray-800 pb-10">
+<div class="h-full font-sans text-walnut-900 pb-10">
   <div
-    class="bg-white/80 backdrop-blur-xl border border-white/60 rounded-3xl shadow-xl p-8 animate-fade-in-up"
+    class="bg-white/80 backdrop-blur-xl border border-cinnamon-100 rounded-3xl shadow-xl p-8 animate-fade-in-up"
   >
     <div class="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8">
       <div>
-        <h2 class="text-3xl font-black text-gray-800 tracking-tight mb-1">Employee Directory</h2>
-        <p class="text-gray-500 font-medium">Manage and track employee information</p>
+        <h2 class="text-3xl font-black text-walnut-950 tracking-tight mb-1">Employee Directory</h2>
+        <p class="text-walnut-600 font-medium">Manage and track employee information</p>
       </div>
 
       <div class="flex items-center gap-3">
         <button
-          class="flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-xl text-sm font-bold transition-all shadow-sm active:scale-95"
+          class="flex items-center gap-2 px-5 py-2.5 bg-white border border-cinnamon-200 hover:bg-cinnamon-50 text-walnut-800 rounded-xl text-sm font-bold transition-all shadow-sm active:scale-95"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -25,7 +25,7 @@
 
         <button
           (click)="openModal()"
-          class="flex items-center gap-2 px-6 py-2.5 bg-black hover:bg-gray-800 text-white rounded-xl text-sm font-bold shadow-lg transition-all active:scale-95"
+          class="flex items-center gap-2 px-6 py-2.5 bg-walnut-900 hover:bg-walnut-950 text-white rounded-xl text-sm font-bold shadow-lg transition-all active:scale-95"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -44,7 +44,7 @@
       <div class="relative flex-1 group">
         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
           <svg
-            class="w-5 h-5 text-gray-400 group-focus-within:text-black transition-colors"
+            class="w-5 h-5 text-walnut-400 group-focus-within:text-saddle-600 transition-colors"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -62,13 +62,18 @@
           [(ngModel)]="searchQuery"
           (ngModelChange)="applyFilters()"
           placeholder="Search by name, role, email, or phone..."
-          class="w-full pl-11 pr-4 py-3.5 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-medium placeholder-gray-400 transition-all shadow-sm"
+          class="w-full pl-11 pr-4 py-3.5 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-medium placeholder-walnut-400 transition-all shadow-sm"
         />
       </div>
 
       <div class="relative min-w-[220px]">
         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            class="w-4 h-4 text-walnut-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -80,14 +85,19 @@
         <select
           [(ngModel)]="selectedRole"
           (ngModelChange)="applyFilters()"
-          class="w-full pl-11 pr-10 py-3.5 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-bold appearance-none cursor-pointer transition-all shadow-sm"
+          class="w-full pl-11 pr-10 py-3.5 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold appearance-none cursor-pointer transition-all shadow-sm"
         >
           <option *ngFor="let role of roles" [value]="role">
             {{ role === 'All' ? 'All Roles' : role }}
           </option>
         </select>
         <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            class="w-4 h-4 text-walnut-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -103,42 +113,42 @@
       <table class="w-full text-left whitespace-nowrap">
         <thead>
           <tr
-            class="text-[10px] font-black text-gray-400 uppercase tracking-wider border-b border-gray-200"
+            class="text-[10px] font-black text-walnut-500 uppercase tracking-wider border-b border-cinnamon-200"
           >
             <th class="pb-4 pl-2">
-              Employee <span class="ml-1 inline-block text-gray-300 font-normal">↑↓</span>
+              Employee <span class="ml-1 inline-block text-walnut-300 font-normal">↑↓</span>
             </th>
             <th class="pb-4 px-4">
-              Role <span class="ml-1 inline-block text-gray-300 font-normal">↑↓</span>
+              Role <span class="ml-1 inline-block text-walnut-300 font-normal">↑↓</span>
             </th>
             <th class="pb-4 px-4">
-              Email <span class="ml-1 inline-block text-gray-300 font-normal">↑↓</span>
+              Email <span class="ml-1 inline-block text-walnut-300 font-normal">↑↓</span>
             </th>
             <th class="pb-4 px-4">
-              Phone <span class="ml-1 inline-block text-gray-300 font-normal">↑↓</span>
+              Phone <span class="ml-1 inline-block text-walnut-300 font-normal">↑↓</span>
             </th>
             <th class="pb-4 px-4">
-              Skills <span class="ml-1 inline-block text-gray-300 font-normal">↑↓</span>
+              Skills <span class="ml-1 inline-block text-walnut-300 font-normal">↑↓</span>
             </th>
             <th class="pb-4 px-4">
-              Joined Date <span class="ml-1 inline-block text-gray-300 font-normal">↑↓</span>
+              Joined Date <span class="ml-1 inline-block text-walnut-300 font-normal">↑↓</span>
             </th>
             <th class="pb-4 px-4">
-              Monthly Salary <span class="ml-1 inline-block text-gray-300 font-normal">↑↓</span>
+              Monthly Salary <span class="ml-1 inline-block text-walnut-300 font-normal">↑↓</span>
             </th>
             <th class="pb-4 pr-4 text-right w-28">Actions</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-100">
+        <tbody class="divide-y divide-cinnamon-100">
           <tr *ngIf="filteredEmployees.length === 0">
-            <td colspan="8" class="py-12 text-center text-gray-500 font-medium">
+            <td colspan="8" class="py-12 text-center text-walnut-500 font-medium">
               No employees found matching your search criteria.
             </td>
           </tr>
 
           <tr
             *ngFor="let emp of filteredEmployees; let i = index"
-            class="hover:bg-gray-50/50 transition-colors group"
+            class="hover:bg-cinnamon-50/80 transition-colors group"
           >
             <td class="py-4 pl-2">
               <div class="flex items-center gap-4">
@@ -158,54 +168,54 @@
                   {{ getInitials(emp.name) }}
                 </div>
                 <div>
-                  <p class="text-sm font-bold text-gray-800">{{ emp.name }}</p>
-                  <p class="text-[11px] font-bold text-gray-400">ID : {{ emp.id }}</p>
+                  <p class="text-sm font-bold text-walnut-950">{{ emp.name }}</p>
+                  <p class="text-[11px] font-bold text-walnut-400">ID : {{ emp.id }}</p>
                 </div>
               </div>
             </td>
 
             <td class="py-4 px-4">
-              <span class="text-sm font-bold text-gray-600">{{ emp.role }}</span>
+              <span class="text-sm font-bold text-walnut-700">{{ emp.role }}</span>
             </td>
 
             <td class="py-4 px-4">
-              <span class="text-sm font-medium text-gray-500">{{ emp.email || 'N/A' }}</span>
+              <span class="text-sm font-medium text-walnut-500">{{ emp.email || 'N/A' }}</span>
             </td>
 
             <td class="py-4 px-4">
-              <span class="text-sm font-medium text-gray-500">{{ emp.phone || 'N/A' }}</span>
+              <span class="text-sm font-medium text-walnut-500">{{ emp.phone || 'N/A' }}</span>
             </td>
 
             <td class="py-4 px-4">
               <div class="flex flex-wrap gap-1" *ngIf="emp.skills && emp.skills.length > 0">
                 <span
                   *ngFor="let skill of emp.skills.slice(0, 2)"
-                  class="px-2.5 py-1 bg-blue-50 text-blue-600 text-[10px] font-bold uppercase tracking-wider rounded-md border border-blue-100"
+                  class="px-2.5 py-1 bg-saddle-50 text-saddle-700 text-[10px] font-bold uppercase tracking-wider rounded-md border border-saddle-200"
                 >
                   {{ skill }}
                 </span>
                 <span
                   *ngIf="emp.skills.length > 2"
-                  class="px-2 py-1 bg-gray-100 text-gray-500 text-[10px] font-bold rounded-md border border-gray-200"
+                  class="px-2 py-1 bg-cinnamon-100 text-walnut-600 text-[10px] font-bold rounded-md border border-cinnamon-200"
                 >
                   +{{ emp.skills.length - 2 }}
                 </span>
               </div>
               <span
                 *ngIf="!emp.skills || emp.skills.length === 0"
-                class="text-xs text-gray-400 italic"
+                class="text-xs text-walnut-400 italic"
                 >None</span
               >
             </td>
 
             <td class="py-4 px-4">
-              <span class="text-sm font-medium text-gray-500">{{
+              <span class="text-sm font-medium text-walnut-600">{{
                 emp.joinedDate | date: 'mediumDate'
               }}</span>
             </td>
 
             <td class="py-4 px-4">
-              <span class="text-sm font-black text-green-600">{{
+              <span class="text-sm font-black text-walnut-900">{{
                 emp.monthlySalary | currency: 'USD' : 'symbol' : '1.0-0'
               }}</span>
             </td>
@@ -217,7 +227,7 @@
                 >
                   <button
                     (click)="openModal(emp)"
-                    class="p-2 text-blue-500 hover:text-blue-700 bg-white hover:bg-blue-50 border border-gray-200 hover:border-blue-200 rounded-xl shadow-sm transition-all hover:scale-110"
+                    class="p-2 text-saddle-600 hover:text-saddle-700 bg-white hover:bg-cinnamon-50 border border-cinnamon-200 hover:border-saddle-300 rounded-xl shadow-sm transition-all hover:scale-110"
                     title="Edit Employee"
                   >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -231,7 +241,7 @@
                   </button>
                   <button
                     (click)="deleteEmployee(emp.id)"
-                    class="p-2 text-red-500 hover:text-red-700 bg-white hover:bg-red-50 border border-gray-200 hover:border-red-200 rounded-xl shadow-sm transition-all hover:scale-110"
+                    class="p-2 text-red-500 hover:text-red-700 bg-white hover:bg-red-50 border border-cinnamon-200 hover:border-red-200 rounded-xl shadow-sm transition-all hover:scale-110"
                     title="Delete Employee"
                   >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -246,7 +256,7 @@
                 </div>
 
                 <button
-                  class="absolute right-0 p-2 text-gray-400 group-hover:opacity-0 transition-opacity duration-200 z-0"
+                  class="absolute right-0 p-2 text-walnut-400 group-hover:opacity-0 transition-opacity duration-200 z-0"
                 >
                   <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                     <path

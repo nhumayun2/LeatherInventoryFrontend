@@ -3,7 +3,7 @@
     <div class="flex items-center gap-4 animate-slide-in-left">
       <button
         (click)="goBack()"
-        class="p-3 bg-white/50 hover:bg-white text-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all backdrop-blur-md border border-white/60"
+        class="p-3 bg-white/50 hover:bg-cinnamon-50 text-walnut-800 rounded-xl shadow-sm hover:shadow-md transition-all backdrop-blur-md border border-cinnamon-200/50"
       >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -16,15 +16,15 @@
       </button>
 
       <div>
-        <h2 class="text-3xl font-black text-gray-800 tracking-tight">Design Variations</h2>
-        <p class="text-gray-500 font-medium">Manage specific items in production</p>
+        <h2 class="text-3xl font-black text-walnut-950 tracking-tight">Design Variations</h2>
+        <p class="text-walnut-600 font-medium">Manage specific items in production</p>
       </div>
     </div>
 
     <button
       *ngIf="designs.length > 0"
       (click)="openModal()"
-      class="group flex items-center gap-2 px-6 py-3 bg-black hover:bg-gray-800 text-white rounded-2xl shadow-xl transition-all active:scale-95 animate-slide-in-right"
+      class="group flex items-center gap-2 px-6 py-3 bg-walnut-900 hover:bg-walnut-950 text-white rounded-2xl shadow-xl transition-all active:scale-95 animate-slide-in-right"
     >
       <svg
         class="w-5 h-5 group-hover:rotate-90 transition-transform"
@@ -48,9 +48,9 @@
     class="flex flex-col items-center justify-center p-12 bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl shadow-sm animate-fade-in-up"
   >
     <div
-      class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4 shadow-inner"
+      class="w-20 h-20 bg-cinnamon-50 rounded-full flex items-center justify-center mb-4 shadow-inner border border-cinnamon-100"
     >
-      <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-10 h-10 text-saddle-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -59,14 +59,14 @@
         ></path>
       </svg>
     </div>
-    <h3 class="text-xl font-black text-gray-800">No designs yet</h3>
-    <p class="text-gray-500 mt-2 mb-6 text-center max-w-md font-medium">
+    <h3 class="text-xl font-black text-walnut-900">No designs yet</h3>
+    <p class="text-walnut-600 mt-2 mb-6 text-center max-w-md font-medium">
       This product category doesn't have any specific designs assigned to it yet.
     </p>
 
     <button
       (click)="openModal()"
-      class="px-6 py-3 bg-black hover:bg-gray-800 text-white font-bold rounded-xl shadow-xl transition-all active:scale-95"
+      class="px-6 py-3 bg-walnut-900 hover:bg-walnut-950 text-white font-bold rounded-xl shadow-xl transition-all active:scale-95"
     >
       + Add First Design
     </button>
@@ -86,7 +86,7 @@
       >
         <button
           (click)="openModal(design, $event)"
-          class="p-2.5 bg-white/90 hover:bg-white text-blue-600 rounded-xl shadow-md backdrop-blur-sm transition-all hover:scale-110 border border-white/50"
+          class="p-2.5 bg-white/90 hover:bg-cinnamon-50 text-saddle-600 rounded-xl shadow-md backdrop-blur-sm transition-all hover:scale-110 border border-white/50"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -113,10 +113,10 @@
         </button>
       </div>
 
-      <div class="h-56 w-full rounded-2xl overflow-hidden mb-4 bg-gray-100 relative">
+      <div class="h-56 w-full rounded-2xl overflow-hidden mb-4 bg-cinnamon-50 relative">
         <div class="absolute top-3 left-3 z-10">
           <span
-            class="px-3 py-1 text-[10px] font-bold text-white uppercase tracking-wider bg-black/60 backdrop-blur-md rounded-full border border-white/20"
+            class="px-3 py-1 text-[10px] font-bold text-white uppercase tracking-wider bg-walnut-900/80 backdrop-blur-md rounded-full border border-white/20 shadow-sm"
           >
             {{ design.status }}
           </span>
@@ -133,28 +133,30 @@
         />
 
         <div
-          class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+          class="absolute inset-0 bg-walnut-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
         ></div>
       </div>
 
       <div class="flex-1 px-2">
         <div class="flex justify-between items-start mb-1">
-          <h3 class="text-xl font-bold text-gray-800 leading-tight">{{ design.designName }}</h3>
+          <h3 class="text-xl font-bold text-walnut-950 leading-tight">{{ design.designName }}</h3>
           <span class="text-xl font-black text-green-700">${{ design.price }}</span>
         </div>
-        <p class="text-xs font-bold text-gray-400 mb-4">
+        <p class="text-xs font-bold text-walnut-500 mb-4">
           Article #: {{ design.articleNumber || 'N/A' }}
         </p>
 
         <div class="grid grid-cols-2 gap-3 mb-2">
           <div
-            class="bg-white/50 rounded-xl p-3 border border-white/60 flex flex-col justify-center"
+            class="bg-cinnamon-50/50 rounded-xl p-3 border border-cinnamon-100 flex flex-col justify-center"
           >
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Client</p>
+            <p class="text-[10px] font-bold text-saddle-600 uppercase tracking-wider mb-1">
+              Client
+            </p>
             <div class="flex items-center gap-2">
               <div
                 *ngIf="design.client?.logoUrl"
-                class="w-6 h-6 rounded-full bg-white border border-gray-200 flex items-center justify-center overflow-hidden shrink-0 shadow-sm"
+                class="w-6 h-6 rounded-full bg-white border border-cinnamon-200 flex items-center justify-center overflow-hidden shrink-0 shadow-sm"
               >
                 <img
                   [src]="design.client.logoUrl"
@@ -162,16 +164,16 @@
                   class="w-full h-full object-contain p-0.5"
                 />
               </div>
-              <p class="text-sm font-bold text-gray-700 truncate">
+              <p class="text-sm font-bold text-walnut-800 truncate">
                 {{ design.client?.name || 'In-House' }}
               </p>
             </div>
           </div>
 
           <div
-            class="bg-white/50 rounded-xl p-3 border border-white/60 flex flex-col justify-center"
+            class="bg-cinnamon-50/50 rounded-xl p-3 border border-cinnamon-100 flex flex-col justify-center"
           >
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">
+            <p class="text-[10px] font-bold text-saddle-600 uppercase tracking-wider mb-1">
               Ready Stock
             </p>
             <p class="text-sm font-bold text-green-600">

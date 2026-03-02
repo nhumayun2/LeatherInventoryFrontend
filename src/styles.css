@@ -1,5 +1,73 @@
-/* You can add global styles to this file, and also import other style files */
 @import 'tailwindcss';
+
+@theme {
+  /* 🌟 The Karigar Leather Palette 🌟 */
+
+  /* Cinnamon Wood */
+  --color-cinnamon-50: #f7f1ed;
+  --color-cinnamon-100: #efe3dc;
+  --color-cinnamon-200: #e0c7b8;
+  --color-cinnamon-300: #d0ac95;
+  --color-cinnamon-400: #c19071;
+  --color-cinnamon-500: #b1744e;
+  --color-cinnamon-600: #8e5d3e;
+  --color-cinnamon-700: #6a462f;
+  --color-cinnamon-800: #472e1f;
+  --color-cinnamon-900: #231710;
+  --color-cinnamon-950: #19100b;
+
+  /* Toffee Brown */
+  --color-toffee-50: #f8f1ed;
+  --color-toffee-100: #f0e3db;
+  --color-toffee-200: #e2c7b6;
+  --color-toffee-300: #d3ab92;
+  --color-toffee-400: #c58f6d;
+  --color-toffee-500: #b67349;
+  --color-toffee-600: #925c3a;
+  --color-toffee-700: #6d452c;
+  --color-toffee-800: #492e1d;
+  --color-toffee-900: #24170f;
+  --color-toffee-950: #1a100a;
+
+  /* Saddle Brown */
+  --color-saddle-50: #f8f1ed;
+  --color-saddle-100: #f1e2da;
+  --color-saddle-200: #e3c6b5;
+  --color-saddle-300: #d5a990;
+  --color-saddle-400: #c78d6b;
+  --color-saddle-500: #b97046;
+  --color-saddle-600: #945a38;
+  --color-saddle-700: #6f432a;
+  --color-saddle-800: #4a2d1c;
+  --color-saddle-900: #25160e;
+  --color-saddle-950: #1a100a;
+
+  /* Brown Bark */
+  --color-bark-50: #f9f0ec;
+  --color-bark-100: #f2e2d9;
+  --color-bark-200: #e6c4b3;
+  --color-bark-300: #d9a78c;
+  --color-bark-400: #cc8a66;
+  --color-bark-500: #bf6c40;
+  --color-bark-600: #995733;
+  --color-bark-700: #734126;
+  --color-bark-800: #4d2b19;
+  --color-bark-900: #26160d;
+  --color-bark-950: #1b0f09;
+
+  /* Dark Walnut */
+  --color-walnut-50: #fbefea;
+  --color-walnut-100: #f6dfd5;
+  --color-walnut-200: #eec0aa;
+  --color-walnut-300: #e5a080;
+  --color-walnut-400: #dc8056;
+  --color-walnut-500: #d4612b;
+  --color-walnut-600: #a94d23;
+  --color-walnut-700: #7f3a1a;
+  --color-walnut-800: #552711;
+  --color-walnut-900: #2a1309;
+  --color-walnut-950: #1e0e06;
+}
 
 /* --- ANIMATIONS --- */
 
@@ -14,7 +82,6 @@
     transform: translateY(0);
   }
 }
-
 .animate-fade-in-up {
   animation: fadeInUp 0.6s ease-out forwards;
   opacity: 0; /* Start hidden */
@@ -31,7 +98,6 @@
     transform: translateX(0);
   }
 }
-
 .animate-slide-in-left {
   animation: slideInLeft 0.5s ease-out forwards;
 }
@@ -47,11 +113,11 @@
     transform: translateX(0);
   }
 }
-
 .animate-slide-in-right {
   animation: slideInRight 0.5s ease-out forwards;
 }
 
+/* 4. Fade In */
 @keyframes fadeIn {
   from {
     opacity: 0.5;
@@ -60,7 +126,24 @@
     opacity: 1;
   }
 }
-
 .animate-fade-in {
   animation: fadeIn 0.5s ease-in-out;
+}
+
+/* 5. 🌟 NEW: Gentle Continuous Float for Background Blobs 🌟 */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-30px) scale(1.05);
+  }
+}
+.animate-float {
+  animation: float 10s ease-in-out infinite;
+}
+.animate-float-delayed {
+  animation: float 12s ease-in-out infinite;
+  animation-delay: -5s;
 }

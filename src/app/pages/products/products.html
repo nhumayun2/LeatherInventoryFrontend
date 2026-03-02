@@ -1,13 +1,13 @@
 <div class="space-y-8 font-sans h-full pb-10">
   <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
     <div class="animate-slide-in-left">
-      <h2 class="text-3xl font-black text-gray-800 tracking-tight">Product Catalog</h2>
-      <p class="text-gray-500 font-medium">Manage your product categories</p>
+      <h2 class="text-3xl font-black text-walnut-950 tracking-tight">Product Catalog</h2>
+      <p class="text-walnut-600 font-medium">Manage your product categories</p>
     </div>
 
     <button
       (click)="openModal()"
-      class="group flex items-center gap-2 px-6 py-3 bg-black hover:bg-gray-800 text-white rounded-2xl shadow-xl transition-all active:scale-95 animate-slide-in-right"
+      class="group flex items-center gap-2 px-6 py-3 bg-walnut-900 hover:bg-walnut-950 text-white rounded-2xl shadow-xl transition-all active:scale-95 animate-slide-in-right"
     >
       <svg
         class="w-5 h-5 group-hover:rotate-90 transition-transform"
@@ -28,7 +28,7 @@
 
   <div class="relative group animate-fade-in-up" style="animation-delay: 100ms">
     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-      <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-5 h-5 text-walnut-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -40,7 +40,7 @@
     <input
       type="text"
       placeholder="Search categories..."
-      class="w-full pl-11 pr-4 py-4 bg-white/40 backdrop-blur-md border border-white/60 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/30 text-gray-800 shadow-sm transition-all"
+      class="w-full pl-11 pr-4 py-4 bg-white/40 backdrop-blur-md border border-white/60 rounded-2xl focus:outline-none focus:ring-2 focus:ring-saddle-400/50 text-walnut-900 shadow-sm transition-all"
     />
   </div>
 
@@ -58,7 +58,7 @@
       >
         <button
           (click)="openModal(product, $event)"
-          class="p-2.5 bg-white/90 hover:bg-white text-blue-600 rounded-xl shadow-md backdrop-blur-sm transition-all hover:scale-110 border border-white/50"
+          class="p-2.5 bg-white/90 hover:bg-cinnamon-50 text-saddle-600 rounded-xl shadow-md backdrop-blur-sm transition-all hover:scale-110 border border-white/50"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -85,7 +85,7 @@
         </button>
       </div>
 
-      <div class="h-64 w-full rounded-2xl overflow-hidden relative mb-4 bg-gray-100">
+      <div class="h-64 w-full rounded-2xl overflow-hidden relative mb-4 bg-cinnamon-50">
         <img
           [src]="
             product.designs &&
@@ -106,30 +106,30 @@
           <span
             *ngFor="let design of product.designs; let dIndex = index"
             class="w-2 h-2 rounded-full transition-all duration-300 shadow-sm"
-            [ngClass]="dIndex === product.currentImageIndex ? 'bg-white w-4' : 'bg-white/50'"
+            [ngClass]="dIndex === product.currentImageIndex ? 'bg-white w-4' : 'bg-white/60'"
           >
           </span>
         </div>
 
         <div
-          class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          class="absolute inset-0 bg-walnut-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         ></div>
       </div>
 
       <div class="px-2 pb-2">
         <div class="flex justify-between items-start mb-2">
           <div>
-            <p class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-1">Category</p>
-            <h3 class="text-2xl font-black text-gray-800 leading-tight">{{ product.name }}</h3>
+            <p class="text-xs font-bold text-saddle-600 uppercase tracking-wider mb-1">Category</p>
+            <h3 class="text-2xl font-black text-walnut-950 leading-tight">{{ product.name }}</h3>
           </div>
         </div>
 
-        <p class="text-sm text-gray-500 font-medium mb-4">
+        <p class="text-sm text-walnut-600 font-medium mb-4">
           {{ product.description || 'No description provided.' }}
         </p>
 
         <button
-          class="w-full py-3 rounded-xl bg-gray-50 group-hover:bg-black group-hover:text-white text-gray-700 font-bold text-sm transition-colors duration-300 flex items-center justify-center gap-2 pointer-events-none"
+          class="w-full py-3 rounded-xl bg-cinnamon-50 group-hover:bg-walnut-800 group-hover:text-cinnamon-50 text-walnut-800 font-bold text-sm transition-colors duration-300 flex items-center justify-center gap-2 pointer-events-none"
         >
           View All Designs
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

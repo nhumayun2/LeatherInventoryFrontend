@@ -1,48 +1,39 @@
-<div class="flex h-screen w-full bg-[#f7f1ed] p-4 gap-4 overflow-hidden font-sans relative z-0">
+<div class="flex h-screen w-full bg-cinnamon-50 p-4 gap-4 overflow-hidden font-sans relative z-0">
   <div
-    class="absolute -top-32 -left-32 w-[60rem] h-[60rem] bg-[#e0c7b8] rounded-full filter blur-[120px] opacity-80 pointer-events-none -z-10"
+    class="absolute -top-32 -left-32 w-[60rem] h-[60rem] pointer-events-none -z-10"
     style="transition: transform 2.5s cubic-bezier(0.25, 1, 0.5, 1)"
     [ngStyle]="{
-      transform:
-        'translate3d(' +
-        activeIndex * 12 +
-        'vw, ' +
-        activeIndex * 6 +
-        'vh, 0) scale(' +
-        (1 + activeIndex * 0.05) +
-        ')',
+      transform: 'translate3d(' + activeIndex * 8 + 'vw, ' + activeIndex * 4 + 'vh, 0)',
     }"
-  ></div>
+  >
+    <div
+      class="w-full h-full bg-cinnamon-200 rounded-full filter blur-[120px] opacity-80 animate-float"
+    ></div>
+  </div>
 
   <div
-    class="absolute -top-20 right-0 w-[60rem] h-[60rem] bg-[#d1ab94] rounded-full filter blur-[120px] opacity-60 pointer-events-none -z-10"
+    class="absolute -top-20 right-0 w-[60rem] h-[60rem] pointer-events-none -z-10"
     style="transition: transform 2.8s cubic-bezier(0.25, 1, 0.5, 1)"
     [ngStyle]="{
-      transform:
-        'translate3d(' +
-        activeIndex * -10 +
-        'vw, ' +
-        activeIndex * 8 +
-        'vh, 0) scale(' +
-        (1 - activeIndex * 0.04) +
-        ')',
+      transform: 'translate3d(' + activeIndex * -6 + 'vw, ' + activeIndex * 6 + 'vh, 0)',
     }"
-  ></div>
+  >
+    <div
+      class="w-full h-full bg-toffee-300 rounded-full filter blur-[120px] opacity-60 animate-float-delayed"
+    ></div>
+  </div>
 
   <div
-    class="absolute -bottom-40 left-1/4 w-[65rem] h-[65rem] bg-[#c28f70] rounded-full filter blur-[140px] opacity-30 pointer-events-none -z-10"
+    class="absolute -bottom-40 left-1/4 w-[65rem] h-[65rem] pointer-events-none -z-10"
     style="transition: transform 2.2s cubic-bezier(0.25, 1, 0.5, 1)"
     [ngStyle]="{
-      transform:
-        'translate3d(' +
-        activeIndex * -15 +
-        'vw, ' +
-        activeIndex * -10 +
-        'vh, 0) scale(' +
-        (1 + activeIndex * 0.06) +
-        ')',
+      transform: 'translate3d(' + activeIndex * -10 + 'vw, ' + activeIndex * -8 + 'vh, 0)',
     }"
-  ></div>
+  >
+    <div
+      class="w-full h-full bg-saddle-300 rounded-full filter blur-[140px] opacity-40 animate-float"
+    ></div>
+  </div>
 
   <aside
     class="w-72 bg-white/60 backdrop-blur-xl border border-white/50 shadow-xl rounded-3xl flex flex-col justify-between hidden md:flex z-10 relative"
@@ -57,9 +48,11 @@
           />
         </div>
         <div class="flex flex-col">
-          <span class="text-2xl font-black tracking-tight text-gray-800 leading-none">KARIGAR</span>
+          <span class="text-2xl font-black tracking-tight text-walnut-900 leading-none"
+            >KARIGAR</span
+          >
           <span
-            class="text-[10px] font-bold text-[#8f5c3d] uppercase tracking-[0.2em] leading-tight"
+            class="text-[10px] font-bold text-saddle-600 uppercase tracking-[0.2em] leading-tight"
             >Leather Works</span
           >
         </div>
@@ -67,7 +60,7 @@
     </div>
 
     <nav class="flex-1 px-4 py-2 flex flex-col">
-      <p class="px-4 text-xs font-bold text-gray-500/80 uppercase tracking-wider mb-4 mt-4">
+      <p class="px-4 text-xs font-bold text-walnut-500/70 uppercase tracking-wider mb-4 mt-4">
         Main Menu
       </p>
 
@@ -79,11 +72,11 @@
 
         <a
           routerLink="/dashboard"
-          routerLinkActive="active-route text-gray-900"
-          class="flex items-center gap-4 px-4 h-[48px] text-gray-600 rounded-2xl group relative z-10 transition-colors"
+          routerLinkActive="active-route text-walnut-950"
+          class="flex items-center gap-4 px-4 h-[48px] text-walnut-700 rounded-2xl group relative z-10 transition-colors"
         >
           <div
-            class="p-2 text-gray-400 group-hover:text-[#8f5c3d] group-hover:scale-125 transition-all duration-300 group-[.active-route]:text-[#8f5c3d] group-[.active-route]:scale-125 group-[.active-route]:drop-shadow-md"
+            class="p-2 text-walnut-400 group-hover:text-saddle-600 group-hover:scale-125 transition-all duration-300 group-[.active-route]:text-saddle-600 group-[.active-route]:scale-125 group-[.active-route]:drop-shadow-md"
           >
             <svg
               class="w-5 h-5"
@@ -105,11 +98,11 @@
 
         <a
           routerLink="/products"
-          routerLinkActive="active-route text-gray-900"
-          class="flex items-center gap-4 px-4 h-[48px] text-gray-600 rounded-2xl group relative z-10 transition-colors"
+          routerLinkActive="active-route text-walnut-950"
+          class="flex items-center gap-4 px-4 h-[48px] text-walnut-700 rounded-2xl group relative z-10 transition-colors"
         >
           <div
-            class="p-2 text-gray-400 group-hover:text-[#8f5c3d] group-hover:scale-125 transition-all duration-300 group-[.active-route]:text-[#8f5c3d] group-[.active-route]:scale-125 group-[.active-route]:drop-shadow-md"
+            class="p-2 text-walnut-400 group-hover:text-saddle-600 group-hover:scale-125 transition-all duration-300 group-[.active-route]:text-saddle-600 group-[.active-route]:scale-125 group-[.active-route]:drop-shadow-md"
           >
             <svg
               class="w-5 h-5"
@@ -131,11 +124,11 @@
 
         <a
           routerLink="/orders"
-          routerLinkActive="active-route text-gray-900"
-          class="flex items-center gap-4 px-4 h-[48px] text-gray-600 rounded-2xl group relative z-10 transition-colors"
+          routerLinkActive="active-route text-walnut-950"
+          class="flex items-center gap-4 px-4 h-[48px] text-walnut-700 rounded-2xl group relative z-10 transition-colors"
         >
           <div
-            class="p-2 text-gray-400 group-hover:text-[#8f5c3d] group-hover:scale-125 transition-all duration-300 group-[.active-route]:text-[#8f5c3d] group-[.active-route]:scale-125 group-[.active-route]:drop-shadow-md"
+            class="p-2 text-walnut-400 group-hover:text-saddle-600 group-hover:scale-125 transition-all duration-300 group-[.active-route]:text-saddle-600 group-[.active-route]:scale-125 group-[.active-route]:drop-shadow-md"
           >
             <svg
               class="w-5 h-5"
@@ -157,11 +150,11 @@
 
         <a
           routerLink="/employees"
-          routerLinkActive="active-route text-gray-900"
-          class="flex items-center gap-4 px-4 h-[48px] text-gray-600 rounded-2xl group relative z-10 transition-colors"
+          routerLinkActive="active-route text-walnut-950"
+          class="flex items-center gap-4 px-4 h-[48px] text-walnut-700 rounded-2xl group relative z-10 transition-colors"
         >
           <div
-            class="p-2 text-gray-400 group-hover:text-[#8f5c3d] group-hover:scale-125 transition-all duration-300 group-[.active-route]:text-[#8f5c3d] group-[.active-route]:scale-125 group-[.active-route]:drop-shadow-md"
+            class="p-2 text-walnut-400 group-hover:text-saddle-600 group-hover:scale-125 transition-all duration-300 group-[.active-route]:text-saddle-600 group-[.active-route]:scale-125 group-[.active-route]:drop-shadow-md"
           >
             <svg
               class="w-5 h-5"
@@ -183,11 +176,11 @@
 
         <a
           routerLink="/clients"
-          routerLinkActive="active-route text-gray-900"
-          class="flex items-center gap-4 px-4 h-[48px] text-gray-600 rounded-2xl group relative z-10 transition-colors"
+          routerLinkActive="active-route text-walnut-950"
+          class="flex items-center gap-4 px-4 h-[48px] text-walnut-700 rounded-2xl group relative z-10 transition-colors"
         >
           <div
-            class="p-2 text-gray-400 group-hover:text-[#8f5c3d] group-hover:scale-125 transition-all duration-300 group-[.active-route]:text-[#8f5c3d] group-[.active-route]:scale-125 group-[.active-route]:drop-shadow-md"
+            class="p-2 text-walnut-400 group-hover:text-saddle-600 group-hover:scale-125 transition-all duration-300 group-[.active-route]:text-saddle-600 group-[.active-route]:scale-125 group-[.active-route]:drop-shadow-md"
           >
             <svg
               class="w-5 h-5"
@@ -213,7 +206,7 @@
       <div
         class="flex items-center gap-4 p-3 bg-white/40 backdrop-blur-md rounded-2xl border border-white/40 shadow-sm cursor-pointer hover:bg-white/60 transition-colors"
       >
-        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-[#d1ab94] to-[#8f5c3d] p-[2px]">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-toffee-400 to-bark-500 p-[2px]">
           <div
             class="w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden"
           >
@@ -225,8 +218,8 @@
           </div>
         </div>
         <div>
-          <p class="text-sm font-bold text-gray-800">Admin User</p>
-          <p class="text-xs text-gray-500">View Profile</p>
+          <p class="text-sm font-bold text-walnut-900">Admin User</p>
+          <p class="text-xs text-walnut-500">View Profile</p>
         </div>
       </div>
     </div>
@@ -239,13 +232,13 @@
       class="h-20 border-b border-white/40 flex items-center justify-between px-8 bg-white/30 backdrop-blur-md sticky top-0 z-20"
     >
       <div>
-        <h1 class="text-2xl font-black text-gray-800 tracking-tight">Overview</h1>
-        <p class="text-sm font-medium text-gray-500">Welcome back to the factory</p>
+        <h1 class="text-2xl font-black text-walnut-950 tracking-tight">Overview</h1>
+        <p class="text-sm font-medium text-walnut-600">Welcome back to the factory</p>
       </div>
 
       <div class="flex items-center gap-3">
         <button
-          class="p-2 text-gray-600 hover:text-gray-900 hover:bg-white/50 rounded-xl transition-colors"
+          class="p-2 text-walnut-600 hover:text-walnut-950 hover:bg-white/50 rounded-xl transition-colors"
         >
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path

@@ -1,14 +1,17 @@
 <div
-  class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm animate-fade-in p-4 overflow-y-auto"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-walnut-950/40 backdrop-blur-sm animate-fade-in p-4 overflow-y-auto"
 >
   <div
-    class="bg-white/90 backdrop-blur-xl border border-white/60 rounded-3xl p-8 shadow-2xl w-full max-w-5xl animate-slide-in-up my-auto max-h-[90vh] overflow-y-auto custom-scrollbar"
+    class="bg-white/95 backdrop-blur-xl border border-cinnamon-100 rounded-3xl p-8 shadow-2xl w-full max-w-5xl animate-slide-in-up my-auto max-h-[90vh] overflow-y-auto custom-scrollbar"
   >
-    <div class="flex justify-between items-center mb-6 border-b border-gray-200/50 pb-4">
-      <h2 class="text-2xl font-black text-gray-800 tracking-tight">
+    <div class="flex justify-between items-center mb-6 border-b border-cinnamon-100 pb-4">
+      <h2 class="text-2xl font-black text-walnut-950 tracking-tight">
         {{ isEditMode ? 'Edit Order Details' : 'Create Purchase Order' }}
       </h2>
-      <button (click)="closeModal()" class="text-gray-400 hover:text-gray-800 transition-colors">
+      <button
+        (click)="closeModal()"
+        class="text-walnut-400 hover:text-walnut-900 transition-colors"
+      >
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
@@ -22,25 +25,25 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
       <div>
-        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+        <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
           >PO Number *</label
         >
         <input
           type="text"
           [(ngModel)]="orderData.poNumber"
           placeholder="e.g. PO-2026-001"
-          class="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-bold transition-all shadow-sm"
+          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold transition-all shadow-sm"
         />
       </div>
 
       <div>
-        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+        <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
           >Company / Client *</label
         >
         <div class="relative">
           <select
             [(ngModel)]="orderData.companyName"
-            class="w-full pl-4 pr-10 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-bold appearance-none cursor-pointer transition-all shadow-sm"
+            class="w-full pl-4 pr-10 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold appearance-none cursor-pointer transition-all shadow-sm"
           >
             <option value="" disabled selected>Select a Client...</option>
             <option *ngFor="let client of clientsList" [value]="client.name">
@@ -49,7 +52,7 @@
           </select>
           <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
             <svg
-              class="w-4 h-4 text-gray-400"
+              class="w-4 h-4 text-walnut-400"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -66,41 +69,41 @@
       </div>
 
       <div>
-        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+        <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
           >Order Date</label
         >
         <input
           type="date"
           [(ngModel)]="orderData.orderDate"
-          class="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-medium transition-all shadow-sm"
+          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-medium transition-all shadow-sm"
         />
       </div>
 
       <div>
-        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+        <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
           >Expected Delivery</label
         >
         <input
           type="date"
           [(ngModel)]="orderData.deliveryDate"
-          class="w-full px-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-medium transition-all shadow-sm"
+          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-medium transition-all shadow-sm"
         />
       </div>
 
       <div class="md:col-span-2">
-        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"
+        <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
           >Order Status</label
         >
         <div class="relative">
           <select
             [(ngModel)]="orderData.status"
-            class="w-full pl-4 pr-10 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-gray-800 font-bold appearance-none cursor-pointer transition-all shadow-sm"
+            class="w-full pl-4 pr-10 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold appearance-none cursor-pointer transition-all shadow-sm"
           >
             <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
           </select>
           <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
             <svg
-              class="w-4 h-4 text-gray-400"
+              class="w-4 h-4 text-walnut-400"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -117,12 +120,12 @@
       </div>
     </div>
 
-    <div class="bg-gray-50/50 rounded-2xl p-6 border border-gray-100 mb-6">
+    <div class="bg-cinnamon-50/30 rounded-2xl p-6 border border-cinnamon-100 mb-6">
       <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-black text-gray-800">Order Items</h3>
+        <h3 class="text-lg font-black text-walnut-950">Order Items</h3>
         <button
           (click)="addItem()"
-          class="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg text-xs font-bold transition-colors border border-blue-200"
+          class="flex items-center gap-1.5 px-3 py-1.5 bg-saddle-50 hover:bg-saddle-100 text-saddle-600 rounded-lg text-xs font-bold transition-colors border border-saddle-200"
         >
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -139,20 +142,20 @@
       <div class="space-y-3">
         <div
           *ngIf="orderData.items.length === 0"
-          class="text-center py-6 text-gray-400 text-sm font-medium italic"
+          class="text-center py-6 text-walnut-500 text-sm font-medium italic"
         >
           No items added yet. Click "Add Product" to start.
         </div>
 
         <div
           *ngFor="let item of orderData.items; let i = index"
-          class="flex flex-col lg:flex-row gap-3 items-start lg:items-center bg-white p-3 rounded-xl border border-gray-200 shadow-sm animate-fade-in"
+          class="flex flex-col lg:flex-row gap-3 items-start lg:items-center bg-white p-3 rounded-xl border border-cinnamon-200 shadow-sm animate-fade-in"
         >
           <div class="w-full lg:flex-1 relative">
             <select
               [(ngModel)]="item.selectedProductId"
               (ngModelChange)="onProductChange(item)"
-              class="w-full pl-3 pr-8 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:bg-white focus:ring-2 focus:ring-black text-sm text-gray-800 font-bold appearance-none cursor-pointer transition-all"
+              class="w-full pl-3 pr-8 py-2 bg-cinnamon-50/50 border border-cinnamon-200 rounded-lg focus:outline-none focus:bg-white focus:ring-2 focus:ring-saddle-400 text-sm text-walnut-900 font-bold appearance-none cursor-pointer transition-all"
             >
               <option value="" disabled selected>1. Select Category...</option>
               <option *ngFor="let prod of productsList" [value]="prod.id">
@@ -161,7 +164,7 @@
             </select>
             <div class="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
               <svg
-                class="w-4 h-4 text-gray-400"
+                class="w-4 h-4 text-walnut-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -181,7 +184,7 @@
               [(ngModel)]="item.selectedDesignId"
               (ngModelChange)="onDesignChange(item)"
               [disabled]="!item.selectedProductId"
-              class="w-full pl-3 pr-8 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:bg-white focus:ring-2 focus:ring-black text-sm text-gray-800 font-bold appearance-none cursor-pointer transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              class="w-full pl-3 pr-8 py-2 bg-cinnamon-50/50 border border-cinnamon-200 rounded-lg focus:outline-none focus:bg-white focus:ring-2 focus:ring-saddle-400 text-sm text-walnut-900 font-bold appearance-none cursor-pointer transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <option value="" disabled selected>2. Select Design...</option>
               <option *ngFor="let design of item.availableDesigns" [value]="design.id">
@@ -190,7 +193,7 @@
             </select>
             <div class="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
               <svg
-                class="w-4 h-4 text-gray-400"
+                class="w-4 h-4 text-walnut-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -211,7 +214,7 @@
               [(ngModel)]="item.articleNumber"
               readonly
               placeholder="Article #"
-              class="w-full px-3 py-2 bg-gray-100 border border-gray-200 rounded-lg text-sm text-gray-500 font-bold cursor-not-allowed transition-all"
+              class="w-full px-3 py-2 bg-cinnamon-100 border border-cinnamon-200 rounded-lg text-sm text-walnut-600 font-bold cursor-not-allowed transition-all"
               title="Auto-filled from catalog"
             />
           </div>
@@ -222,13 +225,13 @@
               [(ngModel)]="item.quantity"
               min="1"
               placeholder="Qty"
-              class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:bg-white focus:ring-2 focus:ring-black text-sm text-center text-gray-800 font-black transition-all"
+              class="w-full px-3 py-2 bg-cinnamon-50/50 border border-cinnamon-200 rounded-lg focus:outline-none focus:bg-white focus:ring-2 focus:ring-saddle-400 text-sm text-center text-walnut-900 font-black transition-all"
             />
           </div>
 
           <button
             (click)="removeItem(i)"
-            class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors self-end lg:self-auto shrink-0"
+            class="p-2 text-walnut-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors self-end lg:self-auto shrink-0"
             title="Remove Item"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -244,16 +247,16 @@
       </div>
     </div>
 
-    <div class="flex justify-end gap-3 pt-4 border-t border-gray-200/50">
+    <div class="flex justify-end gap-3 pt-4 border-t border-cinnamon-100">
       <button
         (click)="closeModal()"
-        class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-all"
+        class="px-6 py-3 bg-cinnamon-100 hover:bg-cinnamon-200 text-walnut-800 font-bold rounded-xl transition-all"
       >
         Cancel
       </button>
       <button
         (click)="saveOrder()"
-        class="px-6 py-3 bg-black hover:bg-gray-800 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-95"
+        class="px-6 py-3 bg-walnut-900 hover:bg-walnut-950 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-95"
       >
         {{ isEditMode ? 'Update Order' : 'Save Order' }}
       </button>
