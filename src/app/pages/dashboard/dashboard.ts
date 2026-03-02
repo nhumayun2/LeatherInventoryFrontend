@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,7 +27,7 @@ export class Dashboard implements OnInit {
     this.loading = true;
 
     // Fetching the packaged data from our new endpoint
-    this.http.get('https://localhost:7201/api/Dashboard/stats').subscribe({
+    this.http.get(`${environment.apiUrl}/Dashboard/stats`).subscribe({
       next: (data) => {
         console.log('Dashboard stats loaded:', data);
         this.stats = data;
