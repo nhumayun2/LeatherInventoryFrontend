@@ -10,7 +10,7 @@ import { filter } from 'rxjs/operators';
   styleUrl: './main-layout.css',
 })
 export class MainLayout implements OnInit {
-  // We use a simple index now (0 = Dashboard, 1 = Products, etc.)
+  // We use a simple index now (0 = Dashboard, 1 = Products, etc., 5 = Trash)
   activeIndex: number = 0;
 
   constructor(private router: Router) {
@@ -32,8 +32,10 @@ export class MainLayout implements OnInit {
       this.activeIndex = 3;
     } else if (url.includes('/clients')) {
       this.activeIndex = 4;
+    } else if (url.includes('/trash')) {
+      this.activeIndex = 5;
     } else {
-      this.activeIndex = 0; // Dashboard
+      this.activeIndex = 0;
     }
   }
 }

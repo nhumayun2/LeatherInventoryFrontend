@@ -6,6 +6,7 @@ import { Clients } from './pages/clients/clients';
 import { Employees } from './pages/employees/employees';
 import { Orders } from './pages/orders/orders';
 import { Dashboard } from './pages/dashboard/dashboard';
+import { TrashBin } from './pages/trash/trash';
 
 export const routes: Routes = [
   {
@@ -39,6 +40,10 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: Dashboard,
+  },
+  {
+    path: 'trash',
+    component: TrashBin,
   },
   {
     path: '**',
