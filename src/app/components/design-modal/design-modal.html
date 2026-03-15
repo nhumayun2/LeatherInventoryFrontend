@@ -226,41 +226,23 @@
     </div>
 
     <div class="bg-cinnamon-50/50 rounded-2xl p-6 border border-cinnamon-100 mb-8">
-      <h3 class="text-lg font-black text-walnut-950 mb-4">Current Inventory Tracking</h3>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div>
-          <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
-            >Qty Ready</label
-          >
-          <input
-            type="number"
-            [(ngModel)]="designData.quantityReady"
-            min="0"
-            class="w-full px-4 py-2 bg-white border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-center text-walnut-900 font-bold transition-all shadow-sm"
-          />
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
-            >Qty In Production</label
-          >
-          <input
-            type="number"
-            [(ngModel)]="designData.quantityInProduction"
-            min="0"
-            class="w-full px-4 py-2 bg-white border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-center text-walnut-900 font-bold transition-all shadow-sm"
-          />
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
-            >Qty Damaged/Rejected</label
-          >
-          <input
-            type="number"
-            [(ngModel)]="designData.quantityDamaged"
-            min="0"
-            class="w-full px-4 py-2 bg-white border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 text-center text-red-600 font-bold transition-all shadow-sm"
-          />
-        </div>
+      <div class="flex flex-col mb-4">
+        <h3 class="text-lg font-black text-walnut-950">Factory Stock</h3>
+        <p class="text-xs font-medium text-walnut-500 mt-1">
+          Number of orders and delivered quantities are tracked automatically.
+        </p>
+      </div>
+
+      <div class="w-full md:w-1/2 lg:w-1/3">
+        <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
+          >Current Physical Stock</label
+        >
+        <input
+          type="number"
+          [(ngModel)]="designData.stock"
+          min="0"
+          class="w-full px-4 py-3 bg-white border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold transition-all shadow-sm"
+        />
       </div>
     </div>
 

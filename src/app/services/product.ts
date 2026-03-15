@@ -42,6 +42,8 @@ export class Product {
     if (newDesignData.specifications)
       formData.append('specifications', newDesignData.specifications);
 
+    if (newDesignData.stock !== undefined) formData.append('stock', newDesignData.stock.toString());
+
     if (newDesignData.features && Array.isArray(newDesignData.features)) {
       newDesignData.features.forEach((feature: string) => {
         formData.append('features', feature);
@@ -71,7 +73,6 @@ export class Product {
     return this.http.put<any>(`${this.apiUrl}/${id}`, productData);
   }
 
-  // 🌟 RESTORED: The missing deleteProduct method!
   deleteProduct(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
@@ -96,12 +97,7 @@ export class Product {
     if (designData.unit) formData.append('unit', designData.unit);
     if (designData.specifications) formData.append('specifications', designData.specifications);
 
-    if (designData.quantityReady !== undefined)
-      formData.append('quantityReady', designData.quantityReady.toString());
-    if (designData.quantityInProduction !== undefined)
-      formData.append('quantityInProduction', designData.quantityInProduction.toString());
-    if (designData.quantityDamaged !== undefined)
-      formData.append('quantityDamaged', designData.quantityDamaged.toString());
+    if (designData.stock !== undefined) formData.append('stock', designData.stock.toString());
 
     if (designData.features && Array.isArray(designData.features)) {
       designData.features.forEach((feature: string) => {

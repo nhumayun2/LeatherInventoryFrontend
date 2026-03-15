@@ -2,7 +2,6 @@ import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-// Correctly importing your existing services
 import { Client } from '../../services/client';
 import { Product } from '../../services/product';
 
@@ -22,7 +21,6 @@ export class OrderModal implements OnInit {
   isEditMode = false;
   statuses = ['Pending', 'In Progress', 'Completed', 'Cancelled'];
 
-  // Lists to populate the initial dropdowns
   clientsList: any[] = [];
   productsList: any[] = [];
 
@@ -60,13 +58,13 @@ export class OrderModal implements OnInit {
         orderDate: formatDate(this.order.orderDate),
         deliveryDate: formatDate(this.order.deliveryDate),
         status: this.order.status || 'Pending',
-        // Map existing items to support the new UI arrays
+        // 🌟 UPDATED: Map existing items to support the new ProductDesignId
         items: this.order.items
           ? this.order.items.map((i: any) => ({
               ...i,
               selectedProductId: '',
-              selectedDesignId: '',
-              availableDesigns: [], // Empty array until they select a product category
+              selectedDesignId: i.productDesignId || '',
+              availableDesigns: [],
             }))
           : [],
       };
@@ -77,20 +75,17 @@ export class OrderModal implements OnInit {
   }
 
   loadDropdownData() {
-    // Fetch Clients for the Company Dropdown
     this.clientService.getClients().subscribe({
       next: (data) => (this.clientsList = data),
       error: (err) => console.error('Failed to load clients', err),
     });
 
-    // Fetch Base Products (Categories) for the first item dropdown
     this.productService.getProducts().subscribe({
       next: (data) => (this.productsList = data),
       error: (err) => console.error('Failed to load products', err),
     });
   }
 
-  // 🌟 THE MISSING FUNCTION IS BACK!
   closeModal() {
     this.close.emit();
   }
@@ -112,11 +107,9 @@ export class OrderModal implements OnInit {
     this.orderData.items.splice(index, 1);
   }
 
-  // STEP 1: They picked a Product Category. Now we fetch its specific designs!
   onProductChange(item: any) {
     if (!item.selectedProductId) return;
 
-    // Clear out the second dropdown until the new data arrives
     item.selectedDesignId = '';
     item.productName = '';
     item.articleNumber = '';
@@ -127,13 +120,12 @@ export class OrderModal implements OnInit {
     });
   }
 
-  // STEP 2: They picked the specific Design. Lock in the details!
   onDesignChange(item: any) {
     const selected = item.availableDesigns.find((d: any) => d.id == item.selectedDesignId);
 
     if (selected) {
       item.productName = selected.designName;
-      item.articleNumber = selected.sku || 'N/A';
+      item.articleNumber = selected.articleNumber || 'N/A';
     }
   }
 
@@ -161,6 +153,14 @@ export class OrderModal implements OnInit {
     if (!payload.deliveryDate) {
       payload.deliveryDate = null;
     }
+
+    payload.items = this.orderData.items.map((item: any) => ({
+      id: item.id || 0,
+      productName: item.productName,
+      articleNumber: item.articleNumber,
+      quantity: item.quantity,
+      productDesignId: item.selectedDesignId ? Number(item.selectedDesignId) : null,
+    }));
 
     this.save.emit(payload);
   }
