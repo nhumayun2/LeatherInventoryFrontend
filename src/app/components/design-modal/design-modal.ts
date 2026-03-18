@@ -24,7 +24,9 @@ export class DesignModal implements OnInit {
 
   isEditMode = false;
   clientsList: any[] = [];
-  statuses = ['In Production', 'Ready', 'Discontinued'];
+
+  // 🌟 UPDATED: New status options
+  statuses = ['New', 'Regular', 'Discontinued'];
 
   designData = {
     id: 0,
@@ -33,10 +35,8 @@ export class DesignModal implements OnInit {
     articleNumber: '',
     price: 0,
     clientId: null as number | null,
-    status: 'In Production',
-    unit: 'pcs',
+    status: 'New',
     specifications: '',
-    // 🌟 NEW: Only tracking Stock here now!
     stock: 0,
     features: [] as string[],
     tags: [] as string[],
@@ -68,10 +68,8 @@ export class DesignModal implements OnInit {
         articleNumber: this.design.articleNumber || '',
         price: this.design.price || 0,
         clientId: this.design.clientId || null,
-        status: this.design.status || 'In Production',
-        unit: this.design.unit || 'pcs',
+        status: this.design.status || 'New',
         specifications: this.design.specifications || '',
-        // 🌟 NEW: Load existing stock
         stock: this.design.stock || 0,
         features: this.design.features ? [...this.design.features] : [],
         tags: this.design.tags ? [...this.design.tags] : [],
