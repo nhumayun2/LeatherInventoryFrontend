@@ -25,14 +25,14 @@ export class DesignModal implements OnInit {
   isEditMode = false;
   clientsList: any[] = [];
 
-  // 🌟 UPDATED: New status options
   statuses = ['New', 'Regular', 'Discontinued'];
 
   designData = {
     id: 0,
     productId: 0,
     designName: '',
-    articleNumber: '',
+    karigarArticleNumber: '',
+    clientArticleNumbers: [] as string[],
     price: 0,
     clientId: null as number | null,
     status: 'New',
@@ -42,6 +42,7 @@ export class DesignModal implements OnInit {
     tags: [] as string[],
   };
 
+  newClientArticle = '';
   newFeature = '';
   newTag = '';
 
@@ -65,7 +66,10 @@ export class DesignModal implements OnInit {
         id: this.design.id,
         productId: this.design.productId,
         designName: this.design.designName || '',
-        articleNumber: this.design.articleNumber || '',
+        karigarArticleNumber: this.design.karigarArticleNumber || '',
+        clientArticleNumbers: this.design.clientArticleNumbers
+          ? [...this.design.clientArticleNumbers]
+          : [],
         price: this.design.price || 0,
         clientId: this.design.clientId || null,
         status: this.design.status || 'New',
@@ -88,6 +92,16 @@ export class DesignModal implements OnInit {
 
   closeModal() {
     this.close.emit();
+  }
+
+  addClientArticle() {
+    if (this.newClientArticle.trim()) {
+      this.designData.clientArticleNumbers.push(this.newClientArticle.trim());
+      this.newClientArticle = '';
+    }
+  }
+  removeClientArticle(index: number) {
+    this.designData.clientArticleNumbers.splice(index, 1);
   }
 
   addFeature() {
@@ -142,6 +156,11 @@ export class DesignModal implements OnInit {
       alert('Design Name is strictly required.');
       return;
     }
+
+    // 🌟 THE UX SAFEGUARD: Auto-add any text left in the inputs!
+    if (this.newClientArticle.trim()) this.addClientArticle();
+    if (this.newFeature.trim()) this.addFeature();
+    if (this.newTag.trim()) this.addTag();
 
     this.save.emit({
       designData: this.designData,

@@ -26,9 +26,55 @@
 
       <div>
         <h2 class="text-3xl font-black text-walnut-950 tracking-tight">{{ design.designName }}</h2>
-        <p class="text-walnut-600 font-medium tracking-wide">
-          Article #: {{ design.articleNumber || 'N/A' }}
-        </p>
+
+        <div class="flex flex-wrap items-center gap-3 mt-1.5">
+          <span
+            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-cinnamon-100 border border-cinnamon-200 text-xs font-bold text-walnut-800 shadow-sm"
+          >
+            Karigar #: {{ design.karigarArticleNumber || 'N/A' }}
+          </span>
+
+          <ng-container
+            *ngIf="design.clientArticleNumbers && design.clientArticleNumbers.length > 0"
+          >
+            <span class="text-cinnamon-300 font-bold">|</span>
+
+            <div
+              *ngIf="design.clientArticleNumbers.length === 1"
+              class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-saddle-50 border border-saddle-200 text-xs font-bold text-saddle-700 shadow-sm"
+            >
+              Client #: {{ design.clientArticleNumbers[0] }}
+            </div>
+
+            <div *ngIf="design.clientArticleNumbers.length > 1" class="relative group">
+              <select
+                class="pl-2.5 pr-8 py-1 rounded-md bg-saddle-50 hover:bg-saddle-100 border border-saddle-200 text-xs font-bold text-saddle-700 appearance-none focus:outline-none focus:ring-2 focus:ring-saddle-400 cursor-pointer shadow-sm transition-colors"
+              >
+                <option value="" disabled selected>
+                  Client #'s ({{ design.clientArticleNumbers.length }})
+                </option>
+                <option *ngFor="let num of design.clientArticleNumbers" [value]="num">
+                  {{ num }}
+                </option>
+              </select>
+              <div class="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
+                <svg
+                  class="w-3.5 h-3.5 text-saddle-500 group-hover:text-saddle-700 transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2.5"
+                    d="M19 9l-7 7-7-7"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+          </ng-container>
+        </div>
       </div>
     </div>
 
@@ -293,7 +339,7 @@
       <div>
         <h3 class="text-lg font-black text-walnut-950 tracking-tight">Costing Sheet Preview</h3>
         <p class="text-xs font-bold text-walnut-600 uppercase">
-          {{ design?.designName }} | Article #{{ design?.articleNumber }}
+          {{ design?.designName }} | Karigar #: {{ design?.karigarArticleNumber || 'N/A' }}
         </p>
       </div>
     </div>

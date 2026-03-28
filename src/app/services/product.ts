@@ -34,25 +34,31 @@ export class Product {
     if (newDesignData.productId) formData.append('productId', newDesignData.productId.toString());
     if (newDesignData.designName) formData.append('designName', newDesignData.designName);
     if (newDesignData.price !== undefined) formData.append('price', newDesignData.price.toString());
-    if (newDesignData.articleNumber) formData.append('articleNumber', newDesignData.articleNumber);
-
     if (newDesignData.clientId) formData.append('clientId', newDesignData.clientId.toString());
     if (newDesignData.status) formData.append('status', newDesignData.status);
-    if (newDesignData.unit) formData.append('unit', newDesignData.unit);
     if (newDesignData.specifications)
       formData.append('specifications', newDesignData.specifications);
-
     if (newDesignData.stock !== undefined) formData.append('stock', newDesignData.stock.toString());
+
+    // 🌟 FIX: Absolute PascalCase matching for ASP.NET
+    if (newDesignData.karigarArticleNumber)
+      formData.append('KarigarArticleNumber', newDesignData.karigarArticleNumber);
+
+    if (newDesignData.clientArticleNumbers && Array.isArray(newDesignData.clientArticleNumbers)) {
+      newDesignData.clientArticleNumbers.forEach((num: string) => {
+        formData.append('ClientArticleNumbers', num);
+      });
+    }
 
     if (newDesignData.features && Array.isArray(newDesignData.features)) {
       newDesignData.features.forEach((feature: string) => {
-        formData.append('features', feature);
+        formData.append('Features', feature);
       });
     }
 
     if (newDesignData.tags && Array.isArray(newDesignData.tags)) {
       newDesignData.tags.forEach((tag: string) => {
-        formData.append('tags', tag);
+        formData.append('Tags', tag);
       });
     }
 
@@ -90,24 +96,30 @@ export class Product {
     if (designData.productId) formData.append('productId', designData.productId.toString());
     if (designData.designName) formData.append('designName', designData.designName);
     if (designData.price !== undefined) formData.append('price', designData.price.toString());
-    if (designData.articleNumber) formData.append('articleNumber', designData.articleNumber);
-
     if (designData.clientId) formData.append('clientId', designData.clientId.toString());
     if (designData.status) formData.append('status', designData.status);
-    if (designData.unit) formData.append('unit', designData.unit);
     if (designData.specifications) formData.append('specifications', designData.specifications);
-
     if (designData.stock !== undefined) formData.append('stock', designData.stock.toString());
+
+    // 🌟 FIX: Absolute PascalCase matching for ASP.NET
+    if (designData.karigarArticleNumber)
+      formData.append('KarigarArticleNumber', designData.karigarArticleNumber);
+
+    if (designData.clientArticleNumbers && Array.isArray(designData.clientArticleNumbers)) {
+      designData.clientArticleNumbers.forEach((num: string) => {
+        formData.append('ClientArticleNumbers', num);
+      });
+    }
 
     if (designData.features && Array.isArray(designData.features)) {
       designData.features.forEach((feature: string) => {
-        formData.append('features', feature);
+        formData.append('Features', feature);
       });
     }
 
     if (designData.tags && Array.isArray(designData.tags)) {
       designData.tags.forEach((tag: string) => {
-        formData.append('tags', tag);
+        formData.append('Tags', tag);
       });
     }
 

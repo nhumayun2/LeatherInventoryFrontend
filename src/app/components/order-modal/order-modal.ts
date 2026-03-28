@@ -58,7 +58,6 @@ export class OrderModal implements OnInit {
         orderDate: formatDate(this.order.orderDate),
         deliveryDate: formatDate(this.order.deliveryDate),
         status: this.order.status || 'Pending',
-        // 🌟 UPDATED: Map existing items to support the new ProductDesignId
         items: this.order.items
           ? this.order.items.map((i: any) => ({
               ...i,
@@ -125,7 +124,8 @@ export class OrderModal implements OnInit {
 
     if (selected) {
       item.productName = selected.designName;
-      item.articleNumber = selected.articleNumber || 'N/A';
+      // 🌟 UPDATED: We now pull from the new karigarArticleNumber property!
+      item.articleNumber = selected.karigarArticleNumber || 'N/A';
     }
   }
 

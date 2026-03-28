@@ -38,11 +38,11 @@
 
       <div>
         <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
-          >Article Number</label
+          >Karigar Article #</label
         >
         <input
           type="text"
-          [(ngModel)]="designData.articleNumber"
+          [(ngModel)]="designData.karigarArticleNumber"
           placeholder="e.g. W-104"
           class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold transition-all shadow-sm"
         />
@@ -234,7 +234,46 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+      <div>
+        <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
+          >Client Article #'s</label
+        >
+        <div class="flex gap-2 mb-3">
+          <input
+            type="text"
+            [(ngModel)]="newClientArticle"
+            (keyup.enter)="addClientArticle()"
+            placeholder="e.g. Bata-B123"
+            class="flex-1 px-4 py-2 bg-white/50 border border-cinnamon-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-saddle-400 text-sm font-medium transition-all"
+          />
+          <button
+            (click)="addClientArticle()"
+            class="px-4 py-2 bg-walnut-800 text-white rounded-lg hover:bg-walnut-900 transition-colors font-bold text-sm"
+          >
+            Add
+          </button>
+        </div>
+        <div class="flex flex-col gap-2 max-h-40 overflow-y-auto custom-scrollbar">
+          <div
+            *ngFor="let article of designData.clientArticleNumbers; let i = index"
+            class="flex items-center justify-between bg-cinnamon-50 px-3 py-2 rounded-lg border border-cinnamon-100 text-sm font-bold text-saddle-700"
+          >
+            <span>{{ article }}</span>
+            <button (click)="removeClientArticle(i)" class="text-red-400 hover:text-red-600">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div>
         <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
           >Key Features</label
