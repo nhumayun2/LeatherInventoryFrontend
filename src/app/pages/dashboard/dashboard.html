@@ -1,11 +1,121 @@
-<div *ngIf="loading" class="flex flex-col items-center justify-center h-[60vh] animate-pulse">
+<div
+  *ngIf="loading"
+  class="flex-1 flex flex-col items-center justify-center min-h-[60vh] animate-fade-in-up"
+>
+  <div class="relative w-[130px] h-[130px]">
+    <svg class="absolute inset-0 w-full h-full" viewBox="0 0 130 130" fill="none">
+      <g class="loader-ring-cw">
+        <circle
+          cx="65"
+          cy="65"
+          r="60"
+          stroke="var(--color-saddle-300)"
+          stroke-width="0.5"
+          stroke-dasharray="3 9"
+        />
+        <circle cx="65" cy="4" r="3" fill="var(--color-saddle-500)" opacity="0.6" />
+        <circle cx="65" cy="126" r="3" fill="var(--color-saddle-500)" opacity="0.6" />
+        <circle cx="4" cy="65" r="3" fill="var(--color-saddle-500)" opacity="0.6" />
+        <circle cx="126" cy="65" r="3" fill="var(--color-saddle-500)" opacity="0.6" />
+      </g>
+      <g class="loader-ring-ccw">
+        <circle
+          cx="65"
+          cy="65"
+          r="48"
+          stroke="var(--color-saddle-400)"
+          stroke-width="0.5"
+          stroke-dasharray="2 6"
+        />
+        <rect
+          x="61"
+          y="13"
+          width="8"
+          height="8"
+          transform="rotate(45 65 17)"
+          fill="none"
+          stroke="var(--color-saddle-600)"
+          stroke-width="1"
+        />
+        <rect
+          x="61"
+          y="109"
+          width="8"
+          height="8"
+          transform="rotate(45 65 113)"
+          fill="none"
+          stroke="var(--color-saddle-600)"
+          stroke-width="1"
+        />
+        <rect
+          x="13"
+          y="61"
+          width="8"
+          height="8"
+          transform="rotate(45 17 65)"
+          fill="none"
+          stroke="var(--color-saddle-600)"
+          stroke-width="1"
+        />
+        <rect
+          x="109"
+          y="61"
+          width="8"
+          height="8"
+          transform="rotate(45 113 65)"
+          fill="none"
+          stroke="var(--color-saddle-600)"
+          stroke-width="1"
+        />
+      </g>
+      <circle class="loader-arc" cx="65" cy="65" r="65" />
+    </svg>
+
+    <div class="absolute inset-0 flex items-center justify-center">
+      <div
+        class="loader-plate w-[62px] h-[62px] border border-saddle-500 bg-cinnamon-50 dark:bg-cinnamon-950 flex flex-col items-center justify-center"
+      >
+        <span
+          class="font-serif font-light text-[28px] leading-none text-cinnamon-800 dark:text-saddle-300 tracking-[.02em]"
+        >
+          K
+        </span>
+        <span
+          class="font-serif text-[6.5px] tracking-[.32em] uppercase text-saddle-600 dark:text-saddle-400 mt-0.5"
+        >
+          Karigar
+        </span>
+      </div>
+    </div>
+  </div>
+
   <div
-    class="w-14 h-14 border-4 border-saddle-200 border-t-saddle-600 rounded-full animate-spin mb-4 shadow-lg"
+    class="w-px h-7 bg-saddle-400 opacity-40 my-5 animate-fade-in-up"
+    style="animation-delay: 0.3s"
   ></div>
-  <p class="text-xl font-black text-walnut-900 tracking-tight">Gathering Factory Metrics...</p>
-  <p class="text-sm font-medium text-walnut-600 mt-1">
-    Calculating real-time inventory and order data
-  </p>
+  <span
+    class="font-serif text-[10.5px] tracking-[.3em] uppercase text-cinnamon-700 dark:text-saddle-300 animate-fade-in-up"
+    style="animation-delay: 0.4s"
+  >
+    Loading inventory
+  </span>
+
+  <div
+    class="relative w-[148px] h-px bg-saddle-500/20 mt-3.5 overflow-hidden animate-fade-in-up"
+    style="animation-delay: 0.5s"
+  >
+    <div class="loader-progress-fill absolute inset-0 bg-saddle-500"></div>
+    <div
+      class="loader-shimmer absolute top-0 bottom-0 w-[40%] bg-gradient-to-r from-transparent via-white/60 to-transparent"
+    ></div>
+  </div>
+
+  <!-- Dots -->
+  <div class="flex gap-1.5 mt-3.5 animate-fade-in-up" style="animation-delay: 0.6s">
+    <span class="loader-dot-1 block w-[3px] h-[3px] rounded-full bg-saddle-500"></span>
+    <span class="loader-dot-2 block w-[3px] h-[3px] rounded-full bg-saddle-500"></span>
+    <span class="loader-dot-3 block w-[3px] h-[3px] rounded-full bg-saddle-500"></span>
+  </div>
 </div>
 
 <div

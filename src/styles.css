@@ -147,3 +147,112 @@
   animation: float 12s ease-in-out infinite;
   animation-delay: -5s;
 }
+
+/* === KARIGAR LOADING ANIMATION === */
+
+@keyframes kRingCW {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes kRingCCW {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+@keyframes kArcFill {
+  from {
+    stroke-dashoffset: 408;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes kBarSweep {
+  0% {
+    transform: scaleX(0);
+  }
+  70% {
+    transform: scaleX(0.72);
+  }
+  100% {
+    transform: scaleX(0.88);
+  }
+}
+@keyframes kShimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 200%;
+  }
+}
+@keyframes kDot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes kInnerPulse {
+  0%,
+  100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.loader-ring-cw {
+  transform-origin: 65px 65px;
+  animation: kRingCW 18s linear infinite;
+}
+.loader-ring-ccw {
+  transform-origin: 65px 65px;
+  animation: kRingCCW 10s linear infinite;
+}
+.loader-arc {
+  fill: none;
+  stroke: theme(--color-saddle-500);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-dasharray: 408;
+  stroke-dashoffset: 408;
+  transform-origin: 65px 65px;
+  transform: rotate(-90deg);
+  animation: kArcFill 2.2s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards;
+}
+.loader-plate {
+  animation:
+    fadeInUp 0.6s ease 0.7s both,
+    kInnerPulse 3s ease 2.5s infinite;
+}
+.loader-progress-fill {
+  transform-origin: left;
+  transform: scaleX(0);
+  animation: kBarSweep 4s cubic-bezier(0.4, 0, 0.6, 1) 1.6s forwards;
+}
+.loader-shimmer {
+  animation: kShimmer 1.8s ease-in-out 2s infinite;
+}
+.loader-dot-1 {
+  animation: kDot 1.5s ease-in-out infinite;
+}
+.loader-dot-2 {
+  animation: kDot 1.5s ease-in-out 0.22s infinite;
+}
+.loader-dot-3 {
+  animation: kDot 1.5s ease-in-out 0.44s infinite;
+}
