@@ -258,8 +258,27 @@
       class="h-20 border-b border-white/40 flex items-center justify-between px-8 bg-white/30 backdrop-blur-md sticky top-0 z-20"
     >
       <div>
-        <h1 class="text-2xl font-black text-walnut-950 tracking-tight">Overview</h1>
-        <p class="text-sm font-medium text-walnut-600">Welcome back to the factory</p>
+        <h1 class="text-2xl font-black text-walnut-950 tracking-tight">
+          <ng-container [ngSwitch]="activeIndex">
+            <span *ngSwitchCase="0">Dashboard Overview</span>
+            <span *ngSwitchCase="1">Products Database</span>
+            <span *ngSwitchCase="2">Factory Orders</span>
+            <span *ngSwitchCase="3">Staff Management</span>
+            <span *ngSwitchCase="4">Client Roster</span>
+            <span *ngSwitchCase="5">Recycle Bin</span>
+            <span *ngSwitchDefault>Karigar Factory</span>
+          </ng-container>
+        </h1>
+
+        <div class="flex items-center gap-2 mt-0.5">
+          <p class="text-sm font-bold text-walnut-600">{{ greeting }}</p>
+          <span class="text-walnut-300">|</span>
+          <p
+            class="text-[13px] font-bold text-saddle-600 tracking-wide font-mono bg-saddle-50 px-2 py-0.5 rounded border border-saddle-100"
+          >
+            {{ currentTime | date: 'MMM d, y, h:mm:ss a' }}
+          </p>
+        </div>
       </div>
 
       <div class="flex items-center gap-3">

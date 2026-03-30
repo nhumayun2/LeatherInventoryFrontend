@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms'; // 🌟 Added for search inputs
 import { Product } from '../../services/product';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DesignModal } from '../../components/design-modal/design-modal';
@@ -7,17 +8,29 @@ import { DesignModal } from '../../components/design-modal/design-modal';
 @Component({
   selector: 'app-product-designs',
   standalone: true,
-  imports: [CommonModule, DesignModal],
+  imports: [CommonModule, FormsModule, DesignModal],
   templateUrl: './product-designs.html',
   styleUrl: './product-designs.css',
 })
 export class ProductDesigns implements OnInit {
   productId: number = 0;
+
+  // 🌟 NEW: Keep original data safe for filtering
+  originalDesigns: any[] = [];
   designs: any[] = [];
 
-  isModalOpen = false;
+  // 🌟 NEW: Filter and Search States
+  searchQuery: string = '';
+  selectedClient: string = '';
+  selectedTag: string = '';
+  selectedFeature: string = '';
 
-  // Track which design is currently being edited
+  // 🌟 NEW: Dynamic Dropdown Options (Auto-populated!)
+  uniqueClients: any[] = [];
+  uniqueTags: string[] = [];
+  uniqueFeatures: string[] = [];
+
+  isModalOpen = false;
   selectedDesignToEdit: any = null;
 
   constructor(
@@ -43,13 +56,76 @@ export class ProductDesigns implements OnInit {
     this.productService.getProductDesigns(this.productId).subscribe({
       next: (data) => {
         console.log('Designs for product', this.productId, ':', data);
+        this.originalDesigns = data; // 🌟 Store the original data
         this.designs = data;
+        this.extractFilters(data); // 🌟 Extract tags/features for dropdowns
       },
       error: (err: any) => {
         console.error('Failed to load designs for product', this.productId, err);
+        this.originalDesigns = [];
         this.designs = [];
       },
     });
+  }
+
+  // 🌟 NEW: Smart function to find all unique tags, features, and clients
+  extractFilters(data: any[]) {
+    const clientsMap = new Map();
+    const tagsSet = new Set<string>();
+    const featuresSet = new Set<string>();
+
+    data.forEach((d) => {
+      if (d.client) clientsMap.set(d.client.id, d.client);
+      if (d.tags) d.tags.forEach((t: string) => tagsSet.add(t));
+      if (d.features) d.features.forEach((f: string) => featuresSet.add(f));
+    });
+
+    this.uniqueClients = Array.from(clientsMap.values());
+    this.uniqueTags = Array.from(tagsSet).sort();
+    this.uniqueFeatures = Array.from(featuresSet).sort();
+  }
+
+  // 🌟 NEW: The live filtering engine
+  applyFilters() {
+    let temp = [...this.originalDesigns];
+
+    // Search by Name, Karigar Article, or Client Article
+    if (this.searchQuery.trim()) {
+      const q = this.searchQuery.toLowerCase();
+      temp = temp.filter(
+        (d) =>
+          (d.designName && d.designName.toLowerCase().includes(q)) ||
+          (d.karigarArticleNumber && d.karigarArticleNumber.toLowerCase().includes(q)) ||
+          (d.clientArticleNumbers &&
+            d.clientArticleNumbers.some((c: string) => c.toLowerCase().includes(q))),
+      );
+    }
+
+    // Filter by Brand/Client
+    if (this.selectedClient) {
+      temp = temp.filter((d) => d.client && d.client.id === Number(this.selectedClient));
+    }
+
+    // Filter by Tag
+    if (this.selectedTag) {
+      temp = temp.filter((d) => d.tags && d.tags.includes(this.selectedTag));
+    }
+
+    // Filter by Feature
+    if (this.selectedFeature) {
+      temp = temp.filter((d) => d.features && d.features.includes(this.selectedFeature));
+    }
+
+    this.designs = temp;
+  }
+
+  // 🌟 NEW: Clear all filters
+  clearFilters() {
+    this.searchQuery = '';
+    this.selectedClient = '';
+    this.selectedTag = '';
+    this.selectedFeature = '';
+    this.applyFilters();
   }
 
   goToDesignDetails(designId: number) {
@@ -60,10 +136,8 @@ export class ProductDesigns implements OnInit {
     this.router.navigate(['/products']);
   }
 
-  // Accepts an optional design to edit
   openModal(design?: any, event?: Event) {
-    if (event) event.stopPropagation(); // Prevents navigating to the details page
-
+    if (event) event.stopPropagation();
     this.selectedDesignToEdit = design || null;
     this.isModalOpen = true;
   }
@@ -73,7 +147,6 @@ export class ProductDesigns implements OnInit {
     this.selectedDesignToEdit = null;
   }
 
-  // 🌟 FIXED: Now correctly unwraps the new 3-part payload!
   handleSaveDesign(payload: {
     designData: any;
     imageFiles: File[];
@@ -86,8 +159,6 @@ export class ProductDesigns implements OnInit {
     designData.productId = this.productId;
 
     if (designData.id && designData.id > 0) {
-      // --- UPDATE EXISTING ---
-      // 🌟 Passes the costingFile to the service
       this.productService
         .updateDesign(designData.id, designData, imageFiles, costingFile)
         .subscribe({
@@ -100,12 +171,12 @@ export class ProductDesigns implements OnInit {
           },
         });
     } else {
-      // --- CREATE NEW ---
-      // 🌟 Passes the costingFile to the service
       this.productService.createDesign(designData, imageFiles, costingFile).subscribe({
         next: (savedDesignFromDb) => {
           console.log('Saved new design from backend:', savedDesignFromDb);
-          this.designs.unshift(savedDesignFromDb);
+
+          // Refresh the whole list to ensure filters update properly
+          this.loadDesignsForThisProduct();
           this.closeModal();
         },
         error: (err: any) => {
@@ -115,14 +186,15 @@ export class ProductDesigns implements OnInit {
     }
   }
 
-  // Delete a product design
   deleteDesign(id: number, event: Event) {
     if (event) event.stopPropagation();
 
     if (confirm('Are you sure you want to delete this design? This action cannot be undone.')) {
       this.productService.deleteDesign(id).subscribe({
         next: () => {
-          this.designs = this.designs.filter((d) => d.id !== id);
+          // Remove from original designs and re-apply filters
+          this.originalDesigns = this.originalDesigns.filter((d) => d.id !== id);
+          this.applyFilters();
         },
         error: (err: any) => console.error('Failed to delete design', err),
       });
