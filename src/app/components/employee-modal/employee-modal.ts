@@ -13,51 +13,57 @@ export class EmployeeModal implements OnInit {
   @Input() employee: any = null;
 
   @Output() close = new EventEmitter<void>();
-  @Output() save = new EventEmitter<any>();
+
+  // 🌟 CHANGED: Now emits FormData so we can upload the Employee Image!
+  @Output() save = new EventEmitter<FormData>();
 
   isEditMode = false;
-
-  // The Loading State Flag
   isSaving = false;
 
-  // Used for the skills input field
-  currentSkill: string = '';
-
+  // 🌟 UPDATED: Your new data model
   employeeData = {
     id: 0,
     name: '',
+    address: '',
     role: '',
-    email: '',
+    section: '',
     phone: '',
-    skills: [] as string[],
+    salary: 0,
+    overtimeSalary: 0,
     joinedDate: '',
-    monthlySalary: 0,
   };
+
+  // 🌟 NEW: Image Upload State
+  selectedFile: File | null = null;
+  imagePreview: string | ArrayBuffer | null = null;
 
   ngOnInit() {
     if (this.employee) {
       this.isEditMode = true;
 
-      // HTML5 date inputs strictly require the YYYY-MM-DD format
       let formattedDate = '';
-      if (this.employee.joinedDate) {
-        const d = new Date(this.employee.joinedDate);
+      if (this.employee.joinedDate || this.employee.date) {
+        const d = new Date(this.employee.joinedDate || this.employee.date);
         formattedDate = d.toISOString().split('T')[0];
       }
 
       this.employeeData = {
         id: this.employee.id,
-        name: this.employee.name,
+        name: this.employee.name || '',
+        address: this.employee.address || '',
         role: this.employee.role || '',
-        email: this.employee.email || '',
+        section: this.employee.section || '',
         phone: this.employee.phone || '',
-        // Use spread operator to safely copy the array
-        skills: this.employee.skills ? [...this.employee.skills] : [],
+        salary: this.employee.salary || 0,
+        overtimeSalary: this.employee.overtimeSalary || 0,
         joinedDate: formattedDate,
-        monthlySalary: this.employee.monthlySalary || 0,
       };
+
+      // 🌟 NEW: Load existing image if they have one
+      if (this.employee.imageUrl) {
+        this.imagePreview = this.employee.imageUrl;
+      }
     } else {
-      // Default joined date to today
       this.employeeData.joinedDate = new Date().toISOString().split('T')[0];
     }
   }
@@ -66,38 +72,55 @@ export class EmployeeModal implements OnInit {
     this.close.emit();
   }
 
-  // --- Skills Array Logic ---
-  addSkill(event?: any) {
-    if (event) event.preventDefault();
-    const val = this.currentSkill.trim();
-    if (val && !this.employeeData.skills.includes(val)) {
-      this.employeeData.skills.push(val);
+  // --- Image Upload Logic ---
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result;
+      };
+      reader.readAsDataURL(file);
     }
-    this.currentSkill = '';
   }
 
-  removeSkill(index: number) {
-    this.employeeData.skills.splice(index, 1);
+  removeImage() {
+    this.selectedFile = null;
+    this.imagePreview = null;
   }
 
   saveEmployee() {
-    // Both Name and Role are required by  C# model
     if (!this.employeeData.name.trim() || !this.employeeData.role.trim()) {
       alert('Name and Role are required fields!');
       return;
     }
 
-    // Prevent multiple clicks by stopping the function if already saving
     if (this.isSaving) return;
-
-    // Turn on the loading state!
     this.isSaving = true;
 
-    // Auto-add any text left in the skills input
-    if (this.currentSkill.trim()) {
-      this.addSkill();
+    // 🌟 NEW: Package everything up as FormData for the backend
+    const formData = new FormData();
+
+    if (this.isEditMode) {
+      formData.append('Id', this.employeeData.id.toString());
     }
 
-    this.save.emit(this.employeeData);
+    // Append all text/number fields
+    formData.append('Name', this.employeeData.name);
+    formData.append('Address', this.employeeData.address);
+    formData.append('Role', this.employeeData.role);
+    formData.append('Section', this.employeeData.section);
+    formData.append('Phone', this.employeeData.phone);
+    formData.append('Salary', this.employeeData.salary.toString());
+    formData.append('OvertimeSalary', this.employeeData.overtimeSalary.toString());
+    formData.append('JoinedDate', this.employeeData.joinedDate);
+
+    // Append the image file if selected
+    if (this.selectedFile) {
+      formData.append('Image', this.selectedFile);
+    }
+
+    this.save.emit(formData);
   }
 }

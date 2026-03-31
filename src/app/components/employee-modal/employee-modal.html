@@ -2,11 +2,11 @@
   class="fixed inset-0 z-50 flex items-center justify-center bg-walnut-950/40 backdrop-blur-sm animate-fade-in p-4 overflow-y-auto"
 >
   <div
-    class="bg-white/95 backdrop-blur-xl border border-cinnamon-100 rounded-3xl p-8 shadow-2xl w-full max-w-2xl animate-slide-in-up my-auto"
+    class="bg-white/95 backdrop-blur-xl border border-cinnamon-100 rounded-3xl p-8 shadow-2xl w-full max-w-2xl animate-slide-in-up my-auto relative"
   >
     <div class="flex justify-between items-center mb-6 border-b border-cinnamon-100 pb-4">
       <h2 class="text-2xl font-black text-walnut-950 tracking-tight">
-        {{ isEditMode ? 'Edit Employee' : 'Add New Employee' }}
+        {{ isEditMode ? 'Edit Employee Profile' : 'Add New Employee' }}
       </h2>
       <button
         (click)="closeModal()"
@@ -24,7 +24,89 @@
       </button>
     </div>
 
-    <div class="space-y-6">
+    <div class="flex flex-col items-center justify-center mb-8">
+      <input
+        type="file"
+        #fileInput
+        (change)="onFileSelected($event)"
+        accept="image/png, image/jpeg, image/webp"
+        [disabled]="isSaving"
+        class="hidden"
+      />
+
+      <div class="relative">
+        <div
+          (click)="!isSaving && fileInput.click()"
+          class="w-28 h-28 rounded-full border-2 border-dashed border-cinnamon-300 flex flex-col items-center justify-center bg-cinnamon-50/50 transition-all shadow-sm overflow-hidden"
+          [ngClass]="
+            isSaving
+              ? 'opacity-60 cursor-not-allowed'
+              : 'hover:border-saddle-400 hover:bg-cinnamon-50/80 cursor-pointer group'
+          "
+        >
+          <ng-container *ngIf="!imagePreview">
+            <div
+              class="bg-white p-2 rounded-full shadow-sm mb-1 group-hover:bg-cinnamon-50 transition-colors"
+            >
+              <svg
+                class="w-6 h-6 text-walnut-400 group-hover:text-saddle-500 transition-colors"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                ></path>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                ></path>
+              </svg>
+            </div>
+            <span class="text-[10px] font-bold text-walnut-500 group-hover:text-saddle-600"
+              >Upload Photo</span
+            >
+          </ng-container>
+
+          <ng-container *ngIf="imagePreview">
+            <img
+              [src]="imagePreview"
+              alt="Employee Photo"
+              class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+            />
+            <div
+              *ngIf="!isSaving"
+              class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              <span class="text-white text-[10px] font-bold tracking-wider">CHANGE</span>
+            </div>
+          </ng-container>
+        </div>
+
+        <button
+          *ngIf="imagePreview && !isSaving"
+          (click)="removeImage()"
+          class="absolute 0 top-0 right-0 p-1.5 bg-red-500 text-white hover:bg-red-600 rounded-full shadow-md border-2 border-white transition-all z-10"
+          title="Remove Photo"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2.5"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="space-y-5">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>
           <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
@@ -40,7 +122,7 @@
         </div>
         <div>
           <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
-            >Role *</label
+            >Job Role *</label
           >
           <input
             type="text"
@@ -55,13 +137,13 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>
           <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
-            >Email Address</label
+            >Factory Section</label
           >
           <input
-            type="email"
-            [(ngModel)]="employeeData.email"
+            type="text"
+            [(ngModel)]="employeeData.section"
             [disabled]="isSaving"
-            placeholder="e.g. jane@example.com"
+            placeholder="e.g. Stitching, Cutting..."
             class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-medium transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
           />
         </div>
@@ -73,81 +155,63 @@
             type="tel"
             [(ngModel)]="employeeData.phone"
             [disabled]="isSaving"
-            placeholder="e.g. +1 234 567 8900"
+            placeholder="e.g. +880 1234 567890"
             class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-medium transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
-          />
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div>
-          <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
-            >Monthly Salary ($)</label
-          >
-          <input
-            type="number"
-            [(ngModel)]="employeeData.monthlySalary"
-            [disabled]="isSaving"
-            placeholder="0"
-            class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-black transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
-          />
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
-            >Joined Date</label
-          >
-          <input
-            type="date"
-            [(ngModel)]="employeeData.joinedDate"
-            [disabled]="isSaving"
-            class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-medium transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
-            [ngClass]="!isSaving ? 'cursor-pointer' : ''"
           />
         </div>
       </div>
 
       <div>
         <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
-          >Skills</label
+          >Home Address</label
         >
-        <div
-          class="p-2 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl transition-all flex flex-wrap gap-2 items-center min-h-[54px] shadow-sm"
-          [ngClass]="
-            isSaving
-              ? 'opacity-70 bg-cinnamon-100/50'
-              : 'focus-within:ring-2 focus-within:ring-saddle-400'
-          "
-        >
-          <span
-            *ngFor="let skill of employeeData.skills; let i = index"
-            class="bg-saddle-50 text-saddle-700 px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 shadow-sm animate-fade-in border border-saddle-200"
-          >
-            {{ skill }}
-            <button
-              *ngIf="!isSaving"
-              (click)="removeSkill(i)"
-              class="hover:text-saddle-900 transition-colors"
-            >
-              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="3"
-                  d="M6 18L18 6M6 6l12 12"
-                ></path>
-              </svg>
-            </button>
-          </span>
+        <textarea
+          [(ngModel)]="employeeData.address"
+          [disabled]="isSaving"
+          placeholder="Employee's full residential address..."
+          rows="2"
+          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-medium transition-all shadow-sm resize-none disabled:opacity-60 disabled:cursor-not-allowed"
+        ></textarea>
+      </div>
 
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="bg-cinnamon-50/30 p-4 rounded-2xl border border-cinnamon-100">
+          <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
+            >Base Salary (৳)</label
+          >
           <input
-            type="text"
-            [(ngModel)]="currentSkill"
+            type="number"
+            [(ngModel)]="employeeData.salary"
             [disabled]="isSaving"
-            (keydown.enter)="addSkill($event)"
-            placeholder="Type a skill & press Enter..."
-            class="flex-1 bg-transparent border-none focus:outline-none text-walnut-900 font-medium min-w-[180px] text-sm px-2 placeholder-walnut-400 disabled:cursor-not-allowed"
+            placeholder="0"
+            class="w-full px-4 py-3 bg-white border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-black transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
           />
         </div>
+        <div class="bg-cinnamon-50/30 p-4 rounded-2xl border border-cinnamon-100">
+          <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
+            >Overtime Rate (৳/hr)</label
+          >
+          <input
+            type="number"
+            [(ngModel)]="employeeData.overtimeSalary"
+            [disabled]="isSaving"
+            placeholder="0"
+            class="w-full px-4 py-3 bg-white border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-black transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
+          >Joined Date</label
+        >
+        <input
+          type="date"
+          [(ngModel)]="employeeData.joinedDate"
+          [disabled]="isSaving"
+          class="w-full md:w-1/2 px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-medium transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
+          [ngClass]="!isSaving ? 'cursor-pointer' : ''"
+        />
       </div>
     </div>
 
@@ -162,7 +226,7 @@
       <button
         (click)="saveEmployee()"
         [disabled]="isSaving"
-        class="flex items-center justify-center gap-2 px-6 py-3 bg-walnut-900 text-white font-bold rounded-xl shadow-lg transition-all min-w-[180px]"
+        class="flex items-center justify-center gap-2 px-6 py-3 bg-walnut-900 text-white font-bold rounded-xl shadow-lg transition-all min-w-[190px]"
         [ngClass]="
           isSaving
             ? 'opacity-80 cursor-not-allowed'
@@ -189,7 +253,7 @@
             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
           ></path>
         </svg>
-        <span>{{ isSaving ? 'Saving...' : isEditMode ? 'Update Employee' : 'Save Employee' }}</span>
+        <span>{{ isSaving ? 'Saving...' : isEditMode ? 'Update Profile' : 'Save Employee' }}</span>
       </button>
     </div>
   </div>

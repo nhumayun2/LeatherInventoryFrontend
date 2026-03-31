@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Employee } from '../../services/employee';
@@ -12,6 +12,8 @@ import { EmployeeModal } from '../../components/employee-modal/employee-modal';
   styleUrl: './employees.css',
 })
 export class Employees implements OnInit {
+  @ViewChild(EmployeeModal) employeeModalComponent!: EmployeeModal;
+
   // Master list from the database
   employees: any[] = [];
 
@@ -20,12 +22,16 @@ export class Employees implements OnInit {
 
   // UI State for Filters
   searchQuery: string = '';
-  selectedRole: string = 'All'; // Changed from Department to Role
-  roles: string[] = ['All']; // Auto-populates based on database data
+  selectedRole: string = 'All';
+  roles: string[] = ['All'];
 
-  // UI State for Modal
+  // UI State for Edit/Create Modal
   isModalOpen = false;
   selectedEmployeeToEdit: any = null;
+
+  // 🌟 NEW: UI State for the Read-Only View Profile Modal
+  isViewModalOpen = false;
+  selectedEmployeeToView: any = null;
 
   constructor(private employeeService: Employee) {}
 
@@ -36,20 +42,14 @@ export class Employees implements OnInit {
   loadEmployees() {
     this.employeeService.getEmployees().subscribe({
       next: (data) => {
-        console.log('Loaded Employees:', data);
         this.employees = data;
-
-        // Extract unique roles for the dropdown
         this.extractRoles();
-
-        // Apply initial filters to populate the table
         this.applyFilters();
       },
       error: (err) => console.error('Failed to load employees', err),
     });
   }
 
-  // Helper to extract "AH" from "Ahmed Hassan" for the cool UI avatars
   getInitials(name: string): string {
     if (!name) return '??';
     const parts = name.trim().split(' ');
@@ -59,16 +59,13 @@ export class Employees implements OnInit {
     return name.substring(0, 2).toUpperCase();
   }
 
-  // Automatically finds all unique roles in your company to build the dropdown
   extractRoles() {
     const allRoles = this.employees.map((e) => e.role).filter((r) => r);
     this.roles = ['All', ...new Set(allRoles)];
   }
 
-  // Runs every time the user types in the search bar or changes the dropdown
   applyFilters() {
     this.filteredEmployees = this.employees.filter((emp) => {
-      // 1. Check Search Query (matches name, role, email, or phone)
       const searchStr = this.searchQuery.toLowerCase();
       const matchesSearch =
         (emp.name && emp.name.toLowerCase().includes(searchStr)) ||
@@ -76,12 +73,13 @@ export class Employees implements OnInit {
         (emp.email && emp.email.toLowerCase().includes(searchStr)) ||
         (emp.phone && emp.phone.toLowerCase().includes(searchStr));
 
-      // 2. Check Role Dropdown
       const matchesRole = this.selectedRole === 'All' || emp.role === this.selectedRole;
 
       return matchesSearch && matchesRole;
     });
   }
+
+  // --- Modal Controls ---
 
   openModal(employee?: any) {
     this.selectedEmployeeToEdit = employee || null;
@@ -93,24 +91,52 @@ export class Employees implements OnInit {
     this.selectedEmployeeToEdit = null;
   }
 
-  handleSave(employeeData: any) {
-    if (employeeData.id && employeeData.id > 0) {
-      // Update existing
-      this.employeeService.updateEmployee(employeeData.id, employeeData).subscribe({
+  // 🌟 NEW: View Profile Modal Controls
+  openViewModal(employee: any) {
+    this.selectedEmployeeToView = employee;
+    this.isViewModalOpen = true;
+  }
+
+  closeViewModal() {
+    this.isViewModalOpen = false;
+    this.selectedEmployeeToView = null;
+  }
+
+  // --- Data Operations ---
+
+  handleSave(formData: FormData) {
+    const idString = formData.get('Id');
+    const id = idString ? parseInt(idString as string, 10) : 0;
+
+    if (id && id > 0) {
+      // UPDATE EXISTING
+      this.employeeService.updateEmployee(id, formData).subscribe({
         next: () => {
-          this.loadEmployees(); // Reload fresh data
+          this.loadEmployees();
           this.closeModal();
         },
-        error: (err) => console.error('Failed to update employee', err),
+        error: (err) => {
+          console.error('Failed to update employee', err);
+          alert('Failed to update employee profile.');
+          if (this.employeeModalComponent) {
+            this.employeeModalComponent.isSaving = false;
+          }
+        },
       });
     } else {
-      // Create new
-      this.employeeService.createEmployee(employeeData).subscribe({
+      // CREATE NEW
+      this.employeeService.createEmployee(formData).subscribe({
         next: () => {
-          this.loadEmployees(); // Reload fresh data
+          this.loadEmployees();
           this.closeModal();
         },
-        error: (err) => console.error('Failed to create employee', err),
+        error: (err) => {
+          console.error('Failed to create employee', err);
+          alert('Failed to create new employee.');
+          if (this.employeeModalComponent) {
+            this.employeeModalComponent.isSaving = false;
+          }
+        },
       });
     }
   }
@@ -119,7 +145,7 @@ export class Employees implements OnInit {
     if (confirm('Are you sure you want to remove this employee from the directory?')) {
       this.employeeService.deleteEmployee(id).subscribe({
         next: () => {
-          this.loadEmployees(); // Reload fresh data
+          this.loadEmployees();
         },
         error: (err) => console.error('Failed to delete employee', err),
       });
