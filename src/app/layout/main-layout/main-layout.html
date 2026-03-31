@@ -400,16 +400,19 @@
 
         <div class="flex gap-4 pl-2">
           <div
-            class="w-12 h-12 rounded-full bg-cinnamon-50 border border-cinnamon-100 flex items-center justify-center shrink-0 overflow-hidden shadow-sm"
+            class="w-12 h-12 rounded-full bg-white border border-cinnamon-200 flex items-center justify-center shrink-0 overflow-hidden shadow-sm"
           >
             <img
               [src]="
-                'https://api.dicebear.com/9.x/initials/svg?seed=' +
-                alert.companyName +
-                '&backgroundColor=f8f3f0&textColor=452a1b'
+                alert.clientLogoUrl
+                  ? alert.clientLogoUrl
+                  : 'https://api.dicebear.com/9.x/initials/svg?seed=' +
+                    alert.companyName +
+                    '&backgroundColor=f8f3f0&textColor=452a1b'
               "
-              alt="Brand Logo"
-              class="w-full h-full object-cover"
+              [alt]="alert.companyName"
+              class="w-full h-full"
+              [ngClass]="alert.clientLogoUrl ? 'object-contain p-1.5' : 'object-cover'"
             />
           </div>
 

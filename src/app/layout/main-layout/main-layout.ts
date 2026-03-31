@@ -17,7 +17,6 @@ export class MainLayout implements OnInit, OnDestroy {
   greeting: string = 'Welcome';
   private timerId: any;
 
-  // Notification State Variables
   isNotificationSidebarOpen: boolean = false;
   notifications: any[] = [];
   unreadCount: number = 0;
@@ -39,7 +38,6 @@ export class MainLayout implements OnInit, OnDestroy {
       this.updateClock();
     }, 1000);
 
-    // 🌟 NEW: Load notifications on startup
     this.loadNotifications();
   }
 
@@ -49,44 +47,59 @@ export class MainLayout implements OnInit, OnDestroy {
     }
   }
 
-  // Fetch orders and calculate delivery timelines
   loadNotifications() {
-    this.http.get<any[]>(`${environment.apiUrl}/Orders`).subscribe({
-      next: (orders) => {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+    // Fetch the clients so have a dictionary of all logos
+    this.http.get<any[]>(`${environment.apiUrl}/Clients`).subscribe({
+      next: (clients) => {
+        // Create a quick lookup map for logos
+        const clientLogos = new Map<string, string>();
+        clients.forEach((c) => {
+          if (c.logoUrl) {
+            clientLogos.set(c.name, c.logoUrl);
+          }
+        });
 
-        this.notifications = orders
-          .filter((order) => {
-            // Ignore orders that are already done, cancelled, or have no delivery date
-            if (
-              !order.deliveryDate ||
-              order.status === 'Completed' ||
-              order.status === 'Cancelled'
-            ) {
-              return false;
-            }
+        //Fetch the orders
+        this.http.get<any[]>(`${environment.apiUrl}/Orders`).subscribe({
+          next: (orders) => {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
 
-            const delDate = new Date(order.deliveryDate);
-            const diffTime = delDate.getTime() - today.getTime();
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            this.notifications = orders
+              .filter((order) => {
+                if (
+                  !order.deliveryDate ||
+                  order.status === 'Completed' ||
+                  order.status === 'Cancelled'
+                ) {
+                  return false;
+                }
 
-            // Keep if delivery is within 10 days OR if it is overdue (negative days)
-            if (diffDays <= 10) {
-              order.daysLeft = diffDays;
-              return true;
-            }
-            return false;
-          })
-          .sort((a, b) => a.daysLeft - b.daysLeft); // Sort so most urgent (or overdue) is at the top
+                const delDate = new Date(order.deliveryDate);
+                const diffTime = delDate.getTime() - today.getTime();
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        this.unreadCount = this.notifications.length;
+                if (diffDays <= 10) {
+                  order.daysLeft = diffDays;
+
+                  // Attach the logo URL to the order if we found a match!
+                  order.clientLogoUrl = clientLogos.get(order.companyName);
+
+                  return true;
+                }
+                return false;
+              })
+              .sort((a, b) => a.daysLeft - b.daysLeft);
+
+            this.unreadCount = this.notifications.length;
+          },
+          error: (err) => console.error('Failed to load notifications for header', err),
+        });
       },
-      error: (err) => console.error('Failed to load notifications for header', err),
+      error: (err) => console.error('Failed to load clients for logos', err),
     });
   }
 
-  // Toggle the sidebar
   toggleNotifications() {
     this.isNotificationSidebarOpen = !this.isNotificationSidebarOpen;
   }
