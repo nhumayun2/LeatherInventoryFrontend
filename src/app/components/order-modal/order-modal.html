@@ -10,7 +10,8 @@
       </h2>
       <button
         (click)="closeModal()"
-        class="text-walnut-400 hover:text-walnut-900 transition-colors"
+        [disabled]="isSaving"
+        class="text-walnut-400 hover:text-walnut-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -31,8 +32,9 @@
         <input
           type="text"
           [(ngModel)]="orderData.poNumber"
+          [disabled]="isSaving"
           placeholder="e.g. PO-2026-001"
-          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold transition-all shadow-sm"
+          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
         />
       </div>
 
@@ -43,7 +45,9 @@
         <div class="relative">
           <select
             [(ngModel)]="orderData.companyName"
-            class="w-full pl-4 pr-10 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold appearance-none cursor-pointer transition-all shadow-sm"
+            [disabled]="isSaving"
+            class="w-full pl-4 pr-10 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold appearance-none transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
+            [ngClass]="!isSaving ? 'cursor-pointer' : ''"
           >
             <option value="" disabled selected>Select a Client...</option>
             <option *ngFor="let client of clientsList" [value]="client.name">
@@ -75,7 +79,8 @@
         <input
           type="date"
           [(ngModel)]="orderData.orderDate"
-          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-medium transition-all shadow-sm"
+          [disabled]="isSaving"
+          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-medium transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
         />
       </div>
 
@@ -86,7 +91,8 @@
         <input
           type="date"
           [(ngModel)]="orderData.deliveryDate"
-          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-medium transition-all shadow-sm"
+          [disabled]="isSaving"
+          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-medium transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
         />
       </div>
 
@@ -97,7 +103,9 @@
         <div class="relative">
           <select
             [(ngModel)]="orderData.status"
-            class="w-full pl-4 pr-10 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold appearance-none cursor-pointer transition-all shadow-sm"
+            [disabled]="isSaving"
+            class="w-full pl-4 pr-10 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold appearance-none transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
+            [ngClass]="!isSaving ? 'cursor-pointer' : ''"
           >
             <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
           </select>
@@ -120,12 +128,16 @@
       </div>
     </div>
 
-    <div class="bg-cinnamon-50/30 rounded-2xl p-6 border border-cinnamon-100 mb-6">
+    <div
+      class="bg-cinnamon-50/30 rounded-2xl p-6 border border-cinnamon-100 mb-6"
+      [ngClass]="isSaving ? 'opacity-80' : ''"
+    >
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-lg font-black text-walnut-950">Order Items</h3>
         <button
           (click)="addItem()"
-          class="flex items-center gap-1.5 px-3 py-1.5 bg-saddle-50 hover:bg-saddle-100 text-saddle-600 rounded-lg text-xs font-bold transition-colors border border-saddle-200"
+          [disabled]="isSaving"
+          class="flex items-center gap-1.5 px-3 py-1.5 bg-saddle-50 hover:bg-saddle-100 text-saddle-600 rounded-lg text-xs font-bold transition-colors border border-saddle-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -155,7 +167,9 @@
             <select
               [(ngModel)]="item.selectedProductId"
               (ngModelChange)="onProductChange(item)"
-              class="w-full pl-3 pr-8 py-2 bg-cinnamon-50/50 border border-cinnamon-200 rounded-lg focus:outline-none focus:bg-white focus:ring-2 focus:ring-saddle-400 text-sm text-walnut-900 font-bold appearance-none cursor-pointer transition-all"
+              [disabled]="isSaving"
+              class="w-full pl-3 pr-8 py-2 bg-cinnamon-50/50 border border-cinnamon-200 rounded-lg focus:outline-none focus:bg-white focus:ring-2 focus:ring-saddle-400 text-sm text-walnut-900 font-bold appearance-none transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+              [ngClass]="!isSaving ? 'cursor-pointer' : ''"
             >
               <option value="" disabled selected>1. Select Category...</option>
               <option *ngFor="let prod of productsList" [value]="prod.id">
@@ -183,8 +197,9 @@
             <select
               [(ngModel)]="item.selectedDesignId"
               (ngModelChange)="onDesignChange(item)"
-              [disabled]="!item.selectedProductId"
-              class="w-full pl-3 pr-8 py-2 bg-cinnamon-50/50 border border-cinnamon-200 rounded-lg focus:outline-none focus:bg-white focus:ring-2 focus:ring-saddle-400 text-sm text-walnut-900 font-bold appearance-none cursor-pointer transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              [disabled]="isSaving || !item.selectedProductId"
+              class="w-full pl-3 pr-8 py-2 bg-cinnamon-50/50 border border-cinnamon-200 rounded-lg focus:outline-none focus:bg-white focus:ring-2 focus:ring-saddle-400 text-sm text-walnut-900 font-bold appearance-none transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+              [ngClass]="!isSaving && item.selectedProductId ? 'cursor-pointer' : ''"
             >
               <option value="" disabled selected>2. Select Design...</option>
               <option *ngFor="let design of item.availableDesigns" [value]="design.id">
@@ -223,15 +238,20 @@
             <input
               type="number"
               [(ngModel)]="item.quantity"
+              [disabled]="isSaving"
               min="1"
               placeholder="Qty"
-              class="w-full px-3 py-2 bg-cinnamon-50/50 border border-cinnamon-200 rounded-lg focus:outline-none focus:bg-white focus:ring-2 focus:ring-saddle-400 text-sm text-center text-walnut-900 font-black transition-all"
+              class="w-full px-3 py-2 bg-cinnamon-50/50 border border-cinnamon-200 rounded-lg focus:outline-none focus:bg-white focus:ring-2 focus:ring-saddle-400 text-sm text-center text-walnut-900 font-black transition-all disabled:opacity-60 disabled:cursor-not-allowed"
             />
           </div>
 
           <button
             (click)="removeItem(i)"
-            class="p-2 text-walnut-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors self-end lg:self-auto shrink-0"
+            [disabled]="isSaving"
+            class="p-2 rounded-lg transition-colors self-end lg:self-auto shrink-0 disabled:opacity-30 disabled:cursor-not-allowed"
+            [ngClass]="
+              !isSaving ? 'text-walnut-400 hover:text-red-500 hover:bg-red-50' : 'text-walnut-400'
+            "
             title="Remove Item"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -250,15 +270,42 @@
     <div class="flex justify-end gap-3 pt-4 border-t border-cinnamon-100">
       <button
         (click)="closeModal()"
-        class="px-6 py-3 bg-cinnamon-100 hover:bg-cinnamon-200 text-walnut-800 font-bold rounded-xl transition-all"
+        [disabled]="isSaving"
+        class="px-6 py-3 bg-cinnamon-100 hover:bg-cinnamon-200 text-walnut-800 font-bold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Cancel
       </button>
       <button
         (click)="saveOrder()"
-        class="px-6 py-3 bg-walnut-900 hover:bg-walnut-950 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-95"
+        [disabled]="isSaving"
+        class="flex items-center justify-center gap-2 px-6 py-3 bg-walnut-900 text-white font-bold rounded-xl shadow-lg transition-all min-w-[160px]"
+        [ngClass]="
+          isSaving
+            ? 'opacity-80 cursor-not-allowed'
+            : 'hover:bg-walnut-950 hover:shadow-xl active:scale-95'
+        "
       >
-        {{ isEditMode ? 'Update Order' : 'Save Order' }}
+        <svg
+          *ngIf="isSaving"
+          class="w-5 h-5 animate-spin text-white"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        <span>{{ isSaving ? 'Saving...' : isEditMode ? 'Update Order' : 'Save Order' }}</span>
       </button>
     </div>
   </div>

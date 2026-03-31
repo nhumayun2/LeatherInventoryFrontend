@@ -10,7 +10,8 @@
       </h2>
       <button
         (click)="closeModal()"
-        class="text-walnut-400 hover:text-walnut-900 transition-colors"
+        [disabled]="isSaving"
+        class="text-walnut-400 hover:text-walnut-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -31,8 +32,9 @@
         <input
           type="text"
           [(ngModel)]="designData.designName"
+          [disabled]="isSaving"
           placeholder="e.g. Classic Bi-Fold Wallet"
-          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold transition-all shadow-sm"
+          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
         />
       </div>
 
@@ -43,8 +45,9 @@
         <input
           type="text"
           [(ngModel)]="designData.karigarArticleNumber"
+          [disabled]="isSaving"
           placeholder="e.g. W-104"
-          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold transition-all shadow-sm"
+          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
         />
       </div>
 
@@ -59,10 +62,11 @@
           <input
             type="number"
             [(ngModel)]="designData.price"
+            [disabled]="isSaving"
             placeholder="0.00"
             min="0"
             step="0.01"
-            class="w-full pl-8 pr-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold transition-all shadow-sm"
+            class="w-full pl-8 pr-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
           />
         </div>
       </div>
@@ -74,7 +78,9 @@
         <div class="relative">
           <select
             [(ngModel)]="designData.clientId"
-            class="w-full pl-4 pr-10 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold appearance-none cursor-pointer transition-all shadow-sm"
+            [disabled]="isSaving"
+            class="w-full pl-4 pr-10 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold appearance-none transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
+            [ngClass]="!isSaving ? 'cursor-pointer' : ''"
           >
             <option [ngValue]="null">No specific client (General Catalog)</option>
             <option *ngFor="let client of clientsList" [ngValue]="client.id">
@@ -106,7 +112,9 @@
         <div class="relative">
           <select
             [(ngModel)]="designData.status"
-            class="w-full pl-4 pr-10 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold appearance-none cursor-pointer transition-all shadow-sm"
+            [disabled]="isSaving"
+            class="w-full pl-4 pr-10 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold appearance-none transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
+            [ngClass]="!isSaving ? 'cursor-pointer' : ''"
           >
             <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
           </select>
@@ -139,16 +147,23 @@
         #costingFileInput
         (change)="onCostingFileSelected($event)"
         accept=".xlsx, .xls"
+        [disabled]="isSaving"
         class="hidden"
       />
 
       <div
         *ngIf="!costingFileName"
-        (click)="costingFileInput.click()"
-        class="w-full border-2 border-dashed border-cinnamon-300 hover:border-saddle-500 rounded-2xl p-6 flex flex-col items-center justify-center cursor-pointer bg-cinnamon-50/50 hover:bg-cinnamon-100 transition-all group shadow-sm"
+        (click)="!isSaving && costingFileInput.click()"
+        class="w-full border-2 border-dashed border-cinnamon-300 rounded-2xl p-6 flex flex-col items-center justify-center bg-cinnamon-50/50 transition-all shadow-sm"
+        [ngClass]="
+          isSaving
+            ? 'opacity-60 cursor-not-allowed'
+            : 'hover:border-saddle-500 hover:bg-cinnamon-100 cursor-pointer group'
+        "
       >
         <div
-          class="w-12 h-12 mb-3 rounded-full bg-white group-hover:bg-cinnamon-50 flex items-center justify-center shadow-sm transition-colors text-saddle-500"
+          class="w-12 h-12 mb-3 rounded-full bg-white flex items-center justify-center shadow-sm transition-colors text-saddle-500"
+          [ngClass]="!isSaving ? 'group-hover:bg-cinnamon-50' : ''"
         >
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -166,6 +181,7 @@
       <div
         *ngIf="costingFileName"
         class="w-full flex items-center justify-between bg-cinnamon-50 border border-cinnamon-200 rounded-xl p-4 shadow-sm"
+        [ngClass]="isSaving ? 'opacity-70' : ''"
       >
         <div class="flex items-center gap-3">
           <div class="p-2 bg-white text-saddle-600 rounded-lg shadow-sm border border-cinnamon-100">
@@ -185,6 +201,7 @@
         </div>
 
         <button
+          *ngIf="!isSaving"
           (click)="removeCostingFile()"
           class="p-2 text-red-500 hover:text-white hover:bg-red-500 rounded-lg transition-all"
           title="Remove File"
@@ -207,9 +224,10 @@
       >
       <textarea
         [(ngModel)]="designData.specifications"
+        [disabled]="isSaving"
         rows="3"
         placeholder="e.g. 100% Genuine Cow Leather, Nylon Thread..."
-        class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-medium transition-all shadow-sm resize-none"
+        class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-medium transition-all shadow-sm resize-none disabled:opacity-60 disabled:cursor-not-allowed"
       ></textarea>
     </div>
 
@@ -228,8 +246,9 @@
         <input
           type="number"
           [(ngModel)]="designData.stock"
+          [disabled]="isSaving"
           min="0"
-          class="w-full px-4 py-3 bg-white border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold transition-all shadow-sm"
+          class="w-full px-4 py-3 bg-white border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
         />
       </div>
     </div>
@@ -243,13 +262,15 @@
           <input
             type="text"
             [(ngModel)]="newClientArticle"
-            (keyup.enter)="addClientArticle()"
+            [disabled]="isSaving"
+            (keyup.enter)="!isSaving && addClientArticle()"
             placeholder="e.g. Bata-B123"
-            class="flex-1 px-4 py-2 bg-white/50 border border-cinnamon-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-saddle-400 text-sm font-medium transition-all"
+            class="flex-1 px-4 py-2 bg-white/50 border border-cinnamon-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-saddle-400 text-sm font-medium transition-all disabled:opacity-60 disabled:cursor-not-allowed"
           />
           <button
             (click)="addClientArticle()"
-            class="px-4 py-2 bg-walnut-800 text-white rounded-lg hover:bg-walnut-900 transition-colors font-bold text-sm"
+            [disabled]="isSaving"
+            class="px-4 py-2 bg-walnut-800 text-white rounded-lg transition-colors font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-walnut-900"
           >
             Add
           </button>
@@ -259,8 +280,12 @@
             *ngFor="let article of designData.clientArticleNumbers; let i = index"
             class="flex items-center justify-between bg-cinnamon-50 px-3 py-2 rounded-lg border border-cinnamon-100 text-sm font-bold text-saddle-700"
           >
-            <span>{{ article }}</span>
-            <button (click)="removeClientArticle(i)" class="text-red-400 hover:text-red-600">
+            <span [ngClass]="isSaving ? 'opacity-60' : ''">{{ article }}</span>
+            <button
+              *ngIf="!isSaving"
+              (click)="removeClientArticle(i)"
+              class="text-red-400 hover:text-red-600"
+            >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
@@ -282,13 +307,15 @@
           <input
             type="text"
             [(ngModel)]="newFeature"
-            (keyup.enter)="addFeature()"
+            [disabled]="isSaving"
+            (keyup.enter)="!isSaving && addFeature()"
             placeholder="e.g. RFID Blocking"
-            class="flex-1 px-4 py-2 bg-white/50 border border-cinnamon-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-saddle-400 text-sm font-medium transition-all"
+            class="flex-1 px-4 py-2 bg-white/50 border border-cinnamon-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-saddle-400 text-sm font-medium transition-all disabled:opacity-60 disabled:cursor-not-allowed"
           />
           <button
             (click)="addFeature()"
-            class="px-4 py-2 bg-walnut-800 text-white rounded-lg hover:bg-walnut-900 transition-colors font-bold text-sm"
+            [disabled]="isSaving"
+            class="px-4 py-2 bg-walnut-800 text-white rounded-lg transition-colors font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-walnut-900"
           >
             Add
           </button>
@@ -298,8 +325,12 @@
             *ngFor="let feat of designData.features; let i = index"
             class="flex items-center justify-between bg-cinnamon-50 px-3 py-2 rounded-lg border border-cinnamon-100 text-sm font-medium text-walnut-800"
           >
-            <span>{{ feat }}</span>
-            <button (click)="removeFeature(i)" class="text-red-400 hover:text-red-600">
+            <span [ngClass]="isSaving ? 'opacity-60' : ''">{{ feat }}</span>
+            <button
+              *ngIf="!isSaving"
+              (click)="removeFeature(i)"
+              class="text-red-400 hover:text-red-600"
+            >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
@@ -321,13 +352,15 @@
           <input
             type="text"
             [(ngModel)]="newTag"
-            (keyup.enter)="addTag()"
+            [disabled]="isSaving"
+            (keyup.enter)="!isSaving && addTag()"
             placeholder="e.g. summer-collection"
-            class="flex-1 px-4 py-2 bg-white/50 border border-cinnamon-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-saddle-400 text-sm font-medium transition-all"
+            class="flex-1 px-4 py-2 bg-white/50 border border-cinnamon-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-saddle-400 text-sm font-medium transition-all disabled:opacity-60 disabled:cursor-not-allowed"
           />
           <button
             (click)="addTag()"
-            class="px-4 py-2 bg-walnut-800 text-white rounded-lg hover:bg-walnut-900 transition-colors font-bold text-sm"
+            [disabled]="isSaving"
+            class="px-4 py-2 bg-walnut-800 text-white rounded-lg transition-colors font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-walnut-900"
           >
             Add
           </button>
@@ -335,10 +368,15 @@
         <div class="flex flex-wrap gap-2 max-h-40 overflow-y-auto custom-scrollbar">
           <div
             *ngFor="let tag of designData.tags; let i = index"
-            class="inline-flex items-center gap-1.5 bg-white hover:bg-cinnamon-50 text-walnut-700 px-2.5 py-1 rounded-full text-xs font-bold border border-cinnamon-200 shadow-sm transition-colors"
+            class="inline-flex items-center gap-1.5 bg-white text-walnut-700 px-2.5 py-1 rounded-full text-xs font-bold border border-cinnamon-200 shadow-sm transition-colors"
+            [ngClass]="isSaving ? 'opacity-60' : 'hover:bg-cinnamon-50'"
           >
             <span>#{{ tag }}</span>
-            <button (click)="removeTag(i)" class="text-walnut-400 hover:text-red-500">
+            <button
+              *ngIf="!isSaving"
+              (click)="removeTag(i)"
+              class="text-walnut-400 hover:text-red-500 cursor-pointer"
+            >
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
@@ -364,19 +402,27 @@
         (change)="onImagesSelected($event)"
         accept="image/png, image/jpeg, image/webp"
         multiple
+        [disabled]="isSaving"
         class="hidden"
       />
 
       <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
         <div
-          (click)="imageInput.click()"
-          class="aspect-square border-2 border-dashed border-cinnamon-300 hover:border-saddle-500 rounded-2xl flex flex-col items-center justify-center cursor-pointer bg-cinnamon-50/50 hover:bg-cinnamon-100 transition-all group shadow-sm"
+          (click)="!isSaving && imageInput.click()"
+          class="aspect-square border-2 border-dashed border-cinnamon-300 rounded-2xl flex flex-col items-center justify-center bg-cinnamon-50/50 transition-all shadow-sm"
+          [ngClass]="
+            isSaving
+              ? 'opacity-60 cursor-not-allowed'
+              : 'hover:border-saddle-500 hover:bg-cinnamon-100 cursor-pointer group'
+          "
         >
           <div
-            class="w-10 h-10 mb-2 rounded-full bg-white group-hover:bg-cinnamon-50 flex items-center justify-center shadow-sm border border-cinnamon-100 transition-colors"
+            class="w-10 h-10 mb-2 rounded-full bg-white flex items-center justify-center shadow-sm border border-cinnamon-100 transition-colors"
+            [ngClass]="!isSaving ? 'group-hover:bg-cinnamon-50' : ''"
           >
             <svg
-              class="w-5 h-5 text-walnut-400 group-hover:text-saddle-500 transition-colors"
+              class="w-5 h-5 text-walnut-400 transition-colors"
+              [ngClass]="!isSaving ? 'group-hover:text-saddle-500' : ''"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -390,7 +436,8 @@
             </svg>
           </div>
           <p
-            class="text-xs font-bold text-walnut-600 group-hover:text-saddle-600 transition-colors"
+            class="text-xs font-bold text-walnut-600 transition-colors"
+            [ngClass]="!isSaving ? 'group-hover:text-saddle-600' : ''"
           >
             Add Images
           </p>
@@ -399,14 +446,18 @@
         <div
           *ngFor="let file of selectedImages; let i = index"
           class="relative aspect-square border border-blue-200 rounded-2xl overflow-hidden bg-blue-50 shadow-sm flex items-center justify-center group p-2"
+          [ngClass]="isSaving ? 'opacity-70' : ''"
         >
           <p class="text-[10px] text-blue-800 font-bold text-center break-words line-clamp-3">
             {{ file.name }}
           </p>
           <div
+            *ngIf="!isSaving"
             class="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity"
           ></div>
+
           <button
+            *ngIf="!isSaving"
             (click)="removeSelectedImage(i)"
             class="absolute top-2 right-2 p-1.5 bg-white/90 text-red-500 hover:text-white hover:bg-red-500 rounded-lg shadow-sm border border-gray-100 transition-all z-10"
             title="Remove"
@@ -425,13 +476,16 @@
         <div
           *ngFor="let url of existingImageUrls"
           class="relative aspect-square border border-cinnamon-200 rounded-2xl overflow-hidden bg-white shadow-sm flex items-center justify-center group"
+          [ngClass]="isSaving ? 'opacity-70' : ''"
         >
           <img
             [src]="url"
             alt="Existing Image"
-            class="max-h-full max-w-full object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+            class="max-h-full max-w-full object-cover w-full h-full transition-transform duration-300"
+            [ngClass]="!isSaving ? 'group-hover:scale-105' : ''"
           />
           <div
+            *ngIf="!isSaving"
             class="absolute inset-0 bg-gradient-to-t from-walnut-950/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3"
           >
             <p class="text-white text-[10px] font-bold tracking-wider uppercase drop-shadow-md">
@@ -445,15 +499,42 @@
     <div class="flex justify-end gap-3 pt-6 border-t border-cinnamon-100">
       <button
         (click)="closeModal()"
-        class="px-6 py-3 bg-cinnamon-100 hover:bg-cinnamon-200 text-walnut-800 font-bold rounded-xl transition-all"
+        [disabled]="isSaving"
+        class="px-6 py-3 bg-cinnamon-100 hover:bg-cinnamon-200 text-walnut-800 font-bold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Cancel
       </button>
       <button
         (click)="saveDesign()"
-        class="px-6 py-3 bg-walnut-900 hover:bg-walnut-950 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-95"
+        [disabled]="isSaving"
+        class="flex items-center justify-center gap-2 px-6 py-3 bg-walnut-900 text-white font-bold rounded-xl shadow-lg transition-all min-w-[150px]"
+        [ngClass]="
+          isSaving
+            ? 'opacity-80 cursor-not-allowed'
+            : 'hover:bg-walnut-950 hover:shadow-xl active:scale-95'
+        "
       >
-        {{ isEditMode ? 'Update Design' : 'Save Design' }}
+        <svg
+          *ngIf="isSaving"
+          class="w-5 h-5 animate-spin text-white"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        <span>{{ isSaving ? 'Saving...' : isEditMode ? 'Update Design' : 'Save Design' }}</span>
       </button>
     </div>
   </div>

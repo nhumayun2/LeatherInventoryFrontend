@@ -10,7 +10,8 @@
       </h2>
       <button
         (click)="closeModal()"
-        class="text-walnut-400 hover:text-walnut-900 transition-colors"
+        [disabled]="isSaving"
+        class="text-walnut-400 hover:text-walnut-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -32,8 +33,9 @@
         <input
           type="text"
           [(ngModel)]="categoryData.Name"
+          [disabled]="isSaving"
           placeholder="e.g. Leather Satchel"
-          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 focus:border-transparent text-walnut-900 font-bold transition-all shadow-sm"
+          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 focus:border-transparent text-walnut-900 font-bold transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
         />
       </div>
 
@@ -43,9 +45,10 @@
         >
         <textarea
           [(ngModel)]="categoryData.Description"
+          [disabled]="isSaving"
           placeholder="Brief description of this category..."
           rows="3"
-          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 focus:border-transparent text-walnut-900 font-medium transition-all shadow-sm resize-none"
+          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 focus:border-transparent text-walnut-900 font-medium transition-all shadow-sm resize-none disabled:opacity-60 disabled:cursor-not-allowed"
         ></textarea>
       </div>
     </div>
@@ -53,15 +56,42 @@
     <div class="flex justify-end gap-3 mt-8 pt-6 border-t border-cinnamon-100">
       <button
         (click)="closeModal()"
-        class="px-6 py-3 bg-cinnamon-100 hover:bg-cinnamon-200 text-walnut-800 font-bold rounded-xl transition-all"
+        [disabled]="isSaving"
+        class="px-6 py-3 bg-cinnamon-100 hover:bg-cinnamon-200 text-walnut-800 font-bold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Cancel
       </button>
       <button
         (click)="saveCategory()"
-        class="px-6 py-3 bg-walnut-900 hover:bg-walnut-950 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-95"
+        [disabled]="isSaving"
+        class="flex items-center justify-center gap-2 px-6 py-3 bg-walnut-900 text-white font-bold rounded-xl shadow-lg transition-all min-w-[170px]"
+        [ngClass]="
+          isSaving
+            ? 'opacity-80 cursor-not-allowed'
+            : 'hover:bg-walnut-950 hover:shadow-xl active:scale-95'
+        "
       >
-        {{ isEditMode ? 'Update Category' : 'Save Category' }}
+        <svg
+          *ngIf="isSaving"
+          class="w-5 h-5 animate-spin text-white"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        <span>{{ isSaving ? 'Saving...' : isEditMode ? 'Update Category' : 'Save Category' }}</span>
       </button>
     </div>
   </div>

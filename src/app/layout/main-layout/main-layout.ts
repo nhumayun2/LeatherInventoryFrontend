@@ -1,7 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RouterLink, RouterModule, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { filter } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-main-layout',
@@ -10,15 +12,20 @@ import { filter } from 'rxjs/operators';
   styleUrl: './main-layout.css',
 })
 export class MainLayout implements OnInit, OnDestroy {
-  // We use a simple index now (0 = Dashboard, 1 = Products, etc., 5 = Trash)
   activeIndex: number = 0;
-
-  // 🌟 NEW: Live Clock and Greeting variables
   currentTime: Date = new Date();
   greeting: string = 'Welcome';
   private timerId: any;
 
-  constructor(private router: Router) {
+  // Notification State Variables
+  isNotificationSidebarOpen: boolean = false;
+  notifications: any[] = [];
+  unreadCount: number = 0;
+
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+  ) {
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
       this.movePill(this.router.url);
     });
@@ -27,21 +34,63 @@ export class MainLayout implements OnInit, OnDestroy {
   ngOnInit() {
     this.movePill(this.router.url);
 
-    // 🌟 NEW: Initialize the clock immediately, then set it to tick every second
     this.updateClock();
     this.timerId = setInterval(() => {
       this.updateClock();
     }, 1000);
+
+    // 🌟 NEW: Load notifications on startup
+    this.loadNotifications();
   }
 
   ngOnDestroy() {
-    // 🌟 NEW: Always clean up intervals to prevent memory leaks!
     if (this.timerId) {
       clearInterval(this.timerId);
     }
   }
 
-  // 🌟 NEW: Logic to determine the time and the appropriate greeting
+  // Fetch orders and calculate delivery timelines
+  loadNotifications() {
+    this.http.get<any[]>(`${environment.apiUrl}/Orders`).subscribe({
+      next: (orders) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        this.notifications = orders
+          .filter((order) => {
+            // Ignore orders that are already done, cancelled, or have no delivery date
+            if (
+              !order.deliveryDate ||
+              order.status === 'Completed' ||
+              order.status === 'Cancelled'
+            ) {
+              return false;
+            }
+
+            const delDate = new Date(order.deliveryDate);
+            const diffTime = delDate.getTime() - today.getTime();
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            // Keep if delivery is within 10 days OR if it is overdue (negative days)
+            if (diffDays <= 10) {
+              order.daysLeft = diffDays;
+              return true;
+            }
+            return false;
+          })
+          .sort((a, b) => a.daysLeft - b.daysLeft); // Sort so most urgent (or overdue) is at the top
+
+        this.unreadCount = this.notifications.length;
+      },
+      error: (err) => console.error('Failed to load notifications for header', err),
+    });
+  }
+
+  // Toggle the sidebar
+  toggleNotifications() {
+    this.isNotificationSidebarOpen = !this.isNotificationSidebarOpen;
+  }
+
   updateClock() {
     this.currentTime = new Date();
     const hour = this.currentTime.getHours();
@@ -53,7 +102,7 @@ export class MainLayout implements OnInit, OnDestroy {
     } else if (hour >= 17 && hour < 22) {
       this.greeting = 'Good Evening';
     } else {
-      this.greeting = 'Working Late'; // A fun touch for the night shift!
+      this.greeting = 'Working Late';
     }
   }
 

@@ -13,10 +13,12 @@ export class ClientModal implements OnInit {
   @Input() client: any = null;
 
   @Output() close = new EventEmitter<void>();
-  // 🌟 Notice we are specifically emitting FormData here, not a standard JSON object!
   @Output() save = new EventEmitter<FormData>();
 
   isEditMode = false;
+
+  // The Loading State Flag
+  isSaving = false;
 
   clientData = {
     id: 0,
@@ -64,8 +66,6 @@ export class ClientModal implements OnInit {
   removeImage() {
     this.selectedFile = null;
     this.imagePreview = null;
-    // Note: If they are editing and remove the image, we would handle keeping/removing
-    // the existing Cloudinary URL on the backend, but for the UI, we just clear the preview.
   }
 
   saveClient() {
@@ -74,7 +74,13 @@ export class ClientModal implements OnInit {
       return;
     }
 
-    // 🌟 Building the FormData exactly how your C# [FromForm] attributes expect it
+    //  Prevent multiple clicks by stopping the function if already saving
+    if (this.isSaving) return;
+
+    // Turn on the loading state!
+    this.isSaving = true;
+
+    // Building the FormData exactly how your C# [FromForm] attributes expect it
     const formData = new FormData();
 
     // Always append the Name
@@ -90,7 +96,10 @@ export class ClientModal implements OnInit {
       formData.append('logo', this.selectedFile);
     }
 
-    // Send it up to clients.ts to be passed to your C# controller
+    // Send it up to clients.ts to be passed to C# controller.
+    // Note: The modal will automatically be destroyed by the parent
+    // component (Clients page) once the backend returns success, so we
+    // don't need to manually set isSaving back to false!
     this.save.emit(formData);
   }
 }

@@ -10,7 +10,8 @@
       </h2>
       <button
         (click)="closeModal()"
-        class="text-walnut-400 hover:text-walnut-900 transition-colors"
+        [disabled]="isSaving"
+        class="text-walnut-400 hover:text-walnut-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -31,8 +32,9 @@
         <input
           type="text"
           [(ngModel)]="clientData.name"
+          [disabled]="isSaving"
           placeholder="e.g. Karigar Leather"
-          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold transition-all shadow-sm"
+          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
         />
       </div>
 
@@ -46,19 +48,27 @@
           #fileInput
           (change)="onFileSelected($event)"
           accept="image/png, image/jpeg, image/webp"
+          [disabled]="isSaving"
           class="hidden"
         />
 
         <div
           *ngIf="!imagePreview"
-          (click)="fileInput.click()"
-          class="w-full h-40 border-2 border-dashed border-cinnamon-300 hover:border-saddle-400 rounded-2xl flex flex-col items-center justify-center cursor-pointer bg-cinnamon-50/30 hover:bg-cinnamon-50/80 transition-all group shadow-sm"
+          (click)="!isSaving && fileInput.click()"
+          class="w-full h-40 border-2 border-dashed border-cinnamon-300 rounded-2xl flex flex-col items-center justify-center bg-cinnamon-50/30 transition-all shadow-sm"
+          [ngClass]="
+            isSaving
+              ? 'opacity-60 cursor-not-allowed'
+              : 'hover:border-saddle-400 hover:bg-cinnamon-50/80 cursor-pointer group'
+          "
         >
           <div
-            class="w-12 h-12 mb-3 rounded-full bg-white group-hover:bg-cinnamon-50 flex items-center justify-center shadow-sm transition-colors border border-cinnamon-100"
+            class="w-12 h-12 mb-3 rounded-full bg-white flex items-center justify-center shadow-sm transition-colors border border-cinnamon-100"
+            [ngClass]="!isSaving ? 'group-hover:bg-cinnamon-50' : ''"
           >
             <svg
-              class="w-6 h-6 text-walnut-400 group-hover:text-saddle-600 transition-colors"
+              class="w-6 h-6 text-walnut-400 transition-colors"
+              [ngClass]="!isSaving ? 'group-hover:text-saddle-600' : ''"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -72,7 +82,8 @@
             </svg>
           </div>
           <p
-            class="text-sm font-bold text-walnut-700 group-hover:text-saddle-700 transition-colors"
+            class="text-sm font-bold text-walnut-700 transition-colors"
+            [ngClass]="!isSaving ? 'group-hover:text-saddle-700' : ''"
           >
             Click to upload logo
           </p>
@@ -82,14 +93,17 @@
         <div
           *ngIf="imagePreview"
           class="relative w-full h-40 border border-cinnamon-200 rounded-2xl overflow-hidden bg-white shadow-sm flex items-center justify-center group"
+          [ngClass]="isSaving ? 'opacity-70' : ''"
         >
           <img
             [src]="imagePreview"
             alt="Logo Preview"
-            class="max-h-full max-w-full object-contain p-4 transition-transform duration-300 group-hover:scale-95"
+            class="max-h-full max-w-full object-contain p-4 transition-transform duration-300"
+            [ngClass]="!isSaving ? 'group-hover:scale-95' : ''"
           />
 
           <button
+            *ngIf="!isSaving"
             (click)="removeImage()"
             class="absolute top-3 right-3 p-2 bg-white/90 text-red-500 hover:text-white hover:bg-red-500 rounded-xl shadow border border-cinnamon-100 hover:border-red-500 backdrop-blur-sm transition-all z-10"
             title="Remove Logo"
@@ -110,15 +124,42 @@
     <div class="flex justify-end gap-3 mt-8 pt-6 border-t border-cinnamon-100">
       <button
         (click)="closeModal()"
-        class="px-6 py-3 bg-cinnamon-100 hover:bg-cinnamon-200 text-walnut-800 font-bold rounded-xl transition-all"
+        [disabled]="isSaving"
+        class="px-6 py-3 bg-cinnamon-100 hover:bg-cinnamon-200 text-walnut-800 font-bold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Cancel
       </button>
       <button
         (click)="saveClient()"
-        class="px-6 py-3 bg-walnut-900 hover:bg-walnut-950 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-95"
+        [disabled]="isSaving"
+        class="flex items-center justify-center gap-2 px-6 py-3 bg-walnut-900 text-white font-bold rounded-xl shadow-lg transition-all min-w-[140px]"
+        [ngClass]="
+          isSaving
+            ? 'opacity-80 cursor-not-allowed'
+            : 'hover:bg-walnut-950 hover:shadow-xl active:scale-95'
+        "
       >
-        {{ isEditMode ? 'Update Client' : 'Save Client' }}
+        <svg
+          *ngIf="isSaving"
+          class="w-5 h-5 animate-spin text-white"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        <span>{{ isSaving ? 'Saving...' : isEditMode ? 'Update Client' : 'Save Client' }}</span>
       </button>
     </div>
   </div>

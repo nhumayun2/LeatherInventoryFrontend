@@ -17,6 +17,9 @@ export class EmployeeModal implements OnInit {
 
   isEditMode = false;
 
+  // The Loading State Flag
+  isSaving = false;
+
   // Used for the skills input field
   currentSkill: string = '';
 
@@ -64,8 +67,8 @@ export class EmployeeModal implements OnInit {
   }
 
   // --- Skills Array Logic ---
-  addSkill(event: any) {
-    event.preventDefault();
+  addSkill(event?: any) {
+    if (event) event.preventDefault();
     const val = this.currentSkill.trim();
     if (val && !this.employeeData.skills.includes(val)) {
       this.employeeData.skills.push(val);
@@ -78,10 +81,21 @@ export class EmployeeModal implements OnInit {
   }
 
   saveEmployee() {
-    // Both Name and Role are required by your C# model
+    // Both Name and Role are required by  C# model
     if (!this.employeeData.name.trim() || !this.employeeData.role.trim()) {
       alert('Name and Role are required fields!');
       return;
+    }
+
+    // Prevent multiple clicks by stopping the function if already saving
+    if (this.isSaving) return;
+
+    // Turn on the loading state!
+    this.isSaving = true;
+
+    // Auto-add any text left in the skills input
+    if (this.currentSkill.trim()) {
+      this.addSkill();
     }
 
     this.save.emit(this.employeeData);

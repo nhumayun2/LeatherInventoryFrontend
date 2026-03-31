@@ -19,6 +19,10 @@ export class OrderModal implements OnInit {
   @Output() save = new EventEmitter<any>();
 
   isEditMode = false;
+
+  // 🌟 NEW: The Loading State Flag
+  isSaving = false;
+
   statuses = ['Pending', 'In Progress', 'Completed', 'Cancelled'];
 
   clientsList: any[] = [];
@@ -124,7 +128,6 @@ export class OrderModal implements OnInit {
 
     if (selected) {
       item.productName = selected.designName;
-      // 🌟 UPDATED: We now pull from the new karigarArticleNumber property!
       item.articleNumber = selected.karigarArticleNumber || 'N/A';
     }
   }
@@ -148,6 +151,12 @@ export class OrderModal implements OnInit {
       alert('All order items must have a valid design selected and a Quantity of at least 1.');
       return;
     }
+
+    // 🌟 UX FIX: Prevent multiple clicks by stopping the function if already saving
+    if (this.isSaving) return;
+
+    // Turn on the loading state!
+    this.isSaving = true;
 
     const payload = { ...this.orderData };
     if (!payload.deliveryDate) {

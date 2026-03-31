@@ -23,8 +23,11 @@ export class DesignModal implements OnInit {
   }>();
 
   isEditMode = false;
-  clientsList: any[] = [];
 
+  // 🌟 NEW: The Loading State Flag
+  isSaving = false;
+
+  clientsList: any[] = [];
   statuses = ['New', 'Regular', 'Discontinued'];
 
   designData = {
@@ -157,7 +160,10 @@ export class DesignModal implements OnInit {
       return;
     }
 
-    // 🌟 THE UX SAFEGUARD: Auto-add any text left in the inputs!
+    if (this.isSaving) return;
+    this.isSaving = true;
+
+    // Auto-add any text left in the inputs
     if (this.newClientArticle.trim()) this.addClientArticle();
     if (this.newFeature.trim()) this.addFeature();
     if (this.newTag.trim()) this.addTag();

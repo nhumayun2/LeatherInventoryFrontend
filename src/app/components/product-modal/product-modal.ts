@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Output, input, OnInit, Input } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-product-modal',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './product-modal.html',
   styleUrl: './product-modal.css',
@@ -15,6 +16,9 @@ export class ProductModal implements OnInit {
   @Output() save = new EventEmitter<any>();
 
   isEditMode: boolean = false;
+
+  // The Loading State Flag
+  isSaving: boolean = false;
 
   categoryData = {
     id: 0,
@@ -36,12 +40,19 @@ export class ProductModal implements OnInit {
   closeModal() {
     this.close.emit();
   }
+
   saveCategory() {
     // Check the capitalized .Name
     if (!this.categoryData.Name.trim()) {
       alert('Category Name is required!');
       return;
     }
+
+    //  Prevent multiple clicks by stopping the function if already saving
+    if (this.isSaving) return;
+
+    // Turn on the loading state!
+    this.isSaving = true;
 
     // Send the correctly formatted package to the parent page
     this.save.emit(this.categoryData);
