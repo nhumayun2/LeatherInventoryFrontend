@@ -6,6 +6,8 @@ import { Clients } from './pages/clients/clients';
 import { Employees } from './pages/employees/employees';
 import { Orders } from './pages/orders/orders';
 import { Dashboard } from './pages/dashboard/dashboard';
+import { Finance } from './pages/finance/finance';
+import { ClientFinance } from './pages/client-finance/client-finance';
 import { TrashBin } from './pages/trash/trash';
 
 export const routes: Routes = [
@@ -24,6 +26,14 @@ export const routes: Routes = [
   {
     path: 'products/:productId/designs/:designId',
     component: DesignDetails,
+  },
+  {
+    path: 'finance',
+    component: Finance,
+  },
+  {
+    path: 'finance/:id',
+    component: ClientFinance,
   },
   {
     path: 'clients',
