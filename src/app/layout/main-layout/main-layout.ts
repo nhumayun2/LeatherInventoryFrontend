@@ -126,12 +126,14 @@ export class MainLayout implements OnInit, OnDestroy {
       this.activeIndex = 2;
     } else if (url.includes('/employees')) {
       this.activeIndex = 3;
-    } else if (url.includes('/clients')) {
+    } else if (url.includes('/finance')) {
       this.activeIndex = 4;
-    } else if (url.includes('/trash')) {
+    } else if (url.includes('/clients')) {
       this.activeIndex = 5;
+    } else if (url.includes('/trash')) {
+      this.activeIndex = 6;
     } else {
-      this.activeIndex = 0;
+      this.activeIndex = 0; // Default (Dashboard)
     }
   }
 }
