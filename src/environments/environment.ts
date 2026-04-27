@@ -5,5 +5,5 @@ export const environment = {
   //apiUrl: 'https://localhost:7201/api',
 
   // ☁️ For Live Production
-  // apiUrl: 'https://karigar-api.onrender.com/api',
+ apiUrl: 'https://karigar-api.onrender.com/api',
 };
