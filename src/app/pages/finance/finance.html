@@ -1,77 +1,71 @@
 <div class="h-full font-sans text-walnut-900 pb-10">
-  <div
-    class="bg-white/80 backdrop-blur-xl border border-cinnamon-100 rounded-3xl shadow-xl p-8 animate-fade-in-up"
-  >
+  <div class="bg-white/80 backdrop-blur-xl border border-cinnamon-100 rounded-3xl shadow-xl p-8 animate-fade-in-up">
+    
+    <!-- Header with New Action Button -->
     <div class="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8">
       <div>
         <h2 class="text-3xl font-black text-walnut-950 tracking-tight mb-1">Financial Documents</h2>
-        <p class="text-walnut-600 font-medium">
-          Manage client-specific spreadsheets and billing files
-        </p>
+        <p class="text-walnut-600 font-medium">Manage client-specific spreadsheets and billing files</p>
       </div>
+
+      <button
+        (click)="openSubBrandModal()"
+        class="group flex items-center gap-2 px-6 py-3 bg-walnut-900 hover:bg-walnut-950 text-white rounded-2xl shadow-xl transition-all active:scale-95 animate-slide-in-right"
+      >
+        <svg class="w-5 h-5 group-hover:rotate-90 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
+        </svg>
+        <span class="font-bold">Add Finance Client</span>
+      </button>
     </div>
 
+    <!-- Loading State -->
     <div *ngIf="isLoading" class="flex justify-center items-center py-20">
-      <div
-        class="animate-spin rounded-full h-12 w-12 border-4 border-cinnamon-200 border-t-saddle-500"
-      ></div>
+      <div class="animate-spin rounded-full h-12 w-12 border-4 border-cinnamon-200 border-t-saddle-500"></div>
     </div>
 
-    <div
-      *ngIf="!isLoading && clients.length > 0"
-      class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
-    >
+    <!-- Client Grid -->
+    <div *ngIf="!isLoading && clients.length > 0" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
       <div
         *ngFor="let client of clients; let i = index"
         (click)="openClientFinance(client.id)"
         class="group relative bg-white border border-cinnamon-200 hover:border-saddle-300 hover:shadow-2xl rounded-2xl p-6 transition-all duration-300 cursor-pointer overflow-hidden flex flex-col items-center text-center hover:-translate-y-1"
       >
-        <div
-          class="absolute top-0 left-0 w-full h-20 bg-gradient-to-br from-cinnamon-100 to-saddle-100 opacity-50 group-hover:opacity-100 transition-opacity z-0"
-        ></div>
-
-        <div
-          class="relative z-10 w-24 h-24 rounded-2xl shadow-md border-4 border-white overflow-hidden mb-5 bg-saddle-50 flex items-center justify-center font-black text-3xl text-saddle-600 transition-transform duration-300 group-hover:scale-105"
+        <!-- Delete Button for Sub-Brands Only -->
+        <button
+          *ngIf="client.isFinanceOnly"
+          (click)="deleteSubBrand(client.id, $event)"
+          class="absolute top-4 right-4 z-20 p-2 text-walnut-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all opacity-0 group-hover:opacity-100"
+          title="Delete Sub-Brand"
         >
-          <img
-            *ngIf="client.logoUrl"
-            [src]="client.logoUrl"
-            alt="Logo"
-            class="w-full h-full object-cover"
-          />
-          <span
-            *ngIf="!client.logoUrl"
-            [ngClass]="
-              ['text-teal-700', 'text-red-700', 'text-indigo-700', 'text-emerald-700'][i % 4]
-            "
-          >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+          </svg>
+        </button>
+
+        <div class="absolute top-0 left-0 w-full h-20 bg-gradient-to-br from-cinnamon-100 to-saddle-100 opacity-50 group-hover:opacity-100 transition-opacity z-0"></div>
+
+        <div class="relative z-10 w-24 h-24 rounded-2xl shadow-md border-4 border-white overflow-hidden mb-5 bg-saddle-50 flex items-center justify-center font-black text-3xl text-saddle-600 transition-transform duration-300 group-hover:scale-105">
+          <img *ngIf="client.logoUrl" [src]="client.logoUrl" alt="Logo" class="w-full h-full object-cover" />
+          <span *ngIf="!client.logoUrl" [ngClass]="['text-teal-700', 'text-red-700', 'text-indigo-700', 'text-emerald-700'][i % 4]">
             {{ getInitials(client.name) }}
           </span>
         </div>
 
-        <h3
-          class="relative z-10 text-xl font-black text-walnut-950 mb-1 group-hover:text-saddle-700 transition-colors"
-        >
+        <h3 class="relative z-10 text-xl font-black text-walnut-950 mb-1 group-hover:text-saddle-700 transition-colors">
           {{ client.name }}
         </h3>
 
-        <p
-          class="relative z-10 text-[10px] font-black text-walnut-400 uppercase tracking-widest mb-6 px-3 py-1 bg-cinnamon-50 rounded-md border border-cinnamon-100"
-        >
-          Client ID: #{{ client.id }}
+        <!-- Label to distinguish Sub-Brands -->
+        <p class="relative z-10 text-[10px] font-black uppercase tracking-widest mb-6 px-3 py-1 rounded-md border"
+           [ngClass]="client.isFinanceOnly ? 'bg-amber-50 text-amber-600 border-amber-100' : 'bg-cinnamon-50 text-walnut-400 border-cinnamon-100'">
+          {{ client.isFinanceOnly ? 'Finance Sub-Brand' : 'Main Brand' }}
         </p>
 
         <div class="relative z-10 w-full mt-auto">
-          <button
-            class="w-full py-3 bg-white border-2 border-cinnamon-100 group-hover:bg-walnut-900 group-hover:border-walnut-900 group-hover:text-white text-walnut-700 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-2"
-          >
+          <button class="w-full py-3 bg-white border-2 border-cinnamon-100 group-hover:bg-walnut-900 group-hover:border-walnut-900 group-hover:text-white text-walnut-700 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              ></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
             Manage Documents
           </button>
@@ -79,24 +73,47 @@
       </div>
     </div>
 
-    <div
-      *ngIf="!isLoading && clients.length === 0"
-      class="py-16 text-center text-walnut-500 font-medium bg-cinnamon-50/50 rounded-2xl border-2 border-dashed border-cinnamon-200"
-    >
-      <svg
-        class="w-12 h-12 mx-auto text-walnut-300 mb-3"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="1.5"
-          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-        ></path>
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && clients.length === 0" class="py-16 text-center text-walnut-500 font-medium bg-cinnamon-50/50 rounded-2xl border-2 border-dashed border-cinnamon-200">
+      <svg class="w-12 h-12 mx-auto text-walnut-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
       </svg>
-      No clients found. Add a client in the Clients section first to manage their finances.
+      No clients found. Click "Add Finance Client" to create a sub-brand.
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Create Finance-Only Sub-Brand -->
+<div *ngIf="isModalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-walnut-950/40 backdrop-blur-sm animate-fade-in p-4">
+  <div class="bg-white/95 backdrop-blur-xl border border-cinnamon-100 rounded-3xl p-8 shadow-2xl w-full max-w-md animate-slide-in-up">
+    <h2 class="text-2xl font-black text-walnut-950 tracking-tight mb-2">New Finance Client</h2>
+    <p class="text-sm text-walnut-500 mb-6 font-medium">This client will only appear in the Finance section.</p>
+
+    <div class="space-y-6">
+      <div>
+        <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2">Sub-Brand Name *</label>
+        <input
+          type="text"
+          [(ngModel)]="newSubBrandName"
+          [disabled]="isSaving"
+          placeholder="e.g. Laxus Premium"
+          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold transition-all shadow-sm"
+        />
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-3 mt-8 pt-6 border-t border-cinnamon-100">
+      <button (click)="closeSubBrandModal()" [disabled]="isSaving" class="px-6 py-3 bg-cinnamon-100 hover:bg-cinnamon-200 text-walnut-800 font-bold rounded-xl transition-all">
+        Cancel
+      </button>
+      <button
+        (click)="createSubBrand()"
+        [disabled]="isSaving || !newSubBrandName.trim()"
+        class="flex items-center justify-center gap-2 px-6 py-3 bg-walnut-900 text-white font-bold rounded-xl shadow-lg transition-all min-w-[140px] disabled:opacity-50"
+      >
+        <div *ngIf="isSaving" class="w-4 h-4 animate-spin rounded-full border-2 border-white/30 border-t-white"></div>
+        {{ isSaving ? 'Creating...' : 'Create Client' }}
+      </button>
     </div>
   </div>
 </div>

@@ -63,7 +63,7 @@
             Only .xlsx Excel files are supported
           </p>
           <p class="text-sm font-bold text-saddle-600" *ngIf="isUploading">
-            Uploading Document to Cloud...
+            Uploading to OneDrive Securely...
           </p>
         </div>
         <input
@@ -180,20 +180,10 @@
             class="px-5 py-2.5 bg-walnut-900 hover:bg-walnut-950 text-white text-xs font-bold rounded-xl shadow-md transition-all active:scale-95 flex items-center gap-2"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              ></path>
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-              ></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
             </svg>
-            Preview & Edit
+            Preview File
           </button>
           <button
             (click)="deleteDocument(doc.id, $event)"
@@ -230,15 +220,14 @@
           d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
         ></path>
       </svg>
-      No spreadsheets uploaded yet. Upload an Excel file above to get started.
+      No spreadsheets uploaded yet. Upload an Excel file above to securely sync to Microsoft Cloud.
     </div>
   </div>
 </div>
 
-<app-excel-editor-modal
-  *ngIf="isEditorOpen"
-  [document]="selectedDocToEdit"
-  (close)="closeEditor()"
-  (saved)="onEditorSaved()"
->
-</app-excel-editor-modal>
+<!-- NEW: Native Microsoft Excel Previewer Modal -->
+<app-onedrive-viewer
+  *ngIf="isPreviewOpen"
+  [document]="currentDoc"
+  (close)="closePreview()"
+></app-onedrive-viewer>

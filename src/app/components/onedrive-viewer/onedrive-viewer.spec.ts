@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ExcelEditorModal } from './excel-editor-modal';
+import { OnedriveViewer } from './onedrive-viewer';
 
-describe('ExcelEditorModal', () => {
-  let component: ExcelEditorModal;
-  let fixture: ComponentFixture<ExcelEditorModal>;
+describe('OnedriveViewer', () => {
+  let component: OnedriveViewer;
+  let fixture: ComponentFixture<OnedriveViewer>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ExcelEditorModal]
+      imports: [OnedriveViewer]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ExcelEditorModal);
+    fixture = TestBed.createComponent(OnedriveViewer);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

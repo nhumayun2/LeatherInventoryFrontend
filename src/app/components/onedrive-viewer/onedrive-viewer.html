@@ -1,0 +1,62 @@
+<div class="fixed inset-0 z-[100] flex items-center justify-center bg-walnut-950/80 backdrop-blur-sm animate-fade-in p-4 sm:p-8">
+  <div class="bg-white border border-cinnamon-200 rounded-3xl shadow-2xl w-full max-w-4xl h-[80vh] flex flex-col animate-slide-in-up overflow-hidden relative">
+    
+    <!-- Modal Header Toolbar -->
+    <div class="h-20 border-b border-cinnamon-200 bg-cinnamon-50/80 flex items-center justify-between px-6 shrink-0">
+      <div class="flex items-center gap-4">
+        <div class="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center shrink-0 shadow-inner border border-emerald-200">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-xl font-black text-walnut-950 line-clamp-1">{{ document?.fileName || 'Cloud Document' }}</h2>
+          <p class="text-[11px] font-bold text-saddle-600 uppercase tracking-widest">Secure Cloud Gateway</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button (click)="closePreview()" class="p-2 text-walnut-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors" title="Close Preview">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Secure Gateway UI (Replaces the broken iframe) -->
+    <div class="flex-1 bg-cinnamon-50/30 relative flex flex-col items-center justify-center p-8 text-center">
+      
+      <div class="w-24 h-24 bg-white rounded-3xl flex items-center justify-center shadow-lg border border-cinnamon-200 mb-8 relative">
+        <!-- Excel Icon -->
+        <svg class="w-12 h-12 text-[#107c41]" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm1.5 13H13v2.5a.5.5 0 0 1-1 0V15H9.5a.5.5 0 0 1 0-1H12v-2.5a.5.5 0 0 1 1 0V14h2.5a.5.5 0 0 1 0 1zM13 9V3.5L18.5 9H13z"/>
+        </svg>
+        
+        <!-- Security Badge -->
+        <div class="absolute -bottom-2 -right-2 bg-emerald-500 text-white p-1.5 rounded-full border-2 border-white shadow-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+      </div>
+
+      <h3 class="text-3xl font-black text-walnut-900 mb-4 tracking-tight">Document Ready</h3>
+      
+      <p class="text-walnut-600 font-medium max-w-md text-lg leading-relaxed mb-10">
+        To ensure maximum security and proper formatting, Microsoft restricts this file from being embedded directly.
+      </p>
+
+      <button (click)="openEditorTab()" class="flex items-center gap-3 px-8 py-4 bg-[#107c41] hover:bg-[#185c37] text-white rounded-2xl text-lg font-bold shadow-xl hover:shadow-2xl transition-all active:scale-95 group">
+        <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm1.5 13H13v2.5a.5.5 0 0 1-1 0V15H9.5a.5.5 0 0 1 0-1H12v-2.5a.5.5 0 0 1 1 0V14h2.5a.5.5 0 0 1 0 1zM13 9V3.5L18.5 9H13z"/>
+        </svg>
+        Open in Excel Online
+        <svg class="w-5 h-5 ml-1 opacity-70 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+        </svg>
+      </button>
+
+    </div>
+  </div>
+</div>

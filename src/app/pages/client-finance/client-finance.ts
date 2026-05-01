@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
-import { ExcelEditorModal } from '../../components/excel-editor-modal/excel-editor-modal';
 import { FormsModule } from '@angular/forms';
+
+import { Finance } from '../../services/finance';
+// 🌟 NEW: Import the viewer component
+import { OnedriveViewer } from '../../components/onedrive-viewer/onedrive-viewer';
 
 @Component({
   selector: 'app-client-finance',
   standalone: true,
-  imports: [CommonModule, ExcelEditorModal, FormsModule],
+  // 🌟 NEW: Add OnedriveViewer to imports
+  imports: [CommonModule, FormsModule, OnedriveViewer],
   templateUrl: './client-finance.html',
   styleUrl: './client-finance.css',
 })
 export class ClientFinance implements OnInit {
-  isEditorOpen = false;
-  selectedDocToEdit: any = null;
   clientId: number = 0;
   documents: any[] = [];
 
@@ -24,14 +24,16 @@ export class ClientFinance implements OnInit {
   searchQuery: string = '';
   sortOption: string = 'newest';
 
+  isPreviewOpen = false;
+  currentDoc: any = null;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private http: HttpClient,
+    private financeService: Finance
   ) {}
 
   ngOnInit() {
-    // Grab the ID from the URL (e.g., /finance/12 -> 12)
     this.route.paramMap.subscribe((params) => {
       const idParam = params.get('id');
       if (idParam) {
@@ -45,7 +47,7 @@ export class ClientFinance implements OnInit {
 
   loadDocuments() {
     this.isLoading = true;
-    this.http.get<any[]>(`${environment.apiUrl}/Finance/Client/${this.clientId}`).subscribe({
+    this.financeService.getClientDocuments(this.clientId).subscribe({
       next: (data) => {
         this.documents = data;
         this.isLoading = false;
@@ -57,18 +59,15 @@ export class ClientFinance implements OnInit {
     });
   }
 
-  // --- Upload Logic ---
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {
       this.uploadFile(file);
     }
-    // Reset the input so the same file can be selected again if needed
     event.target.value = '';
   }
 
   uploadFile(file: File) {
-    // Safety check: Only allow Excel files
     if (!file.name.endsWith('.xlsx')) {
       alert('Only .xlsx Excel files are allowed.');
       return;
@@ -76,15 +75,14 @@ export class ClientFinance implements OnInit {
 
     this.isUploading = true;
 
-    // We must use FormData because we are sending an actual file, not just JSON text
     const formData = new FormData();
     formData.append('ClientId', this.clientId.toString());
     formData.append('Document', file);
 
-    this.http.post(`${environment.apiUrl}/Finance/Upload`, formData).subscribe({
+    this.financeService.uploadDocument(formData).subscribe({
       next: () => {
         this.isUploading = false;
-        this.loadDocuments(); // Refresh the list
+        this.loadDocuments(); 
       },
       error: (err) => {
         console.error('Upload failed', err);
@@ -95,29 +93,26 @@ export class ClientFinance implements OnInit {
   }
 
   deleteDocument(id: number, event: Event) {
-    event.stopPropagation(); // Prevent the row click from triggering the preview
+    event.stopPropagation(); 
 
-    if (confirm('Are you sure you want to permanently delete this spreadsheet?')) {
-      this.http.delete(`${environment.apiUrl}/Finance/${id}`).subscribe({
+    if (confirm('Are you sure you want to permanently delete this spreadsheet from the cloud?')) {
+      this.financeService.deleteDocument(id).subscribe({
         next: () => {
-          this.loadDocuments(); // Refresh the list
+          this.loadDocuments(); 
         },
         error: (err) => console.error('Delete failed', err),
       });
     }
   }
 
-  // 🌟 Dynamic Filter & Sort Engine
   get processedDocuments() {
     let result = this.documents;
 
-    // 1. Search Filter
     if (this.searchQuery.trim()) {
       const query = this.searchQuery.toLowerCase();
       result = result.filter((doc) => doc.fileName.toLowerCase().includes(query));
     }
 
-    // 2. Sort Logic
     return result.sort((a, b) => {
       if (this.sortOption === 'newest') {
         return new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime();
@@ -132,20 +127,15 @@ export class ClientFinance implements OnInit {
     });
   }
 
-  // We will build the actual preview logic in Phase 4!
+  // 🌟 FIX: Simplified because the component handles the heavy lifting now
   openPreview(doc: any) {
-    this.selectedDocToEdit = doc;
-    this.isEditorOpen = true;
+    this.currentDoc = doc;
+    this.isPreviewOpen = true;
   }
 
-  closeEditor() {
-    this.isEditorOpen = false;
-    this.selectedDocToEdit = null;
-  }
-
-  onEditorSaved() {
-    this.closeEditor();
-    this.loadDocuments();
+  closePreview() {
+    this.isPreviewOpen = false;
+    this.currentDoc = null;
   }
 
   goBack() {
