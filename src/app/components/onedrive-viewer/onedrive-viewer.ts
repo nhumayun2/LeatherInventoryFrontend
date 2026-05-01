@@ -13,13 +13,14 @@ export class OnedriveViewer {
   @Output() close = new EventEmitter<void>();
 
   openEditorTab() {
-    // For OneDrive documents
-    if (this.document?.webUrl) {
-      window.open(this.document.webUrl, '_blank');
-    } 
-    // Fallback for Costing Sheets (local DB)
-    else if (this.document?.previewUrl) {
-      window.open(this.document.previewUrl, '_blank');
+    // Look for the URL regardless of which page sent it (Design Details vs Finance DB)
+    const targetUrl = this.document?.webUrl || this.document?.cloudinaryUrl || this.document?.previewUrl;
+
+    if (targetUrl) {
+      window.open(targetUrl, '_blank');
+    } else {
+      console.error("No valid URL found on this document object:", this.document);
+      alert("Error: Could not find the file link.");
     }
   }
 
