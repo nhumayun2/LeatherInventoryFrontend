@@ -16,6 +16,8 @@
       </div>
 
       <div class="flex items-center gap-3">
+        <div class="w-px h-8 bg-cinnamon-200 mx-1"></div>
+        
         <button (click)="closePreview()" class="p-2 text-walnut-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors" title="Close Preview">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
@@ -24,16 +26,13 @@
       </div>
     </div>
 
-    <!-- Secure Gateway UI (Replaces the broken iframe) -->
+    <!-- Secure Gateway UI -->
     <div class="flex-1 bg-cinnamon-50/30 relative flex flex-col items-center justify-center p-8 text-center">
       
       <div class="w-24 h-24 bg-white rounded-3xl flex items-center justify-center shadow-lg border border-cinnamon-200 mb-8 relative">
-        <!-- Excel Icon -->
         <svg class="w-12 h-12 text-[#107c41]" fill="currentColor" viewBox="0 0 24 24">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm1.5 13H13v2.5a.5.5 0 0 1-1 0V15H9.5a.5.5 0 0 1 0-1H12v-2.5a.5.5 0 0 1 1 0V14h2.5a.5.5 0 0 1 0 1zM13 9V3.5L18.5 9H13z"/>
         </svg>
-        
-        <!-- Security Badge -->
         <div class="absolute -bottom-2 -right-2 bg-emerald-500 text-white p-1.5 rounded-full border-2 border-white shadow-sm">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
@@ -47,7 +46,7 @@
         To ensure maximum security and proper formatting, Microsoft restricts this file from being embedded directly.
       </p>
 
-      <button (click)="openEditorTab()" class="flex items-center gap-3 px-8 py-4 bg-[#107c41] hover:bg-[#185c37] text-white rounded-2xl text-lg font-bold shadow-xl hover:shadow-2xl transition-all active:scale-95 group">
+      <a [href]="targetUrl" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-3 px-8 py-4 bg-[#107c41] hover:bg-[#185c37] text-white rounded-2xl text-lg font-bold shadow-xl hover:shadow-2xl transition-all active:scale-95 group cursor-pointer decoration-transparent">
         <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm1.5 13H13v2.5a.5.5 0 0 1-1 0V15H9.5a.5.5 0 0 1 0-1H12v-2.5a.5.5 0 0 1 1 0V14h2.5a.5.5 0 0 1 0 1zM13 9V3.5L18.5 9H13z"/>
         </svg>
@@ -55,7 +54,7 @@
         <svg class="w-5 h-5 ml-1 opacity-70 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
         </svg>
-      </button>
+      </a>
 
     </div>
   </div>

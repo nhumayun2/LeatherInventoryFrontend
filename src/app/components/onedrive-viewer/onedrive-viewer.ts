@@ -12,16 +12,9 @@ export class OnedriveViewer {
   @Input() document: any = null; 
   @Output() close = new EventEmitter<void>();
 
-  openEditorTab() {
-    // Look for the URL regardless of which page sent it (Design Details vs Finance DB)
-    const targetUrl = this.document?.webUrl || this.document?.cloudinaryUrl || this.document?.previewUrl;
-
-    if (targetUrl) {
-      window.open(targetUrl, '_blank');
-    } else {
-      console.error("No valid URL found on this document object:", this.document);
-      alert("Error: Could not find the file link.");
-    }
+  get targetUrl(): string {
+    if (!this.document) return '#';
+    return this.document.webUrl || this.document.cloudinaryUrl || this.document.previewUrl || '#';
   }
 
   closePreview() {
