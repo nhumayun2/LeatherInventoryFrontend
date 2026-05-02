@@ -98,7 +98,7 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M19 9l-7 7-7-7"
+                d="M19 9l-7-7-7-7"
               ></path>
             </svg>
           </div>
@@ -129,7 +129,7 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M19 9l-7 7-7-7"
+                d="M19 9l-7-7-7-7"
               ></path>
             </svg>
           </div>
@@ -137,84 +137,123 @@
       </div>
     </div>
 
-    <div class="mb-8">
-      <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
-        >Costing Sheet (Excel .xlsx)</label
-      >
-
-      <input
-        type="file"
-        #costingFileInput
-        (change)="onCostingFileSelected($event)"
-        accept=".xlsx, .xls"
-        [disabled]="isSaving"
-        class="hidden"
-      />
-
-      <div
-        *ngIf="!costingFileName"
-        (click)="!isSaving && costingFileInput.click()"
-        class="w-full border-2 border-dashed border-cinnamon-300 rounded-2xl p-6 flex flex-col items-center justify-center bg-cinnamon-50/50 transition-all shadow-sm"
-        [ngClass]="
-          isSaving
-            ? 'opacity-60 cursor-not-allowed'
-            : 'hover:border-saddle-500 hover:bg-cinnamon-100 cursor-pointer group'
-        "
-      >
-        <div
-          class="w-12 h-12 mb-3 rounded-full bg-white flex items-center justify-center shadow-sm transition-colors text-saddle-500"
-          [ngClass]="!isSaving ? 'group-hover:bg-cinnamon-50' : ''"
-        >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-            ></path>
-          </svg>
+    <!-- COSTING SHEET SECTION WITH TOGGLE -->
+    <div class="mb-8 bg-white border border-cinnamon-200 rounded-2xl p-6 shadow-sm relative overflow-hidden">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <div>
+          <label class="block text-sm font-black text-walnut-900 tracking-tight">Costing Sheet</label>
+          <p class="text-xs font-medium text-walnut-500 mt-1">Upload an Excel file or provide a OneDrive link.</p>
         </div>
-        <p class="text-sm font-bold text-walnut-800">Click to upload Costing Sheet</p>
-        <p class="text-xs text-walnut-500 mt-1 font-medium">.xlsx or .xls only</p>
+        
+        <div class="flex bg-cinnamon-50 p-1 rounded-xl border border-cinnamon-100">
+          <button
+            (click)="setCostingType('file')"
+            [disabled]="isSaving"
+            [class.bg-white]="costingInputType === 'file'"
+            [class.shadow-sm]="costingInputType === 'file'"
+            [class.text-saddle-700]="costingInputType === 'file'"
+            [class.text-walnut-500]="costingInputType !== 'file'"
+            class="px-4 py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-2"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+            </svg>
+            Upload File
+          </button>
+          <button
+            (click)="setCostingType('link')"
+            [disabled]="isSaving"
+            [class.bg-white]="costingInputType === 'link'"
+            [class.shadow-sm]="costingInputType === 'link'"
+            [class.text-saddle-700]="costingInputType === 'link'"
+            [class.text-walnut-500]="costingInputType !== 'link'"
+            class="px-4 py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-2"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+            </svg>
+            Cloud Link
+          </button>
+        </div>
       </div>
 
-      <div
-        *ngIf="costingFileName"
-        class="w-full flex items-center justify-between bg-cinnamon-50 border border-cinnamon-200 rounded-xl p-4 shadow-sm"
-        [ngClass]="isSaving ? 'opacity-70' : ''"
-      >
-        <div class="flex items-center gap-3">
-          <div class="p-2 bg-white text-saddle-600 rounded-lg shadow-sm border border-cinnamon-100">
+      <!-- Option 1: File Upload -->
+      <div *ngIf="costingInputType === 'file'" class="animate-fade-in">
+        <input
+          type="file"
+          #costingFileInput
+          (change)="onCostingFileSelected($event)"
+          accept=".xlsx, .xls"
+          [disabled]="isSaving"
+          class="hidden"
+        />
+
+        <div
+          *ngIf="!costingFileName"
+          (click)="!isSaving && costingFileInput.click()"
+          class="w-full border-2 border-dashed border-cinnamon-300 rounded-xl p-6 flex flex-col items-center justify-center bg-cinnamon-50/50 transition-all shadow-sm"
+          [ngClass]="
+            isSaving
+              ? 'opacity-60 cursor-not-allowed'
+              : 'hover:border-saddle-500 hover:bg-cinnamon-100 cursor-pointer group'
+          "
+        >
+          <div
+            class="w-12 h-12 mb-3 rounded-full bg-white flex items-center justify-center shadow-sm transition-colors text-saddle-500 border border-cinnamon-100"
+            [ngClass]="!isSaving ? 'group-hover:bg-cinnamon-50' : ''"
+          >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              ></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
           </div>
-          <div>
-            <p class="text-sm font-bold text-walnut-900 line-clamp-1">{{ costingFileName }}</p>
-            <p class="text-xs text-walnut-600 font-medium">Excel Document</p>
-          </div>
+          <p class="text-sm font-bold text-walnut-800">Click to upload Costing Sheet</p>
+          <p class="text-xs text-walnut-500 mt-1 font-medium">.xlsx or .xls only</p>
         </div>
 
-        <button
-          *ngIf="!isSaving"
-          (click)="removeCostingFile()"
-          class="p-2 text-red-500 hover:text-white hover:bg-red-500 rounded-lg transition-all"
-          title="Remove File"
+        <div
+          *ngIf="costingFileName"
+          class="w-full flex items-center justify-between bg-white border border-cinnamon-200 rounded-xl p-4 shadow-sm"
+          [ngClass]="isSaving ? 'opacity-70' : ''"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-            ></path>
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-saddle-50 text-saddle-600 rounded-lg shadow-sm border border-saddle-100">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-bold text-walnut-900 line-clamp-1">{{ costingFileName }}</p>
+              <p class="text-xs text-walnut-600 font-medium">Excel Document</p>
+            </div>
+          </div>
+
+          <button
+            *ngIf="!isSaving"
+            (click)="removeCostingFile()"
+            class="p-2 text-red-500 hover:text-white hover:bg-red-500 rounded-lg transition-all"
+            title="Remove File"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Option 2: Cloud Link -->
+      <div *ngIf="costingInputType === 'link'" class="animate-fade-in relative">
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+          <svg class="w-5 h-5 text-saddle-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
           </svg>
-        </button>
+        </div>
+        <input
+          type="text"
+          [(ngModel)]="costingLink"
+          [disabled]="isSaving"
+          placeholder="Paste Microsoft OneDrive sharing link here..."
+          class="w-full pl-12 pr-4 py-4 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-medium transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed placeholder:text-walnut-400"
+        />
       </div>
     </div>
 

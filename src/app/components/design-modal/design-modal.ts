@@ -20,11 +20,10 @@ export class DesignModal implements OnInit {
     designData: any;
     imageFiles: File[];
     costingFile: File | undefined;
+    costingLink: string;
   }>();
 
   isEditMode = false;
-
-  // 🌟 NEW: The Loading State Flag
   isSaving = false;
 
   clientsList: any[] = [];
@@ -52,8 +51,11 @@ export class DesignModal implements OnInit {
   selectedImages: File[] = [];
   existingImageUrls: string[] = [];
 
+  // --- Costing Sheet States ---
+  costingInputType: 'file' | 'link' = 'file';
   costingFile: File | undefined;
   costingFileName = '';
+  costingLink: string = '';
 
   constructor(private clientService: Client) {}
 
@@ -85,8 +87,15 @@ export class DesignModal implements OnInit {
       this.existingImageUrls = this.design.imageUrls ? [...this.design.imageUrls] : [];
 
       if (this.design.costingFilePath) {
-        this.costingFileName =
-          this.design.costingFilePath.split('/').pop() || 'Existing Costing File';
+        // If the saved path is a cloud URL, flip the toggle to 'link'
+        if (this.design.costingFilePath.startsWith('http')) {
+          this.costingInputType = 'link';
+          this.costingLink = this.design.costingFilePath;
+        } else {
+          this.costingInputType = 'file';
+          this.costingFileName =
+            this.design.costingFilePath.split('/').pop() || 'Existing Costing File';
+        }
       }
     } else {
       this.designData.productId = this.productId;
@@ -154,6 +163,11 @@ export class DesignModal implements OnInit {
     this.costingFileName = '';
   }
 
+  // Switch between Uploading a File and Pasting a Link
+  setCostingType(type: 'file' | 'link') {
+    this.costingInputType = type;
+  }
+
   saveDesign() {
     if (!this.designData.designName.trim()) {
       alert('Design Name is strictly required.');
@@ -168,10 +182,15 @@ export class DesignModal implements OnInit {
     if (this.newFeature.trim()) this.addFeature();
     if (this.newTag.trim()) this.addTag();
 
+    // Ensure we only send the selected type of costing
+    const finalCostingFile = this.costingInputType === 'file' ? this.costingFile : undefined;
+    const finalCostingLink = this.costingInputType === 'link' ? this.costingLink : '';
+
     this.save.emit({
       designData: this.designData,
       imageFiles: this.selectedImages,
-      costingFile: this.costingFile,
+      costingFile: finalCostingFile,
+      costingLink: finalCostingLink,
     });
   }
 }
