@@ -25,9 +25,13 @@ export class Orders implements OnInit {
   // Standard statuses matching your C# default "Pending"
   statuses: string[] = ['All', 'Pending', 'In Progress', 'Completed', 'Cancelled'];
 
-  // UI State for Modal
+  // UI State for Edit Modal
   isModalOpen = false;
   selectedOrderToEdit: any = null;
+
+  // 🌟 NEW: UI State for the Read-Only View Modal
+  isViewModalOpen = false;
+  selectedOrderToView: any = null;
 
   constructor(private orderService: Order) {}
 
@@ -69,6 +73,7 @@ export class Orders implements OnInit {
     return order.items.reduce((sum: number, item: any) => sum + (item.quantity || 0), 0);
   }
 
+  // --- Edit Modal Controls ---
   openModal(order?: any) {
     this.selectedOrderToEdit = order || null;
     this.isModalOpen = true;
@@ -79,6 +84,18 @@ export class Orders implements OnInit {
     this.selectedOrderToEdit = null;
   }
 
+  // 🌟 NEW: View Modal Controls
+  openViewModal(order: any) {
+    this.selectedOrderToView = order;
+    this.isViewModalOpen = true;
+  }
+
+  closeViewModal() {
+    this.isViewModalOpen = false;
+    this.selectedOrderToView = null;
+  }
+
+  // --- Data Operations ---
   handleSave(orderData: any) {
     // For Orders,sending standard JSON back to the C# backend, no FormData needed!
     if (orderData.id && orderData.id > 0) {

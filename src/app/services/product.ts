@@ -28,7 +28,8 @@ export class Product {
     return this.http.post<any>(this.apiUrl, newProductData);
   }
 
-  createDesign(newDesignData: any, imageFiles?: File[], costingFile?: File): Observable<any> {
+  // 🌟 NEW: Added costingLink parameter
+  createDesign(newDesignData: any, imageFiles?: File[], costingFile?: File, costingLink?: string): Observable<any> {
     const formData = new FormData();
 
     if (newDesignData.productId) formData.append('productId', newDesignData.productId.toString());
@@ -40,7 +41,6 @@ export class Product {
       formData.append('specifications', newDesignData.specifications);
     if (newDesignData.stock !== undefined) formData.append('stock', newDesignData.stock.toString());
 
-    // 🌟 FIX: Absolute PascalCase matching for ASP.NET
     if (newDesignData.karigarArticleNumber)
       formData.append('KarigarArticleNumber', newDesignData.karigarArticleNumber);
 
@@ -72,6 +72,11 @@ export class Product {
       formData.append('CostingFile', costingFile, costingFile.name);
     }
 
+    // 🌟 NEW: Append the cloud link if the user pasted one
+    if (costingLink) {
+      formData.append('CostingLink', costingLink);
+    }
+
     return this.http.post<any>(this.designsUrl, formData);
   }
 
@@ -83,11 +88,13 @@ export class Product {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 
+  // 🌟 NEW: Added costingLink parameter
   updateDesign(
     id: number,
     designData: any,
     imageFiles?: File[],
     costingFile?: File,
+    costingLink?: string
   ): Observable<any> {
     const formData = new FormData();
 
@@ -101,7 +108,6 @@ export class Product {
     if (designData.specifications) formData.append('specifications', designData.specifications);
     if (designData.stock !== undefined) formData.append('stock', designData.stock.toString());
 
-    // 🌟 FIX: Absolute PascalCase matching for ASP.NET
     if (designData.karigarArticleNumber)
       formData.append('KarigarArticleNumber', designData.karigarArticleNumber);
 
@@ -131,6 +137,11 @@ export class Product {
 
     if (costingFile) {
       formData.append('CostingFile', costingFile, costingFile.name);
+    }
+
+    // 🌟 NEW: Append the cloud link if the user pasted one
+    if (costingLink) {
+      formData.append('CostingLink', costingLink);
     }
 
     return this.http.put<any>(`${this.designsUrl}/${id}`, formData);

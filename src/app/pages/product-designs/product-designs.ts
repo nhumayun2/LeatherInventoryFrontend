@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // 🌟 Added for search inputs
+import { FormsModule } from '@angular/forms';
 import { Product } from '../../services/product';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DesignModal } from '../../components/design-modal/design-modal';
@@ -15,17 +15,14 @@ import { DesignModal } from '../../components/design-modal/design-modal';
 export class ProductDesigns implements OnInit {
   productId: number = 0;
 
-  // 🌟 NEW: Keep original data safe for filtering
   originalDesigns: any[] = [];
   designs: any[] = [];
 
-  // 🌟 NEW: Filter and Search States
   searchQuery: string = '';
   selectedClient: string = '';
   selectedTag: string = '';
   selectedFeature: string = '';
 
-  // 🌟 NEW: Dynamic Dropdown Options (Auto-populated!)
   uniqueClients: any[] = [];
   uniqueTags: string[] = [];
   uniqueFeatures: string[] = [];
@@ -56,9 +53,9 @@ export class ProductDesigns implements OnInit {
     this.productService.getProductDesigns(this.productId).subscribe({
       next: (data) => {
         console.log('Designs for product', this.productId, ':', data);
-        this.originalDesigns = data; // 🌟 Store the original data
+        this.originalDesigns = data;
         this.designs = data;
-        this.extractFilters(data); // 🌟 Extract tags/features for dropdowns
+        this.extractFilters(data);
       },
       error: (err: any) => {
         console.error('Failed to load designs for product', this.productId, err);
@@ -68,7 +65,6 @@ export class ProductDesigns implements OnInit {
     });
   }
 
-  // 🌟 NEW: Smart function to find all unique tags, features, and clients
   extractFilters(data: any[]) {
     const clientsMap = new Map();
     const tagsSet = new Set<string>();
@@ -85,11 +81,9 @@ export class ProductDesigns implements OnInit {
     this.uniqueFeatures = Array.from(featuresSet).sort();
   }
 
-  // 🌟 NEW: The live filtering engine
   applyFilters() {
     let temp = [...this.originalDesigns];
 
-    // Search by Name, Karigar Article, or Client Article
     if (this.searchQuery.trim()) {
       const q = this.searchQuery.toLowerCase();
       temp = temp.filter(
@@ -101,17 +95,14 @@ export class ProductDesigns implements OnInit {
       );
     }
 
-    // Filter by Brand/Client
     if (this.selectedClient) {
       temp = temp.filter((d) => d.client && d.client.id === Number(this.selectedClient));
     }
 
-    // Filter by Tag
     if (this.selectedTag) {
       temp = temp.filter((d) => d.tags && d.tags.includes(this.selectedTag));
     }
 
-    // Filter by Feature
     if (this.selectedFeature) {
       temp = temp.filter((d) => d.features && d.features.includes(this.selectedFeature));
     }
@@ -119,7 +110,6 @@ export class ProductDesigns implements OnInit {
     this.designs = temp;
   }
 
-  // 🌟 NEW: Clear all filters
   clearFilters() {
     this.searchQuery = '';
     this.selectedClient = '';
@@ -147,20 +137,23 @@ export class ProductDesigns implements OnInit {
     this.selectedDesignToEdit = null;
   }
 
+  // 🌟 NEW: Added costingLink to the payload and passed it to the service calls
   handleSaveDesign(payload: {
     designData: any;
     imageFiles: File[];
     costingFile: File | undefined;
+    costingLink: string;
   }) {
     const designData = payload.designData;
     const imageFiles = payload.imageFiles;
     const costingFile = payload.costingFile;
+    const costingLink = payload.costingLink; 
 
     designData.productId = this.productId;
 
     if (designData.id && designData.id > 0) {
       this.productService
-        .updateDesign(designData.id, designData, imageFiles, costingFile)
+        .updateDesign(designData.id, designData, imageFiles, costingFile, costingLink)
         .subscribe({
           next: () => {
             this.loadDesignsForThisProduct();
@@ -171,11 +164,9 @@ export class ProductDesigns implements OnInit {
           },
         });
     } else {
-      this.productService.createDesign(designData, imageFiles, costingFile).subscribe({
+      this.productService.createDesign(designData, imageFiles, costingFile, costingLink).subscribe({
         next: (savedDesignFromDb) => {
           console.log('Saved new design from backend:', savedDesignFromDb);
-
-          // Refresh the whole list to ensure filters update properly
           this.loadDesignsForThisProduct();
           this.closeModal();
         },
@@ -192,7 +183,6 @@ export class ProductDesigns implements OnInit {
     if (confirm('Are you sure you want to delete this design? This action cannot be undone.')) {
       this.productService.deleteDesign(id).subscribe({
         next: () => {
-          // Remove from original designs and re-apply filters
           this.originalDesigns = this.originalDesigns.filter((d) => d.id !== id);
           this.applyFilters();
         },

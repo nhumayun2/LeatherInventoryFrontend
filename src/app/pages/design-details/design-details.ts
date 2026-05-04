@@ -7,7 +7,6 @@ import { OnedriveViewer } from '../../components/onedrive-viewer/onedrive-viewer
 @Component({
   selector: 'app-design-details',
   standalone: true,
-  // 2. Add it to imports
   imports: [CommonModule, OnedriveViewer],
   templateUrl: './design-details.html',
   styleUrl: './design-details.css',
@@ -59,32 +58,21 @@ export class DesignDetails implements OnInit {
     this.router.navigate(['/products', this.productId]);
   }
 
-  getCostingFileUrl(): string | null {
-    if (!this.design?.costingFilePath) return null;
-    return `https://localhost:7201${this.design.costingFilePath}`;
-  }
-
+  // 🌟 UPDATED: Open the Microsoft OneDrive Web URL in a new tab
   downloadCostingFile() {
-    const url = this.getCostingFileUrl();
-    if (url) {
-      window.open(url, '_blank');
+    if (this.design?.costingWebUrl) {
+      window.open(this.design.costingWebUrl, '_blank');
     }
   }
 
-  // 3. The New Preview Logic
+  // 🌟 UPDATED: Feed the actual cloud data to your OneDrive Viewer component!
   previewCostingFile() {
-    const url = this.getCostingFileUrl();
-    if (!url) return;
-
-    // We use Microsoft's public viewer to read the file.
-    // NOTE: This will only load successfully once your backend is deployed live. 
-    // Microsoft's cloud servers cannot reach your local "https://localhost:7201" to render it during dev!
-    const officeViewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`;
+    if (!this.design?.costingPreviewUrl) return;
 
     this.costingDoc = {
-      fileName: 'Costing Sheet Preview',
-      previewUrl: officeViewerUrl,
-      webUrl: url
+      fileName: this.design.costingFileName || 'Costing Sheet',
+      previewUrl: this.design.costingPreviewUrl,
+      webUrl: this.design.costingWebUrl
     };
     
     this.isExcelPreviewOpen = true;
@@ -94,12 +82,14 @@ export class DesignDetails implements OnInit {
   selectImage(index: number) { this.selectedImageIndex = index; }
   openLightbox(index: number = this.selectedImageIndex) { this.selectedImageIndex = index; this.isLightboxOpen = true; }
   closeLightbox() { this.isLightboxOpen = false; }
+  
   nextImage(event?: Event) {
     if (event) event.stopPropagation();
     if (this.design?.imageUrls?.length > 0) {
       this.selectedImageIndex = (this.selectedImageIndex + 1) % this.design.imageUrls.length;
     }
   }
+  
   prevImage(event?: Event) {
     if (event) event.stopPropagation();
     if (this.design?.imageUrls?.length > 0) {

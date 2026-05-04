@@ -70,31 +70,22 @@
           <div class="flex-1">
             <p class="text-xs font-bold text-walnut-500 uppercase tracking-wider mb-3">Costing Sheet</p>
             
-            <div *ngIf="design.costingFilePath" class="flex flex-wrap gap-3">
-              <!-- 🌟 ADDED PREVIEW BUTTON BACK -->
-              <button
-                (click)="previewCostingFile()"
-                class="flex items-center gap-2 px-5 py-2.5 bg-green-50 hover:bg-green-100 text-green-700 font-bold rounded-xl transition-all border border-green-200 shadow-sm hover:shadow active:scale-95"
-              >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                </svg>
-                Preview Sheet
-              </button>
-
+            <!-- 🌟 UPDATED: Looking for the new OneDrive WebUrl instead of the local FilePath -->
+            <div *ngIf="design.costingWebUrl" class="flex flex-wrap gap-3">
               <button
                 (click)="downloadCostingFile()"
                 class="flex items-center gap-2 px-5 py-2.5 bg-cinnamon-100 hover:bg-cinnamon-200 text-walnut-800 font-bold rounded-xl transition-all border border-cinnamon-200 shadow-sm hover:shadow active:scale-95"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                 </svg>
-                Download Excel Sheet
+                Open Excel Online
               </button>
             </div>
 
-            <div *ngIf="!design.costingFilePath">
+            <!-- 🌟 UPDATED: Same here -->
+            <div *ngIf="!design.costingWebUrl">
               <p class="text-sm font-bold text-walnut-500 italic bg-cinnamon-50 inline-block px-4 py-2 rounded-lg border border-cinnamon-100">
                 No costing file attached.
               </p>
@@ -143,12 +134,11 @@
   </div>
 </div>
 
-<!-- Lightbox remains the same as it doesn't use xlsx -->
+<!-- Lightbox -->
 <div
   *ngIf="isLightboxOpen && design?.imageUrls?.length > 0"
   class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-walnut-950/95 backdrop-blur-xl animate-fade-in"
 >
-  <!-- ... Lightbox content ... -->
   <div class="absolute top-0 left-0 w-full p-6 flex justify-between items-center z-10">
     <div class="text-cinnamon-50 font-bold tracking-widest text-sm bg-walnut-900/50 px-4 py-2 rounded-full border border-white/10">
       {{ selectedImageIndex + 1 }} / {{ design.imageUrls.length }}
@@ -160,9 +150,7 @@
   <img [src]="design.imageUrls[selectedImageIndex]" class="max-w-full max-h-[80vh] object-contain rounded-xl shadow-2xl animate-fade-in" />
 </div>
 
-<!-- ... existing Lightbox code ... -->
-
-<!-- 🌟 ADDED THE ONEDRIVE VIEWER TAG -->
+<!-- The Magic OneDrive Viewer Modal -->
 <app-onedrive-viewer
   *ngIf="isExcelPreviewOpen"
   [document]="costingDoc"

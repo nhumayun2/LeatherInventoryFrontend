@@ -19,8 +19,6 @@ export class OrderModal implements OnInit {
   @Output() save = new EventEmitter<any>();
 
   isEditMode = false;
-
-  // 🌟 NEW: The Loading State Flag
   isSaving = false;
 
   statuses = ['Pending', 'In Progress', 'Completed', 'Cancelled'];
@@ -44,6 +42,7 @@ export class OrderModal implements OnInit {
   ) {}
 
   ngOnInit() {
+    // 🌟 FIX: Start loading data first, THEN process the edit order!
     this.loadDropdownData();
 
     if (this.order) {
@@ -62,14 +61,7 @@ export class OrderModal implements OnInit {
         orderDate: formatDate(this.order.orderDate),
         deliveryDate: formatDate(this.order.deliveryDate),
         status: this.order.status || 'Pending',
-        items: this.order.items
-          ? this.order.items.map((i: any) => ({
-              ...i,
-              selectedProductId: '',
-              selectedDesignId: i.productDesignId || '',
-              availableDesigns: [],
-            }))
-          : [],
+        items: [], // We will populate this AFTER products load!
       };
     } else {
       this.orderData.orderDate = new Date().toISOString().split('T')[0];
@@ -84,16 +76,48 @@ export class OrderModal implements OnInit {
     });
 
     this.productService.getProducts().subscribe({
-      next: (data) => (this.productsList = data),
+      next: (data) => {
+        this.productsList = data;
+        // 🌟 FIX: Now that products are loaded, rebuild the items array for Edit Mode!
+        if (this.isEditMode && this.order?.items) {
+          this.populateEditItems();
+        }
+      },
       error: (err) => console.error('Failed to load products', err),
+    });
+  }
+
+  populateEditItems() {
+    this.orderData.items = this.order.items.map((i: any) => {
+      let parentProductId = '';
+      let availableDesigns: any[] = [];
+
+      // Search through loaded products to find which category this design belongs to
+      if (i.productDesignId) {
+        for (const prod of this.productsList) {
+          if (prod.designs && prod.designs.some((d: any) => d.id === i.productDesignId)) {
+            parentProductId = prod.id;
+            availableDesigns = prod.designs;
+            break;
+          }
+        }
+      }
+
+      return {
+        id: i.id,
+        productName: i.productName,
+        articleNumber: i.articleNumber,
+        quantity: i.quantity,
+        selectedProductId: parentProductId,
+        selectedDesignId: i.productDesignId || '',
+        availableDesigns: availableDesigns,
+      };
     });
   }
 
   closeModal() {
     this.close.emit();
   }
-
-  // --- Dynamic Item Array Management ---
 
   addItem() {
     this.orderData.items.push({
@@ -117,10 +141,9 @@ export class OrderModal implements OnInit {
     item.productName = '';
     item.articleNumber = '';
 
-    this.productService.getProductDesigns(item.selectedProductId).subscribe({
-      next: (data) => (item.availableDesigns = data),
-      error: (err) => console.error('Failed to load designs for product', err),
-    });
+    // 🌟 OPTIMIZATION: Grab designs directly from pre-loaded productsList (No API call needed)
+    const selectedProduct = this.productsList.find(p => p.id == item.selectedProductId);
+    item.availableDesigns = selectedProduct ? selectedProduct.designs : [];
   }
 
   onDesignChange(item: any) {
@@ -152,10 +175,7 @@ export class OrderModal implements OnInit {
       return;
     }
 
-    // 🌟 UX FIX: Prevent multiple clicks by stopping the function if already saving
     if (this.isSaving) return;
-
-    // Turn on the loading state!
     this.isSaving = true;
 
     const payload = { ...this.orderData };
