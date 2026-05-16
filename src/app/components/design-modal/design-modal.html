@@ -1,45 +1,84 @@
 <div
-  class="fixed inset-0 z-50 flex items-center justify-center bg-walnut-950/40 backdrop-blur-sm animate-fade-in p-4 overflow-y-auto"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-walnut-950/60 backdrop-blur-md animate-fade-in p-4 sm:p-6 overflow-y-auto"
 >
   <div
-    class="bg-white/95 backdrop-blur-xl border border-cinnamon-100 rounded-3xl p-8 shadow-2xl w-full max-w-5xl animate-slide-in-up my-auto max-h-[90vh] overflow-y-auto custom-scrollbar"
+    class="bg-white border border-cinnamon-100 rounded-[2rem] p-8 shadow-2xl w-full max-w-5xl animate-slide-in-up my-auto max-h-[95vh] overflow-y-auto custom-scrollbar flex flex-col"
   >
-    <div class="flex justify-between items-center mb-6 border-b border-cinnamon-100 pb-4">
-      <h2 class="text-2xl font-black text-walnut-950 tracking-tight">
-        {{ isEditMode ? 'Edit Product Design' : 'Add New Design' }}
-      </h2>
+    <!-- HEADER -->
+    <div class="flex justify-between items-center mb-6 pb-5 border-b border-cinnamon-100/60">
+      <div>
+        <h2 class="text-2xl font-black text-walnut-950 tracking-tight">
+          {{ isEditMode ? 'Edit Product Design' : 'Add New Design' }}
+        </h2>
+        <p class="text-xs font-medium text-walnut-500 mt-1">Fill in the primary details and specifications below.</p>
+      </div>
       <button
         (click)="closeModal()"
         [disabled]="isSaving"
-        class="text-walnut-400 hover:text-walnut-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        class="p-2 bg-cinnamon-50 text-walnut-400 hover:text-walnut-900 hover:bg-cinnamon-100 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          ></path>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
       </button>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-      <div class="lg:col-span-2">
-        <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
-          >Design Name *</label
+    <!-- MAIN DETAILS GRID (PRIORITY FIELDS) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
+      <!-- Design Name (Full Width) -->
+      <div class="md:col-span-3">
+        <label class="block text-[11px] font-black text-walnut-500 uppercase tracking-widest mb-1.5"
+          >Design Name <span class="text-red-500">*</span></label
         >
         <input
           type="text"
           [(ngModel)]="designData.designName"
           [disabled]="isSaving"
           placeholder="e.g. Classic Bi-Fold Wallet"
-          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
+          class="w-full px-4 py-2.5 bg-cinnamon-50/30 border border-cinnamon-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-saddle-400 focus:border-transparent text-walnut-900 font-bold transition-all shadow-sm disabled:opacity-60"
         />
       </div>
 
+      <!-- Client Article #'s (Moved Up & First) -->
+      <div class="bg-cinnamon-50/30 p-3 rounded-xl border border-cinnamon-100 flex flex-col">
+        <label class="block text-[11px] font-black text-walnut-500 uppercase tracking-widest mb-1.5"
+          >Client Article #'s</label
+        >
+        <div class="flex gap-2 mb-2">
+          <input
+            type="text"
+            [(ngModel)]="newClientArticle"
+            [disabled]="isSaving"
+            (keyup.enter)="!isSaving && addClientArticle()"
+            placeholder="e.g. Bata-B123"
+            class="flex-1 px-3 py-2 bg-white border border-cinnamon-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-saddle-400 text-sm font-medium transition-all disabled:opacity-60"
+          />
+          <button
+            (click)="addClientArticle()"
+            [disabled]="isSaving"
+            class="px-3 py-2 bg-walnut-900 text-white rounded-lg transition-colors font-bold text-xs hover:bg-walnut-800 disabled:opacity-50"
+          >
+            Add
+          </button>
+        </div>
+        <div class="flex flex-wrap gap-1.5 max-h-20 overflow-y-auto custom-scrollbar">
+          <div
+            *ngFor="let article of designData.clientArticleNumbers; let i = index"
+            class="inline-flex items-center gap-1 bg-white border border-cinnamon-200 px-2 py-1 rounded-md text-[11px] font-bold text-saddle-700 shadow-sm"
+          >
+            <span [ngClass]="isSaving ? 'opacity-60' : ''">{{ article }}</span>
+            <button *ngIf="!isSaving" (click)="removeClientArticle(i)" class="text-red-400 hover:text-red-600 ml-1">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Karigar Article # -->
       <div>
-        <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
+        <label class="block text-[11px] font-black text-walnut-500 uppercase tracking-widest mb-1.5"
           >Karigar Article #</label
         >
         <input
@@ -47,12 +86,13 @@
           [(ngModel)]="designData.karigarArticleNumber"
           [disabled]="isSaving"
           placeholder="e.g. W-104"
-          class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
+          class="w-full px-4 py-2.5 bg-cinnamon-50/30 border border-cinnamon-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-saddle-400 focus:border-transparent text-walnut-900 font-bold transition-all shadow-sm disabled:opacity-60"
         />
       </div>
 
+      <!-- Unit Price -->
       <div>
-        <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
+        <label class="block text-[11px] font-black text-walnut-500 uppercase tracking-widest mb-1.5"
           >Unit Price</label
         >
         <div class="relative">
@@ -66,374 +106,88 @@
             placeholder="0.00"
             min="0"
             step="0.01"
-            class="w-full pl-8 pr-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
+            class="w-full pl-8 pr-4 py-2.5 bg-cinnamon-50/30 border border-cinnamon-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-saddle-400 focus:border-transparent text-walnut-900 font-bold transition-all shadow-sm disabled:opacity-60"
           />
         </div>
       </div>
 
+      <!-- Exclusive Client -->
       <div>
-        <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
-          >Exclusive Client (Optional)</label
+        <label class="block text-[11px] font-black text-walnut-500 uppercase tracking-widest mb-1.5"
+          >Exclusive Client <span class="normal-case tracking-normal text-walnut-400 font-medium">(Optional)</span></label
         >
         <div class="relative">
           <select
             [(ngModel)]="designData.clientId"
             [disabled]="isSaving"
-            class="w-full pl-4 pr-10 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold appearance-none transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
+            class="w-full pl-4 pr-10 py-2.5 bg-cinnamon-50/30 border border-cinnamon-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-saddle-400 focus:border-transparent text-walnut-900 font-bold appearance-none transition-all shadow-sm disabled:opacity-60"
             [ngClass]="!isSaving ? 'cursor-pointer' : ''"
           >
-            <option [ngValue]="null">No specific client (General Catalog)</option>
-            <option *ngFor="let client of clientsList" [ngValue]="client.id">
-              {{ client.name }}
-            </option>
+            <option [ngValue]="null">General Catalog (None)</option>
+            <option *ngFor="let client of clientsList" [ngValue]="client.id">{{ client.name }}</option>
           </select>
           <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-            <svg
-              class="w-4 h-4 text-walnut-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7-7-7-7"
-              ></path>
+            <svg class="w-4 h-4 text-walnut-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7-7-7-7"></path>
             </svg>
           </div>
         </div>
       </div>
 
+      <!-- Status -->
       <div>
-        <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
-          >Status</label
-        >
+        <label class="block text-[11px] font-black text-walnut-500 uppercase tracking-widest mb-1.5">Status</label>
         <div class="relative">
           <select
             [(ngModel)]="designData.status"
             [disabled]="isSaving"
-            class="w-full pl-4 pr-10 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold appearance-none transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
+            class="w-full pl-4 pr-10 py-2.5 bg-cinnamon-50/30 border border-cinnamon-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-saddle-400 focus:border-transparent text-walnut-900 font-bold appearance-none transition-all shadow-sm disabled:opacity-60"
             [ngClass]="!isSaving ? 'cursor-pointer' : ''"
           >
             <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
           </select>
           <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-            <svg
-              class="w-4 h-4 text-walnut-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7-7-7-7"
-              ></path>
+            <svg class="w-4 h-4 text-walnut-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7-7-7-7"></path>
             </svg>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- COSTING SHEET SECTION WITH TOGGLE -->
-    <div class="mb-8 bg-white border border-cinnamon-200 rounded-2xl p-6 shadow-sm relative overflow-hidden">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-        <div>
-          <label class="block text-sm font-black text-walnut-900 tracking-tight">Costing Sheet</label>
-          <p class="text-xs font-medium text-walnut-500 mt-1">Upload an Excel file or provide a OneDrive link.</p>
-        </div>
-        
-        <div class="flex bg-cinnamon-50 p-1 rounded-xl border border-cinnamon-100">
-          <button
-            (click)="setCostingType('file')"
-            [disabled]="isSaving"
-            [class.bg-white]="costingInputType === 'file'"
-            [class.shadow-sm]="costingInputType === 'file'"
-            [class.text-saddle-700]="costingInputType === 'file'"
-            [class.text-walnut-500]="costingInputType !== 'file'"
-            class="px-4 py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-2"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
-            </svg>
-            Upload File
-          </button>
-          <button
-            (click)="setCostingType('link')"
-            [disabled]="isSaving"
-            [class.bg-white]="costingInputType === 'link'"
-            [class.shadow-sm]="costingInputType === 'link'"
-            [class.text-saddle-700]="costingInputType === 'link'"
-            [class.text-walnut-500]="costingInputType !== 'link'"
-            class="px-4 py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-2"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
-            </svg>
-            Cloud Link
-          </button>
-        </div>
-      </div>
-
-      <!-- Option 1: File Upload -->
-      <div *ngIf="costingInputType === 'file'" class="animate-fade-in">
-        <input
-          type="file"
-          #costingFileInput
-          (change)="onCostingFileSelected($event)"
-          accept=".xlsx, .xls"
-          [disabled]="isSaving"
-          class="hidden"
-        />
-
-        <div
-          *ngIf="!costingFileName"
-          (click)="!isSaving && costingFileInput.click()"
-          class="w-full border-2 border-dashed border-cinnamon-300 rounded-xl p-6 flex flex-col items-center justify-center bg-cinnamon-50/50 transition-all shadow-sm"
-          [ngClass]="
-            isSaving
-              ? 'opacity-60 cursor-not-allowed'
-              : 'hover:border-saddle-500 hover:bg-cinnamon-100 cursor-pointer group'
-          "
-        >
-          <div
-            class="w-12 h-12 mb-3 rounded-full bg-white flex items-center justify-center shadow-sm transition-colors text-saddle-500 border border-cinnamon-100"
-            [ngClass]="!isSaving ? 'group-hover:bg-cinnamon-50' : ''"
-          >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-            </svg>
-          </div>
-          <p class="text-sm font-bold text-walnut-800">Click to upload Costing Sheet</p>
-          <p class="text-xs text-walnut-500 mt-1 font-medium">.xlsx or .xls only</p>
-        </div>
-
-        <div
-          *ngIf="costingFileName"
-          class="w-full flex items-center justify-between bg-white border border-cinnamon-200 rounded-xl p-4 shadow-sm"
-          [ngClass]="isSaving ? 'opacity-70' : ''"
-        >
-          <div class="flex items-center gap-3">
-            <div class="p-2 bg-saddle-50 text-saddle-600 rounded-lg shadow-sm border border-saddle-100">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-              </svg>
-            </div>
-            <div>
-              <p class="text-sm font-bold text-walnut-900 line-clamp-1">{{ costingFileName }}</p>
-              <p class="text-xs text-walnut-600 font-medium">Excel Document</p>
-            </div>
-          </div>
-
-          <button
-            *ngIf="!isSaving"
-            (click)="removeCostingFile()"
-            class="p-2 text-red-500 hover:text-white hover:bg-red-500 rounded-lg transition-all"
-            title="Remove File"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- Option 2: Cloud Link -->
-      <div *ngIf="costingInputType === 'link'" class="animate-fade-in relative">
-        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <svg class="w-5 h-5 text-saddle-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
-          </svg>
-        </div>
-        <input
-          type="text"
-          [(ngModel)]="costingLink"
-          [disabled]="isSaving"
-          placeholder="Paste Microsoft OneDrive sharing link here..."
-          class="w-full pl-12 pr-4 py-4 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-medium transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed placeholder:text-walnut-400"
-        />
-      </div>
-    </div>
-
-    <div class="mb-8">
-      <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
-        >Specifications</label
-      >
-      <textarea
-        [(ngModel)]="designData.specifications"
-        [disabled]="isSaving"
-        rows="3"
-        placeholder="e.g. 100% Genuine Cow Leather, Nylon Thread..."
-        class="w-full px-4 py-3 bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-medium transition-all shadow-sm resize-none disabled:opacity-60 disabled:cursor-not-allowed"
-      ></textarea>
-    </div>
-
-    <div class="bg-cinnamon-50/50 rounded-2xl p-6 border border-cinnamon-100 mb-8">
-      <div class="flex flex-col mb-4">
-        <h3 class="text-lg font-black text-walnut-950">Factory Stock</h3>
-        <p class="text-xs font-medium text-walnut-500 mt-1">
-          Number of orders and delivered quantities are tracked automatically.
-        </p>
-      </div>
-
-      <div class="w-full md:w-1/2 lg:w-1/3">
-        <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
-          >Current Physical Stock</label
+      <!-- Factory Stock (Moved Up) -->
+      <div>
+        <label class="block text-[11px] font-black text-walnut-500 uppercase tracking-widest mb-1.5"
+          >Factory Stock</label
         >
         <input
           type="number"
           [(ngModel)]="designData.stock"
           [disabled]="isSaving"
           min="0"
-          class="w-full px-4 py-3 bg-white border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-walnut-900 font-bold transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
+          placeholder="0"
+          class="w-full px-4 py-2.5 bg-cinnamon-50/30 border border-cinnamon-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-saddle-400 focus:border-transparent text-walnut-900 font-bold transition-all shadow-sm disabled:opacity-60"
         />
       </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-      <div>
-        <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
-          >Client Article #'s</label
+    <!-- PRODUCT IMAGES (Middle Position, Compact Size) -->
+    <div class="mb-6 bg-white border border-cinnamon-200 rounded-2xl p-5 shadow-sm">
+      <div class="flex justify-between items-center mb-3">
+        <div>
+          <label class="block text-sm font-black text-walnut-900 tracking-tight">Product Images</label>
+          <p class="text-[11px] font-medium text-walnut-500">Upload high-res images (PNG, JPG, WEBP)</p>
+        </div>
+        <button
+          (click)="!isSaving && imageInput.click()"
+          [disabled]="isSaving"
+          class="px-4 py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-2 bg-saddle-50 text-saddle-700 hover:bg-saddle-100 shadow-sm border border-saddle-200 disabled:opacity-50"
         >
-        <div class="flex gap-2 mb-3">
-          <input
-            type="text"
-            [(ngModel)]="newClientArticle"
-            [disabled]="isSaving"
-            (keyup.enter)="!isSaving && addClientArticle()"
-            placeholder="e.g. Bata-B123"
-            class="flex-1 px-4 py-2 bg-white/50 border border-cinnamon-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-saddle-400 text-sm font-medium transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-          />
-          <button
-            (click)="addClientArticle()"
-            [disabled]="isSaving"
-            class="px-4 py-2 bg-walnut-800 text-white rounded-lg transition-colors font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-walnut-900"
-          >
-            Add
-          </button>
-        </div>
-        <div class="flex flex-col gap-2 max-h-40 overflow-y-auto custom-scrollbar">
-          <div
-            *ngFor="let article of designData.clientArticleNumbers; let i = index"
-            class="flex items-center justify-between bg-cinnamon-50 px-3 py-2 rounded-lg border border-cinnamon-100 text-sm font-bold text-saddle-700"
-          >
-            <span [ngClass]="isSaving ? 'opacity-60' : ''">{{ article }}</span>
-            <button
-              *ngIf="!isSaving"
-              (click)="removeClientArticle(i)"
-              class="text-red-400 hover:text-red-600"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                ></path>
-              </svg>
-            </button>
-          </div>
-        </div>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          Add Images
+        </button>
       </div>
-
-      <div>
-        <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
-          >Key Features</label
-        >
-        <div class="flex gap-2 mb-3">
-          <input
-            type="text"
-            [(ngModel)]="newFeature"
-            [disabled]="isSaving"
-            (keyup.enter)="!isSaving && addFeature()"
-            placeholder="e.g. RFID Blocking"
-            class="flex-1 px-4 py-2 bg-white/50 border border-cinnamon-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-saddle-400 text-sm font-medium transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-          />
-          <button
-            (click)="addFeature()"
-            [disabled]="isSaving"
-            class="px-4 py-2 bg-walnut-800 text-white rounded-lg transition-colors font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-walnut-900"
-          >
-            Add
-          </button>
-        </div>
-        <div class="flex flex-col gap-2 max-h-40 overflow-y-auto custom-scrollbar">
-          <div
-            *ngFor="let feat of designData.features; let i = index"
-            class="flex items-center justify-between bg-cinnamon-50 px-3 py-2 rounded-lg border border-cinnamon-100 text-sm font-medium text-walnut-800"
-          >
-            <span [ngClass]="isSaving ? 'opacity-60' : ''">{{ feat }}</span>
-            <button
-              *ngIf="!isSaving"
-              (click)="removeFeature(i)"
-              class="text-red-400 hover:text-red-600"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                ></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
-          >Search Tags</label
-        >
-        <div class="flex gap-2 mb-3">
-          <input
-            type="text"
-            [(ngModel)]="newTag"
-            [disabled]="isSaving"
-            (keyup.enter)="!isSaving && addTag()"
-            placeholder="e.g. summer-collection"
-            class="flex-1 px-4 py-2 bg-white/50 border border-cinnamon-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-saddle-400 text-sm font-medium transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-          />
-          <button
-            (click)="addTag()"
-            [disabled]="isSaving"
-            class="px-4 py-2 bg-walnut-800 text-white rounded-lg transition-colors font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-walnut-900"
-          >
-            Add
-          </button>
-        </div>
-        <div class="flex flex-wrap gap-2 max-h-40 overflow-y-auto custom-scrollbar">
-          <div
-            *ngFor="let tag of designData.tags; let i = index"
-            class="inline-flex items-center gap-1.5 bg-white text-walnut-700 px-2.5 py-1 rounded-full text-xs font-bold border border-cinnamon-200 shadow-sm transition-colors"
-            [ngClass]="isSaving ? 'opacity-60' : 'hover:bg-cinnamon-50'"
-          >
-            <span>#{{ tag }}</span>
-            <button
-              *ngIf="!isSaving"
-              (click)="removeTag(i)"
-              class="text-walnut-400 hover:text-red-500 cursor-pointer"
-            >
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                ></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="mb-8">
-      <label class="block text-xs font-bold text-walnut-600 uppercase tracking-wider mb-2"
-        >Product Images</label
-      >
 
       <input
         type="file"
@@ -445,133 +199,219 @@
         class="hidden"
       />
 
-      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        <div
-          (click)="!isSaving && imageInput.click()"
-          class="aspect-square border-2 border-dashed border-cinnamon-300 rounded-2xl flex flex-col items-center justify-center bg-cinnamon-50/50 transition-all shadow-sm"
-          [ngClass]="
-            isSaving
-              ? 'opacity-60 cursor-not-allowed'
-              : 'hover:border-saddle-500 hover:bg-cinnamon-100 cursor-pointer group'
-          "
-        >
-          <div
-            class="w-10 h-10 mb-2 rounded-full bg-white flex items-center justify-center shadow-sm border border-cinnamon-100 transition-colors"
-            [ngClass]="!isSaving ? 'group-hover:bg-cinnamon-50' : ''"
-          >
-            <svg
-              class="w-5 h-5 text-walnut-400 transition-colors"
-              [ngClass]="!isSaving ? 'group-hover:text-saddle-500' : ''"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 4v16m8-8H4"
-              ></path>
-            </svg>
-          </div>
-          <p
-            class="text-xs font-bold text-walnut-600 transition-colors"
-            [ngClass]="!isSaving ? 'group-hover:text-saddle-600' : ''"
-          >
-            Add Images
-          </p>
+      <div class="flex gap-3 overflow-x-auto pb-2 custom-scrollbar min-h-[5rem]">
+        <!-- Empty State -->
+        <div *ngIf="selectedImages.length === 0 && existingImageUrls.length === 0" class="flex-1 flex items-center justify-center border-2 border-dashed border-cinnamon-200 rounded-xl bg-cinnamon-50/30 py-4">
+          <p class="text-xs text-walnut-400 font-bold tracking-wide">No images uploaded yet.</p>
         </div>
 
+        <!-- Selected Files (Preview Data) -->
         <div
           *ngFor="let file of selectedImages; let i = index"
-          class="relative aspect-square border border-blue-200 rounded-2xl overflow-hidden bg-blue-50 shadow-sm flex items-center justify-center group p-2"
+          class="relative w-20 h-20 shrink-0 border border-blue-200 rounded-xl overflow-hidden bg-blue-50 shadow-sm flex items-center justify-center group p-1"
           [ngClass]="isSaving ? 'opacity-70' : ''"
         >
-          <p class="text-[10px] text-blue-800 font-bold text-center break-words line-clamp-3">
+          <p class="text-[9px] text-blue-800 font-bold text-center break-words line-clamp-3 leading-tight">
             {{ file.name }}
           </p>
-          <div
-            *ngIf="!isSaving"
-            class="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity"
-          ></div>
-
           <button
             *ngIf="!isSaving"
             (click)="removeSelectedImage(i)"
-            class="absolute top-2 right-2 p-1.5 bg-white/90 text-red-500 hover:text-white hover:bg-red-500 rounded-lg shadow-sm border border-gray-100 transition-all z-10"
-            title="Remove"
+            class="absolute top-1 right-1 p-1 bg-white/90 text-red-500 hover:text-white hover:bg-red-500 rounded-md shadow-sm border border-gray-100 transition-all z-10"
           >
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              ></path>
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </button>
         </div>
 
+        <!-- Existing Images -->
         <div
           *ngFor="let url of existingImageUrls"
-          class="relative aspect-square border border-cinnamon-200 rounded-2xl overflow-hidden bg-white shadow-sm flex items-center justify-center group"
+          class="relative w-20 h-20 shrink-0 border border-cinnamon-200 rounded-xl overflow-hidden bg-white shadow-sm flex items-center justify-center group"
           [ngClass]="isSaving ? 'opacity-70' : ''"
         >
           <img
             [src]="url"
-            alt="Existing Image"
-            class="max-h-full max-w-full object-cover w-full h-full transition-transform duration-300"
-            [ngClass]="!isSaving ? 'group-hover:scale-105' : ''"
+            alt="Product"
+            class="object-cover w-full h-full transition-transform duration-300"
+            [ngClass]="!isSaving ? 'group-hover:scale-110' : ''"
           />
-          <div
-            *ngIf="!isSaving"
-            class="absolute inset-0 bg-gradient-to-t from-walnut-950/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3"
-          >
-            <p class="text-white text-[10px] font-bold tracking-wider uppercase drop-shadow-md">
-              Uploaded
-            </p>
+          <div *ngIf="!isSaving" class="absolute inset-0 bg-gradient-to-t from-walnut-950/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-1.5">
+            <p class="text-white text-[8px] font-bold tracking-wider uppercase">Saved</p>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="flex justify-end gap-3 pt-6 border-t border-cinnamon-100">
+    <!-- SPECIFICATIONS, FEATURES, TAGS -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+      <div class="md:col-span-2">
+        <label class="block text-[11px] font-black text-walnut-500 uppercase tracking-widest mb-1.5"
+          >Specifications</label
+        >
+        <textarea
+          [(ngModel)]="designData.specifications"
+          [disabled]="isSaving"
+          rows="2"
+          placeholder="e.g. 100% Genuine Cow Leather, Nylon Thread..."
+          class="w-full px-4 py-2.5 bg-cinnamon-50/30 border border-cinnamon-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-saddle-400 focus:border-transparent text-walnut-900 font-medium transition-all shadow-sm resize-none disabled:opacity-60"
+        ></textarea>
+      </div>
+
+      <!-- Features Builder -->
+      <div class="bg-cinnamon-50/30 p-4 rounded-xl border border-cinnamon-100 flex flex-col">
+        <label class="block text-[11px] font-black text-walnut-500 uppercase tracking-widest mb-1.5"
+          >Key Features</label
+        >
+        <div class="flex gap-2 mb-3">
+          <input
+            type="text"
+            [(ngModel)]="newFeature"
+            [disabled]="isSaving"
+            (keyup.enter)="!isSaving && addFeature()"
+            placeholder="e.g. RFID Blocking"
+            class="flex-1 px-3 py-2 bg-white border border-cinnamon-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-saddle-400 text-sm font-medium transition-all disabled:opacity-60"
+          />
+          <button
+            (click)="addFeature()"
+            [disabled]="isSaving"
+            class="px-3 py-2 bg-walnut-900 text-white rounded-lg transition-colors font-bold text-xs hover:bg-walnut-800 disabled:opacity-50"
+          >
+            Add
+          </button>
+        </div>
+        <div class="flex flex-col gap-1.5 max-h-32 overflow-y-auto custom-scrollbar">
+          <div
+            *ngFor="let feat of designData.features; let i = index"
+            class="flex items-center justify-between bg-white px-3 py-2 rounded-lg border border-cinnamon-100 text-xs font-bold text-walnut-800 shadow-sm"
+          >
+            <span [ngClass]="isSaving ? 'opacity-60' : ''">{{ feat }}</span>
+            <button *ngIf="!isSaving" (click)="removeFeature(i)" class="text-red-400 hover:text-red-600">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tags Builder -->
+      <div class="bg-cinnamon-50/30 p-4 rounded-xl border border-cinnamon-100 flex flex-col">
+        <label class="block text-[11px] font-black text-walnut-500 uppercase tracking-widest mb-1.5"
+          >Search Tags</label
+        >
+        <div class="flex gap-2 mb-3">
+          <input
+            type="text"
+            [(ngModel)]="newTag"
+            [disabled]="isSaving"
+            (keyup.enter)="!isSaving && addTag()"
+            placeholder="e.g. summer-collection"
+            class="flex-1 px-3 py-2 bg-white border border-cinnamon-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-saddle-400 text-sm font-medium transition-all disabled:opacity-60"
+          />
+          <button
+            (click)="addTag()"
+            [disabled]="isSaving"
+            class="px-3 py-2 bg-walnut-900 text-white rounded-lg transition-colors font-bold text-xs hover:bg-walnut-800 disabled:opacity-50"
+          >
+            Add
+          </button>
+        </div>
+        <div class="flex flex-wrap gap-2 max-h-32 overflow-y-auto custom-scrollbar">
+          <div
+            *ngFor="let tag of designData.tags; let i = index"
+            class="inline-flex items-center gap-1.5 bg-white text-saddle-600 px-2.5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider border border-cinnamon-200 shadow-sm"
+            [ngClass]="isSaving ? 'opacity-60' : ''"
+          >
+            <span>#{{ tag }}</span>
+            <button *ngIf="!isSaving" (click)="removeTag(i)" class="text-walnut-400 hover:text-red-500 cursor-pointer">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COSTING SHEET SECTION (Bottom Position, Compact Size) -->
+    <div class="mt-auto mb-6 bg-white border border-cinnamon-200 rounded-2xl p-4 shadow-sm relative">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <!-- Labels -->
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-saddle-50 text-saddle-600 rounded-lg border border-saddle-100 shadow-sm">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </div>
+          <div>
+            <label class="block text-sm font-black text-walnut-900 tracking-tight">Costing Sheet</label>
+            <p class="text-[11px] font-medium text-walnut-500 mt-0.5">Attach file or OneDrive link</p>
+          </div>
+        </div>
+
+        <!-- Inputs / Toggles (Sleek Inline) -->
+        <div class="w-full sm:w-auto flex-1 max-w-lg">
+          <!-- Toggle -->
+          <div class="flex bg-cinnamon-50 p-1 rounded-xl border border-cinnamon-100 mb-2 sm:hidden">
+            <button (click)="setCostingType('file')" [class.bg-white]="costingInputType === 'file'" [class.shadow-sm]="costingInputType === 'file'" [class.text-saddle-700]="costingInputType === 'file'" [class.text-walnut-500]="costingInputType !== 'file'" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition-all">File</button>
+            <button (click)="setCostingType('link')" [class.bg-white]="costingInputType === 'link'" [class.shadow-sm]="costingInputType === 'link'" [class.text-saddle-700]="costingInputType === 'link'" [class.text-walnut-500]="costingInputType !== 'link'" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition-all">Link</button>
+          </div>
+
+          <!-- Dynamic Input Area -->
+          <div class="flex items-center gap-3 w-full">
+            <div class="hidden sm:flex bg-cinnamon-50 p-1 rounded-xl border border-cinnamon-100 shrink-0">
+              <button (click)="setCostingType('file')" [class.bg-white]="costingInputType === 'file'" [class.shadow-sm]="costingInputType === 'file'" [class.text-saddle-700]="costingInputType === 'file'" [class.text-walnut-500]="costingInputType !== 'file'" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all">File</button>
+              <button (click)="setCostingType('link')" [class.bg-white]="costingInputType === 'link'" [class.shadow-sm]="costingInputType === 'link'" [class.text-saddle-700]="costingInputType === 'link'" [class.text-walnut-500]="costingInputType !== 'link'" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all">Link</button>
+            </div>
+
+            <!-- Option 1: File -->
+            <div *ngIf="costingInputType === 'file'" class="flex-1 relative animate-fade-in">
+              <input type="file" #costingFileInput (change)="onCostingFileSelected($event)" accept=".xlsx, .xls" [disabled]="isSaving" class="hidden" />
+              <div *ngIf="!costingFileName" (click)="!isSaving && costingFileInput.click()" class="w-full px-4 py-2 border border-dashed border-cinnamon-300 rounded-xl text-xs font-bold text-walnut-600 text-center cursor-pointer hover:bg-cinnamon-50 transition-colors" [ngClass]="isSaving ? 'opacity-60 cursor-not-allowed' : ''">
+                Click to upload Excel File (.xlsx)
+              </div>
+              <div *ngIf="costingFileName" class="w-full flex items-center justify-between bg-cinnamon-50/50 border border-cinnamon-200 rounded-xl px-4 py-2">
+                <span class="text-xs font-bold text-walnut-900 truncate pr-4">{{ costingFileName }}</span>
+                <button *ngIf="!isSaving" (click)="removeCostingFile()" class="text-red-400 hover:text-red-600 shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Option 2: Link -->
+            <div *ngIf="costingInputType === 'link'" class="flex-1 relative animate-fade-in">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="w-4 h-4 text-walnut-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                </svg>
+              </div>
+              <input type="text" [(ngModel)]="costingLink" [disabled]="isSaving" placeholder="Paste OneDrive link..." class="w-full pl-9 pr-3 py-2 bg-white border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-xs font-medium text-walnut-900 transition-all placeholder:text-walnut-400 shadow-sm disabled:opacity-60" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER ACTIONS -->
+    <div class="flex justify-end gap-3 pt-5 border-t border-cinnamon-100/60 mt-auto">
       <button
         (click)="closeModal()"
         [disabled]="isSaving"
-        class="px-6 py-3 bg-cinnamon-100 hover:bg-cinnamon-200 text-walnut-800 font-bold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        class="px-5 py-2.5 bg-cinnamon-50 hover:bg-cinnamon-100 text-walnut-700 text-sm font-bold rounded-xl transition-all disabled:opacity-50 border border-transparent hover:border-cinnamon-200"
       >
         Cancel
       </button>
       <button
         (click)="saveDesign()"
         [disabled]="isSaving"
-        class="flex items-center justify-center gap-2 px-6 py-3 bg-walnut-900 text-white font-bold rounded-xl shadow-lg transition-all min-w-[150px]"
-        [ngClass]="
-          isSaving
-            ? 'opacity-80 cursor-not-allowed'
-            : 'hover:bg-walnut-950 hover:shadow-xl active:scale-95'
-        "
+        class="flex items-center justify-center gap-2 px-6 py-2.5 bg-walnut-900 text-white text-sm font-bold rounded-xl shadow-lg transition-all min-w-[140px]"
+        [ngClass]="isSaving ? 'opacity-80 cursor-not-allowed' : 'hover:bg-walnut-950 hover:shadow-xl active:scale-95'"
       >
-        <svg
-          *ngIf="isSaving"
-          class="w-5 h-5 animate-spin text-white"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            class="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            stroke-width="4"
-          ></circle>
-          <path
-            class="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-          ></path>
+        <svg *ngIf="isSaving" class="w-4 h-4 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
         <span>{{ isSaving ? 'Saving...' : isEditMode ? 'Update Design' : 'Save Design' }}</span>
       </button>
