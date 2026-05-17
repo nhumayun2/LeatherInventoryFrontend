@@ -77,32 +77,42 @@ export class Orders implements OnInit {
     });
 
     // 2. SORTING
-    this.filteredOrders = tempFiltered.sort((a, b) => {
-      // RULE 1:
-      // "In Progress" always above "Completed"
-      if (a.status === 'In Progress' && b.status === 'Completed') {
-        return -1;
-      }
+    // 2. SORTING
+this.filteredOrders = tempFiltered.sort((a, b) => {
 
-      if (a.status === 'Completed' && b.status === 'In Progress') {
-        return 1;
-      }
+  // RULE 1:
+  // "In Progress" always above "Completed"
+  if (a.status === 'In Progress' && b.status === 'Completed') {
+    return -1;
+  }
 
-      // RULE 2:
-      // Inside same status group,
-      // sort by nearest upcoming delivery date first
+  if (a.status === 'Completed' && b.status === 'In Progress') {
+    return 1;
+  }
 
-      const dateA = a.deliveryDate
-        ? new Date(a.deliveryDate).getTime()
-        : Infinity;
+  // Convert delivery dates
+  const dateA = a.deliveryDate
+    ? new Date(a.deliveryDate).getTime()
+    : Infinity;
 
-      const dateB = b.deliveryDate
-        ? new Date(b.deliveryDate).getTime()
-        : Infinity;
+  const dateB = b.deliveryDate
+    ? new Date(b.deliveryDate).getTime()
+    : Infinity;
 
-      // ASCENDING = nearest upcoming date first
-      return dateA - dateB;
-    });
+  // RULE 2:
+  // In Progress => nearest upcoming first (ASC)
+  if (a.status === 'In Progress' && b.status === 'In Progress') {
+    return dateA - dateB;
+  }
+
+  // RULE 3:
+  // Completed => latest completed first (DESC)
+  if (a.status === 'Completed' && b.status === 'Completed') {
+    return dateB - dateA;
+  }
+
+  return 0;
+});
   }
 
   // Loops through the OrderItems list and sums total quantity
