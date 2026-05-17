@@ -1,9 +1,9 @@
 export const environment = {
   production: true,
 
-  // // 💻 For Local Development
+  // 💻 For Local Development
   // apiUrl: 'https://localhost:7201/api',
 
-  // ☁️ For Live Production
+  // // ☁️ For Live Production
   apiUrl: 'https://karigar-api.onrender.com/api',
 };

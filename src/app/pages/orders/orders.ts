@@ -23,7 +23,7 @@ export class Orders implements OnInit {
   selectedStatus: string = 'All';
 
   // Standard statuses matching your C# default "Pending"
-  statuses: string[] = ['All', 'Pending', 'In Progress', 'Completed', 'Cancelled'];
+  statuses: string[] = ['All', 'In Progress', 'Completed'];
 
   // UI State for Edit Modal
   isModalOpen = false;
@@ -45,69 +45,74 @@ export class Orders implements OnInit {
         console.log('Loaded Orders:', data);
         this.orders = data;
 
-        // Apply filters and our new sorting logic immediately upon loading
+        // Apply filters and sorting immediately after loading
         this.applyFilters();
       },
       error: (err) => console.error('Failed to load orders', err),
     });
   }
 
-  // Runs every time the user types in the search bar, changes the status, or when data first loads
-  // Runs every time the user types in the search bar, changes the status, or when data first loads
+  // Runs every time search/filter changes
   applyFilters() {
-    // 1. Filter by Search and Status
+    // 1. FILTERING
     let tempFiltered = this.orders.filter((order) => {
       const searchStr = this.searchQuery.toLowerCase();
+
       const matchesSearch =
-        (order.companyName && order.companyName.toLowerCase().includes(searchStr)) ||
-        (order.poNumber && order.poNumber.toLowerCase().includes(searchStr));
+        (order.companyName &&
+          order.companyName.toLowerCase().includes(searchStr)) ||
+        (order.poNumber &&
+          order.poNumber.toLowerCase().includes(searchStr));
 
-      const matchesStatus = this.selectedStatus === 'All' || order.status === this.selectedStatus;
+      const matchesDropdown =
+        this.selectedStatus === 'All' ||
+        order.status === this.selectedStatus;
 
-      return matchesSearch && matchesStatus;
+      // Only allow these statuses
+      const isAllowedStatus =
+        order.status === 'In Progress' ||
+        order.status === 'Completed';
+
+      return matchesSearch && matchesDropdown && isAllowedStatus;
     });
 
-    // 2. Advanced Priority Sorting (The "Urgency Queue")
+    // 2. SORTING
     this.filteredOrders = tempFiltered.sort((a, b) => {
-      // Define active vs inactive (We don't want 'Completed' orders clogging the top of the queue)
-      const isActiveA = a.status === 'Pending' || a.status === 'In Progress';
-      const isActiveB = b.status === 'Pending' || b.status === 'In Progress';
-
-      // RULE 1: Active orders ALWAYS go above Inactive (Completed/Cancelled) orders
-      if (isActiveA && !isActiveB) return -1;
-      if (!isActiveA && isActiveB) return 1;
-
-      // RULE 2: If both are inactive, push the newest to the top of the bottom pile
-      if (!isActiveA && !isActiveB) {
-        return new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime();
+      // RULE 1:
+      // "In Progress" always above "Completed"
+      if (a.status === 'In Progress' && b.status === 'Completed') {
+        return -1;
       }
 
-      // RULE 3: Both are active. Check for Delivery Dates.
-      // Convert to timestamps. Invalid/Empty dates become NaN safely.
-      const timeA = a.deliveryDate ? new Date(a.deliveryDate).getTime() : NaN;
-      const timeB = b.deliveryDate ? new Date(b.deliveryDate).getTime() : NaN;
-
-      const hasDateA = !isNaN(timeA);
-      const hasDateB = !isNaN(timeB);
-
-      // RULE 4: If one has a valid delivery date and the other is TBD, the valid date goes to the top
-      if (hasDateA && !hasDateB) return -1;
-      if (!hasDateA && hasDateB) return 1;
-
-      // RULE 5: Both are TBD (No delivery date). Sort by Newest Order Date.
-      if (!hasDateA && !hasDateB) {
-         return new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime();
+      if (a.status === 'Completed' && b.status === 'In Progress') {
+        return 1;
       }
 
-      // RULE 6: Both have valid Delivery Dates! Sort strictly by Nearest Date (Ascending: May 18 -> May 19)
-      return timeA - timeB;
+      // RULE 2:
+      // Inside same status group,
+      // sort by nearest upcoming delivery date first
+
+      const dateA = a.deliveryDate
+        ? new Date(a.deliveryDate).getTime()
+        : Infinity;
+
+      const dateB = b.deliveryDate
+        ? new Date(b.deliveryDate).getTime()
+        : Infinity;
+
+      // ASCENDING = nearest upcoming date first
+      return dateA - dateB;
     });
   }
 
-  // Loops through the OrderItems list and sums up the Quantity of all products in the order
+  // Loops through the OrderItems list and sums total quantity
   getTotalQuantity(order: any): number {
     if (!order.items || !Array.isArray(order.items)) return 0;
-    return order.items.reduce((sum: number, item: any) => sum + (item.quantity || 0), 0);
+
+    return order.items.reduce(
+      (sum: number, item: any) => sum + (item.quantity || 0),
+      0
+    );
   }
 
   // --- Edit Modal Controls ---
@@ -121,7 +126,7 @@ export class Orders implements OnInit {
     this.selectedOrderToEdit = null;
   }
 
-  // View Modal Controls
+  // --- View Modal Controls ---
   openViewModal(order: any) {
     this.selectedOrderToView = order;
     this.isViewModalOpen = true;
@@ -134,7 +139,7 @@ export class Orders implements OnInit {
 
   // --- Data Operations ---
   handleSave(orderData: any) {
-    // For Orders, sending standard JSON back to the C# backend, no FormData needed!
+    // UPDATE
     if (orderData.id && orderData.id > 0) {
       this.orderService.updateOrder(orderData.id, orderData).subscribe({
         next: () => {
@@ -143,7 +148,10 @@ export class Orders implements OnInit {
         },
         error: (err) => console.error('Failed to update order', err),
       });
-    } else {
+    }
+
+    // CREATE
+    else {
       this.orderService.createOrder(orderData).subscribe({
         next: () => {
           this.loadOrders();
@@ -155,7 +163,11 @@ export class Orders implements OnInit {
   }
 
   deleteOrder(id: number) {
-    if (confirm('Are you sure you want to permanently delete this order?')) {
+    if (
+      confirm(
+        'Are you sure you want to permanently delete this order?'
+      )
+    ) {
       this.orderService.deleteOrder(id).subscribe({
         next: () => {
           this.loadOrders();

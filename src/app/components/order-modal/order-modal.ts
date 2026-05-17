@@ -21,7 +21,7 @@ export class OrderModal implements OnInit {
   isEditMode = false;
   isSaving = false;
 
-  statuses = ['Pending', 'In Progress', 'Completed', 'Cancelled'];
+  statuses = ['In Progress', 'Completed'];
 
   clientsList: any[] = [];
   productsList: any[] = [];
@@ -32,7 +32,7 @@ export class OrderModal implements OnInit {
     companyName: '',
     orderDate: '',
     deliveryDate: '' as string | null,
-    status: 'Pending',
+    status: 'In Progress',
     items: [] as any[],
   };
 
@@ -60,7 +60,7 @@ export class OrderModal implements OnInit {
         companyName: this.order.companyName || '',
         orderDate: formatDate(this.order.orderDate),
         deliveryDate: formatDate(this.order.deliveryDate),
-        status: this.order.status || 'Pending',
+        status: this.order.status || 'In Progress',
         items: [], // We will populate this AFTER products load!
       };
     } else {
