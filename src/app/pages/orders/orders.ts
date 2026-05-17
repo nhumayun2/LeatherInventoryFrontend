@@ -15,7 +15,7 @@ export class Orders implements OnInit {
   // Master list from the database
   orders: any[] = [];
 
-  // The list currently shown on screen (after searching/filtering)
+  // The list currently shown on screen (after searching/filtering/sorting)
   filteredOrders: any[] = [];
 
   // UI State for Filters
@@ -29,7 +29,7 @@ export class Orders implements OnInit {
   isModalOpen = false;
   selectedOrderToEdit: any = null;
 
-  // 🌟 NEW: UI State for the Read-Only View Modal
+  // UI State for the Read-Only View Modal
   isViewModalOpen = false;
   selectedOrderToView: any = null;
 
@@ -45,17 +45,18 @@ export class Orders implements OnInit {
         console.log('Loaded Orders:', data);
         this.orders = data;
 
-        // Apply initial filters to populate the table
+        // Apply filters and our new sorting logic immediately upon loading
         this.applyFilters();
       },
       error: (err) => console.error('Failed to load orders', err),
     });
   }
 
-  // Runs every time the user types in the search bar or changes the status dropdown
+  // Runs every time the user types in the search bar, changes the status, or when data first loads
+  // Runs every time the user types in the search bar, changes the status, or when data first loads
   applyFilters() {
-    this.filteredOrders = this.orders.filter((order) => {
-      // 1. Check Search Query (matches Company Name or PO Number)
+    // 1. Filter by Search and Status
+    let tempFiltered = this.orders.filter((order) => {
       const searchStr = this.searchQuery.toLowerCase();
       const matchesSearch =
         (order.companyName && order.companyName.toLowerCase().includes(searchStr)) ||
@@ -64,6 +65,42 @@ export class Orders implements OnInit {
       const matchesStatus = this.selectedStatus === 'All' || order.status === this.selectedStatus;
 
       return matchesSearch && matchesStatus;
+    });
+
+    // 2. Advanced Priority Sorting (The "Urgency Queue")
+    this.filteredOrders = tempFiltered.sort((a, b) => {
+      // Define active vs inactive (We don't want 'Completed' orders clogging the top of the queue)
+      const isActiveA = a.status === 'Pending' || a.status === 'In Progress';
+      const isActiveB = b.status === 'Pending' || b.status === 'In Progress';
+
+      // RULE 1: Active orders ALWAYS go above Inactive (Completed/Cancelled) orders
+      if (isActiveA && !isActiveB) return -1;
+      if (!isActiveA && isActiveB) return 1;
+
+      // RULE 2: If both are inactive, push the newest to the top of the bottom pile
+      if (!isActiveA && !isActiveB) {
+        return new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime();
+      }
+
+      // RULE 3: Both are active. Check for Delivery Dates.
+      // Convert to timestamps. Invalid/Empty dates become NaN safely.
+      const timeA = a.deliveryDate ? new Date(a.deliveryDate).getTime() : NaN;
+      const timeB = b.deliveryDate ? new Date(b.deliveryDate).getTime() : NaN;
+
+      const hasDateA = !isNaN(timeA);
+      const hasDateB = !isNaN(timeB);
+
+      // RULE 4: If one has a valid delivery date and the other is TBD, the valid date goes to the top
+      if (hasDateA && !hasDateB) return -1;
+      if (!hasDateA && hasDateB) return 1;
+
+      // RULE 5: Both are TBD (No delivery date). Sort by Newest Order Date.
+      if (!hasDateA && !hasDateB) {
+         return new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime();
+      }
+
+      // RULE 6: Both have valid Delivery Dates! Sort strictly by Nearest Date (Ascending: May 18 -> May 19)
+      return timeA - timeB;
     });
   }
 
@@ -84,7 +121,7 @@ export class Orders implements OnInit {
     this.selectedOrderToEdit = null;
   }
 
-  // 🌟 NEW: View Modal Controls
+  // View Modal Controls
   openViewModal(order: any) {
     this.selectedOrderToView = order;
     this.isViewModalOpen = true;
@@ -97,7 +134,7 @@ export class Orders implements OnInit {
 
   // --- Data Operations ---
   handleSave(orderData: any) {
-    // For Orders,sending standard JSON back to the C# backend, no FormData needed!
+    // For Orders, sending standard JSON back to the C# backend, no FormData needed!
     if (orderData.id && orderData.id > 0) {
       this.orderService.updateOrder(orderData.id, orderData).subscribe({
         next: () => {
