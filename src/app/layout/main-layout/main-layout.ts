@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { filter } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { AuthService } from '../../services/auth'; // 🌟 NEW: Added AuthService
 
 @Component({
   selector: 'app-main-layout',
@@ -21,9 +22,13 @@ export class MainLayout implements OnInit, OnDestroy {
   notifications: any[] = [];
   unreadCount: number = 0;
 
+  // 🌟 NEW: Toggle state for the profile menu
+  isProfileMenuOpen: boolean = false; 
+
   constructor(
     private router: Router,
     private http: HttpClient,
+    private authService: AuthService // 🌟 NEW: Injected AuthService
   ) {
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
       this.movePill(this.router.url);
@@ -48,10 +53,8 @@ export class MainLayout implements OnInit, OnDestroy {
   }
 
   loadNotifications() {
-    // Fetch the clients so have a dictionary of all logos
     this.http.get<any[]>(`${environment.apiUrl}/Clients`).subscribe({
       next: (clients) => {
-        // Create a quick lookup map for logos
         const clientLogos = new Map<string, string>();
         clients.forEach((c) => {
           if (c.logoUrl) {
@@ -59,7 +62,6 @@ export class MainLayout implements OnInit, OnDestroy {
           }
         });
 
-        //Fetch the orders
         this.http.get<any[]>(`${environment.apiUrl}/Orders`).subscribe({
           next: (orders) => {
             const today = new Date();
@@ -81,10 +83,7 @@ export class MainLayout implements OnInit, OnDestroy {
 
                 if (diffDays <= 10) {
                   order.daysLeft = diffDays;
-
-                  // Attach the logo URL to the order if we found a match!
                   order.clientLogoUrl = clientLogos.get(order.companyName);
-
                   return true;
                 }
                 return false;
@@ -133,7 +132,18 @@ export class MainLayout implements OnInit, OnDestroy {
     } else if (url.includes('/trash')) {
       this.activeIndex = 6;
     } else {
-      this.activeIndex = 0; // Default (Dashboard)
+      this.activeIndex = 0; 
     }
+  }
+
+  // 🌟 NEW: Menu Toggle Method
+  toggleProfileMenu() {
+    this.isProfileMenuOpen = !this.isProfileMenuOpen;
+  }
+
+  // 🌟 NEW: Logout Method
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

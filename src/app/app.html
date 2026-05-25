@@ -1,5 +1,9 @@
-<app-main-layout>
-    
+<ng-container *ngIf="showNavigation">
+  <app-main-layout>
     <router-outlet></router-outlet>
+  </app-main-layout>
+</ng-container>
 
-</app-main-layout>
+<div *ngIf="!showNavigation" class="w-full min-h-screen">
+  <router-outlet></router-outlet>
+</div>
