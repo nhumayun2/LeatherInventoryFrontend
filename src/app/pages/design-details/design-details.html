@@ -1,13 +1,10 @@
-<!-- Loading State -->
 <div *ngIf="!design" class="flex flex-col items-center justify-center h-64 animate-pulse">
   <div class="w-12 h-12 border-4 border-cinnamon-200 border-t-saddle-600 rounded-full animate-spin mb-4"></div>
   <p class="text-sm font-bold text-walnut-500 tracking-widest uppercase">Loading design details...</p>
 </div>
 
-<!-- Main Page -->
 <div *ngIf="design" class="font-sans h-full pb-10 space-y-6">
 
-  <!-- Header Navigation -->
   <div class="flex items-center justify-between animate-slide-in-left">
     <button
       (click)="goBackToCategory()"
@@ -24,28 +21,41 @@
     </span>
   </div>
 
-  <!-- Primary Split Card -->
   <div class="bg-white/80 backdrop-blur-xl border border-cinnamon-100 rounded-3xl overflow-hidden shadow-xl animate-fade-in-up">
     <div class="grid grid-cols-1 lg:grid-cols-12">
       
-      <!-- Left Column: Image Gallery -->
       <div class="lg:col-span-5 bg-cinnamon-50/50 p-6 flex flex-col gap-4 border-b lg:border-b-0 lg:border-r border-cinnamon-100">
-        <!-- Main Image -->
+        
         <div
           (click)="openLightbox()"
-          class="relative bg-white border border-cinnamon-200 rounded-2xl aspect-square overflow-hidden cursor-zoom-in group shadow-sm"
+          class="relative border border-cinnamon-200 rounded-2xl aspect-square overflow-hidden cursor-zoom-in group shadow-sm transition-colors duration-300"
+          [ngClass]="isZoomedOut ? 'bg-cinnamon-50' : 'bg-white'"
         >
           <img
             [src]="design.imageUrls?.length > 0 ? design.imageUrls[selectedImageIndex] : 'https://placehold.co/800x800?text=No+Image'"
             alt="{{ design.designName }}"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+            class="w-full h-full transition-all duration-700"
+            [ngClass]="isZoomedOut ? 'object-contain p-4 group-hover:scale-100' : 'object-cover group-hover:scale-105'"
           />
+
+          <button 
+            (click)="toggleZoom($event)"
+            class="absolute top-3 right-3 bg-walnut-950/60 hover:bg-walnut-950 backdrop-blur-md text-white p-2.5 rounded-full shadow-lg border border-white/20 transition-all z-10"
+            title="Toggle Full Size"
+          >
+            <svg *ngIf="!isZoomedOut" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"/>
+            </svg>
+            <svg *ngIf="isZoomedOut" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"/>
+            </svg>
+          </button>
+
           <div *ngIf="design.imageUrls?.length > 1" class="absolute bottom-3 left-3 bg-walnut-950/70 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-widest border border-white/20">
             {{ selectedImageIndex + 1 }} / {{ design.imageUrls.length }}
           </div>
         </div>
 
-        <!-- Thumbnails -->
         <div
           *ngIf="design.imageUrls?.length > 1"
           class="flex gap-3 overflow-x-auto custom-scrollbar pb-2"
@@ -61,10 +71,8 @@
         </div>
       </div>
 
-      <!-- Right Column: Info Pane -->
       <div class="lg:col-span-7 flex flex-col">
         
-        <!-- Top Section: Title & Price -->
         <div class="p-8 border-b border-cinnamon-100">
           <div class="flex justify-between items-start gap-4">
             <div>
@@ -84,7 +92,6 @@
           </div>
         </div>
 
-        <!-- Middle Section: Client & Costing Actions -->
         <div class="p-8 border-b border-cinnamon-100 bg-cinnamon-50/30 flex flex-col sm:flex-row justify-between items-center gap-6">
           <div class="flex items-center gap-4">
             <div class="w-12 h-12 rounded-xl bg-white border border-cinnamon-200 overflow-hidden flex items-center justify-center shadow-sm shrink-0">
@@ -129,7 +136,6 @@
           </div>
         </div>
 
-        <!-- Bottom Section: Specifications -->
         <div class="p-8 flex-1">
           <p class="text-[10px] font-bold uppercase tracking-widest text-walnut-500 mb-3">Specifications & Details</p>
           <p class="text-sm font-medium text-walnut-800 leading-relaxed">
@@ -140,10 +146,8 @@
     </div>
   </div>
 
-  <!-- Secondary Meta Data Grid -->
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in-up" style="animation-delay: 100ms;">
     
-    <!-- Key Features -->
     <div class="bg-white/80 backdrop-blur-xl border border-cinnamon-100 rounded-3xl p-6 shadow-md md:col-span-1">
       <p class="text-[10px] font-bold uppercase tracking-widest text-saddle-600 mb-4 flex items-center gap-2">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
@@ -158,7 +162,6 @@
       </ul>
     </div>
 
-    <!-- Client Articles & Search Tags -->
     <div class="bg-white/80 backdrop-blur-xl border border-cinnamon-100 rounded-3xl p-6 shadow-md md:col-span-2 flex flex-col sm:flex-row gap-8">
       <div class="flex-1">
         <p class="text-[10px] font-bold uppercase tracking-widest text-walnut-500 mb-4">Client Article Numbers</p>
@@ -190,7 +193,6 @@
     </div>
   </div>
 
-  <!-- Factory Stats Bar (Dark Card) -->
   <div class="bg-gradient-to-br from-walnut-800 to-walnut-950 rounded-3xl p-8 shadow-2xl text-cinnamon-50 relative overflow-hidden animate-fade-in-up" style="animation-delay: 200ms;">
     <h4 class="text-sm font-black text-cinnamon-200 uppercase tracking-widest mb-8 relative z-10">Live Factory Inventory</h4>
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 relative z-10">
@@ -211,7 +213,6 @@
 
 </div>
 
-<!-- Lightbox -->
 <div
   *ngIf="isLightboxOpen && design?.imageUrls?.length > 0"
   class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-walnut-950/95 backdrop-blur-xl animate-fade-in"
@@ -226,19 +227,18 @@
   </div>
   
   <div class="relative w-full h-full flex items-center justify-center p-8">
-    <button (click)="$event.stopPropagation(); prevImage()" class="absolute left-8 p-4 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all border border-white/10 hover:border-white/30">
+    <button (click)="$event.stopPropagation(); prevImage()" class="absolute left-8 p-4 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all border border-white/10 hover:border-white/30 z-20">
       <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
     </button>
     
-    <img [src]="design.imageUrls[selectedImageIndex]" class="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl animate-fade-in" />
+    <img [src]="design.imageUrls[selectedImageIndex]" class="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl animate-fade-in z-10" />
     
-    <button (click)="$event.stopPropagation(); nextImage()" class="absolute right-8 p-4 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all border border-white/10 hover:border-white/30">
+    <button (click)="$event.stopPropagation(); nextImage()" class="absolute right-8 p-4 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all border border-white/10 hover:border-white/30 z-20">
       <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
     </button>
   </div>
 </div>
 
-<!-- OneDrive Viewer Modal -->
 <app-onedrive-viewer
   *ngIf="isExcelPreviewOpen"
   [document]="costingDoc"

@@ -18,6 +18,9 @@ export class DesignDetails implements OnInit {
 
   selectedImageIndex: number = 0;
   isLightboxOpen: boolean = false;
+  
+  // 🌟 NEW: Track whether the user wants the image zoomed out (full size) or zoomed in (cover)
+  isZoomedOut: boolean = false; 
 
   // --- Costing Sheet Viewer State ---
   isExcelPreviewOpen: boolean = false; 
@@ -58,14 +61,12 @@ export class DesignDetails implements OnInit {
     this.router.navigate(['/products', this.productId]);
   }
 
-  // 🌟 UPDATED: Open the Microsoft OneDrive Web URL in a new tab
   downloadCostingFile() {
     if (this.design?.costingWebUrl) {
       window.open(this.design.costingWebUrl, '_blank');
     }
   }
 
-  // 🌟 UPDATED: Feed the actual cloud data to your OneDrive Viewer component!
   previewCostingFile() {
     if (!this.design?.costingPreviewUrl) return;
 
@@ -79,14 +80,31 @@ export class DesignDetails implements OnInit {
   }
 
   // --- Image Gallery Logic ---
-  selectImage(index: number) { this.selectedImageIndex = index; }
-  openLightbox(index: number = this.selectedImageIndex) { this.selectedImageIndex = index; this.isLightboxOpen = true; }
-  closeLightbox() { this.isLightboxOpen = false; }
+  selectImage(index: number) { 
+    this.selectedImageIndex = index; 
+  }
+  
+  openLightbox(index: number = this.selectedImageIndex) { 
+    this.selectedImageIndex = index; 
+    this.isZoomedOut = false; // Reset zoom state when opening
+    this.isLightboxOpen = true; 
+  }
+  
+  closeLightbox() { 
+    this.isLightboxOpen = false; 
+  }
+
+  // 🌟 NEW: Toggle method for the Zoom button
+  toggleZoom(event?: Event) {
+    if (event) event.stopPropagation();
+    this.isZoomedOut = !this.isZoomedOut;
+  }
   
   nextImage(event?: Event) {
     if (event) event.stopPropagation();
     if (this.design?.imageUrls?.length > 0) {
       this.selectedImageIndex = (this.selectedImageIndex + 1) % this.design.imageUrls.length;
+      this.isZoomedOut = false; // Reset zoom state when changing image
     }
   }
   
@@ -94,6 +112,7 @@ export class DesignDetails implements OnInit {
     if (event) event.stopPropagation();
     if (this.design?.imageUrls?.length > 0) {
       this.selectedImageIndex = (this.selectedImageIndex - 1 + this.design.imageUrls.length) % this.design.imageUrls.length;
+      this.isZoomedOut = false; // Reset zoom state when changing image
     }
   }
 
