@@ -19,6 +19,7 @@ export class MainLayout implements OnInit, OnDestroy {
   private timerId: any;
 
   isNotificationSidebarOpen: boolean = false;
+  isMobileSidebarOpen: boolean = false;
   notifications: any[] = [];
   unreadCount: number = 0;
 

@@ -1,4 +1,4 @@
-<div class="flex h-screen w-full bg-cinnamon-50 p-4 gap-4 overflow-hidden font-sans relative z-0">
+<div class="flex h-screen w-full bg-cinnamon-50 md:p-4 gap-0 md:gap-4 overflow-hidden font-sans relative z-0">
   
   <div
     class="absolute -top-32 -left-32 w-[60rem] h-[60rem] pointer-events-none -z-10"
@@ -36,11 +36,25 @@
     ></div>
   </div>
 
+  <div 
+    *ngIf="isMobileSidebarOpen"
+    (click)="isMobileSidebarOpen = false"
+    class="fixed inset-0 bg-walnut-950/40 backdrop-blur-sm z-[80] md:hidden transition-opacity"
+  ></div>
+
   <aside
-    class="w-72 bg-white/60 backdrop-blur-xl border border-white/50 shadow-xl rounded-3xl flex flex-col justify-between hidden md:flex z-10 relative"
+    class="fixed inset-y-0 left-0 w-72 bg-white/95 md:bg-white/60 backdrop-blur-xl border-r md:border border-white/50 shadow-2xl md:shadow-xl md:rounded-3xl flex flex-col justify-between z-[90] md:relative transform transition-transform duration-300 ease-in-out md:translate-x-0"
+    [ngClass]="isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'"
   >
+    <button 
+      (click)="isMobileSidebarOpen = false"
+      class="absolute top-6 right-4 p-2 text-walnut-500 hover:text-walnut-900 md:hidden bg-white/50 rounded-full"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    </button>
+
     <div class="h-24 flex items-center px-8 border-b border-white/20">
-      <a routerLink="/dashboard"><div class="flex items-center gap-3">
+      <a routerLink="/dashboard" (click)="isMobileSidebarOpen = false"><div class="flex items-center gap-3">
         <div class="w-12 h-12 flex items-center justify-center">
           <img
             src="/logo.png"
@@ -61,7 +75,7 @@
       
     </div>
 
-    <nav class="flex-1 px-4 py-2 flex flex-col">
+    <nav class="flex-1 px-4 py-2 flex flex-col overflow-y-auto custom-scrollbar">
       <p class="px-4 text-xs font-bold text-walnut-500/70 uppercase tracking-wider mb-4 mt-4">
         Main Menu
       </p>
@@ -74,6 +88,7 @@
 
         <a
           routerLink="/dashboard"
+          (click)="isMobileSidebarOpen = false"
           routerLinkActive="active-route text-walnut-950"
           [routerLinkActiveOptions]="{ exact: true }"
           class="flex items-center gap-4 px-4 h-[48px] text-walnut-700 rounded-2xl group relative z-10 transition-colors"
@@ -90,6 +105,7 @@
 
         <a
           routerLink="/products"
+          (click)="isMobileSidebarOpen = false"
           routerLinkActive="active-route text-walnut-950"
           class="flex items-center gap-4 px-4 h-[48px] text-walnut-700 rounded-2xl group relative z-10 transition-colors"
         >
@@ -105,6 +121,7 @@
 
         <a
           routerLink="/orders"
+          (click)="isMobileSidebarOpen = false"
           routerLinkActive="active-route text-walnut-950"
           class="flex items-center gap-4 px-4 h-[48px] text-walnut-700 rounded-2xl group relative z-10 transition-colors"
         >
@@ -120,6 +137,7 @@
 
         <a
           routerLink="/employees"
+          (click)="isMobileSidebarOpen = false"
           routerLinkActive="active-route text-walnut-950"
           class="flex items-center gap-4 px-4 h-[48px] text-walnut-700 rounded-2xl group relative z-10 transition-colors"
         >
@@ -135,6 +153,7 @@
 
         <a
           routerLink="/finance"
+          (click)="isMobileSidebarOpen = false"
           routerLinkActive="active-route text-walnut-950"
           class="flex items-center gap-4 px-4 h-[48px] text-walnut-700 rounded-2xl group relative z-10 transition-colors"
         >
@@ -150,6 +169,7 @@
 
         <a
           routerLink="/clients"
+          (click)="isMobileSidebarOpen = false"
           routerLinkActive="active-route text-walnut-950"
           class="flex items-center gap-4 px-4 h-[48px] text-walnut-700 rounded-2xl group relative z-10 transition-colors"
         >
@@ -165,6 +185,7 @@
 
         <a
           routerLink="/trash"
+          (click)="isMobileSidebarOpen = false"
           routerLinkActive="active-route text-walnut-950"
           class="flex items-center gap-4 px-4 h-[48px] text-walnut-700 rounded-2xl group relative z-10 transition-colors"
         >
@@ -194,7 +215,7 @@
       >
         <a 
           routerLink="/forgot-password"
-          (click)="toggleProfileMenu()"
+          (click)="toggleProfileMenu(); isMobileSidebarOpen = false"
           class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-walnut-700 hover:text-saddle-600 hover:bg-cinnamon-50 rounded-xl transition-colors cursor-pointer"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -249,36 +270,46 @@
   </aside>
 
   <main
-    class="flex-1 bg-white/50 backdrop-blur-3xl border border-white/60 shadow-2xl rounded-3xl overflow-hidden flex flex-col relative z-10 ml-4 h-full"
+    class="flex-1 bg-white/95 md:bg-white/50 md:backdrop-blur-3xl border-0 md:border md:border-white/60 shadow-2xl md:rounded-3xl overflow-hidden flex flex-col relative z-10 ml-0 md:ml-4 h-full"
   >
     <header
-      class="h-20 border-b border-white/40 flex items-center justify-between px-8 bg-white/30 backdrop-blur-md sticky top-0 z-20"
+      class="h-16 md:h-20 border-b border-white/40 flex items-center justify-between px-4 md:px-8 bg-white/90 md:bg-white/30 backdrop-blur-md sticky top-0 z-20 shadow-sm md:shadow-none"
     >
-      <div>
-        <h1 class="text-2xl font-black text-walnut-950 tracking-tight">
-          <ng-container [ngSwitch]="activeIndex">
-            <span *ngSwitchCase="0">Dashboard Overview</span>
-            <span *ngSwitchCase="1">Products Database</span>
-            <span *ngSwitchCase="2">Factory Orders</span>
-            <span *ngSwitchCase="3">Staff Management</span>
-            <span *ngSwitchCase="4">Client Roster</span>
-            <span *ngSwitchCase="5">Recycle Bin</span>
-            <span *ngSwitchDefault>Karigar Factory</span>
-          </ng-container>
-        </h1>
+      <div class="flex items-center gap-3">
+        
+        <button 
+          (click)="isMobileSidebarOpen = true"
+          class="p-2 -ml-2 text-walnut-700 hover:bg-white/50 rounded-lg md:hidden transition-colors"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
 
-        <div class="flex items-center gap-2 mt-0.5">
-          <p class="text-sm font-bold text-walnut-600">{{ greeting }}</p>
-          <span class="text-walnut-300">|</span>
-          <p
-            class="text-[13px] font-bold text-saddle-600 tracking-wide font-mono bg-saddle-50 px-2 py-0.5 rounded border border-saddle-100"
-          >
-            {{ currentTime | date: 'MMM d, y, h:mm:ss a' }}
-          </p>
+        <div>
+          <h1 class="text-lg md:text-2xl font-black text-walnut-950 tracking-tight line-clamp-1">
+            <ng-container [ngSwitch]="activeIndex">
+              <span *ngSwitchCase="0">Dashboard Overview</span>
+              <span *ngSwitchCase="1">Products Database</span>
+              <span *ngSwitchCase="2">Factory Orders</span>
+              <span *ngSwitchCase="3">Staff Management</span>
+              <span *ngSwitchCase="4">Client Roster</span>
+              <span *ngSwitchCase="5">Recycle Bin</span>
+              <span *ngSwitchDefault>Karigar Factory</span>
+            </ng-container>
+          </h1>
+
+          <div class="hidden md:flex items-center gap-2 mt-0.5">
+            <p class="text-sm font-bold text-walnut-600">{{ greeting }}</p>
+            <span class="text-walnut-300">|</span>
+            <p
+              class="text-[13px] font-bold text-saddle-600 tracking-wide font-mono bg-saddle-50 px-2 py-0.5 rounded border border-saddle-100"
+            >
+              {{ currentTime | date: 'MMM d, y, h:mm:ss a' }}
+            </p>
+          </div>
         </div>
       </div>
 
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2 md:gap-3">
         <button
           (click)="toggleNotifications()"
           class="relative p-2 text-walnut-600 hover:text-walnut-950 hover:bg-white/50 rounded-xl transition-colors"
@@ -304,7 +335,7 @@
       </div>
     </header>
 
-    <div class="flex-1 overflow-auto p-8 relative">
+    <div class="flex-1 overflow-auto p-4 md:p-8 relative custom-scrollbar">
       <ng-content></ng-content>
     </div>
   </main>
