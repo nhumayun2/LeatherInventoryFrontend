@@ -24,7 +24,7 @@
     <button
       *ngIf="originalDesigns.length > 0"
       (click)="openModal()"
-      class="group flex items-center gap-2 px-6 py-3 bg-walnut-900 hover:bg-walnut-950 text-white rounded-2xl shadow-xl transition-all active:scale-95 animate-slide-in-right"
+      class="group flex items-center justify-center md:justify-start gap-2 px-6 py-3 bg-walnut-900 hover:bg-walnut-950 text-white rounded-2xl shadow-xl transition-all active:scale-95 animate-slide-in-right"
     >
       <svg
         class="w-5 h-5 group-hover:rotate-90 transition-transform"
@@ -67,11 +67,11 @@
       />
     </div>
 
-    <div class="flex flex-wrap md:flex-nowrap gap-3">
+    <div class="flex flex-col sm:flex-row gap-3">
       <select
         [(ngModel)]="selectedClient"
         (change)="applyFilters()"
-        class="flex-1 md:w-40 px-4 py-3 bg-white/80 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-sm font-bold text-walnut-800 shadow-sm transition-all appearance-none cursor-pointer"
+        class="flex-1 sm:w-40 px-4 py-3 bg-white/80 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-sm font-bold text-walnut-800 shadow-sm transition-all appearance-none cursor-pointer"
       >
         <option value="">All Brands</option>
         <option *ngFor="let client of uniqueClients" [value]="client.id">{{ client.name }}</option>
@@ -80,7 +80,7 @@
       <select
         [(ngModel)]="selectedTag"
         (change)="applyFilters()"
-        class="flex-1 md:w-40 px-4 py-3 bg-white/80 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-sm font-bold text-walnut-800 shadow-sm transition-all appearance-none cursor-pointer"
+        class="flex-1 sm:w-40 px-4 py-3 bg-white/80 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-sm font-bold text-walnut-800 shadow-sm transition-all appearance-none cursor-pointer"
       >
         <option value="">All Tags</option>
         <option *ngFor="let tag of uniqueTags" [value]="tag">#{{ tag }}</option>
@@ -89,7 +89,7 @@
       <select
         [(ngModel)]="selectedFeature"
         (change)="applyFilters()"
-        class="flex-1 md:w-40 px-4 py-3 bg-white/80 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-sm font-bold text-walnut-800 shadow-sm transition-all appearance-none cursor-pointer"
+        class="flex-1 sm:w-40 px-4 py-3 bg-white/80 border border-cinnamon-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saddle-400 text-sm font-bold text-walnut-800 shadow-sm transition-all appearance-none cursor-pointer"
       >
         <option value="">All Features</option>
         <option *ngFor="let feature of uniqueFeatures" [value]="feature">{{ feature }}</option>
@@ -98,7 +98,7 @@
       <button
         *ngIf="searchQuery || selectedClient || selectedTag || selectedFeature"
         (click)="clearFilters()"
-        class="px-4 py-3 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-xl font-bold text-sm transition-all flex items-center gap-2 shadow-sm"
+        class="px-4 py-3 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-sm"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -178,8 +178,9 @@
       (click)="goToDesignDetails(design.id)"
       class="bg-white/60 backdrop-blur-xl border border-white/50 rounded-3xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer group relative"
     >
+      
       <div
-        class="absolute top-7 right-7 z-20 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        class="absolute top-7 right-7 z-20 flex gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300"
       >
         <button
           (click)="openModal(design, $event)"
