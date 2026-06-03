@@ -7,7 +7,7 @@
 
     <button
       (click)="openModal()"
-      class="group flex items-center gap-2 px-6 py-3 bg-walnut-900 hover:bg-walnut-950 text-white rounded-2xl shadow-xl transition-all active:scale-95 animate-slide-in-right"
+      class="group flex items-center justify-center md:justify-start gap-2 px-6 py-3 bg-walnut-900 hover:bg-walnut-950 text-white rounded-2xl shadow-xl transition-all active:scale-95 animate-slide-in-right"
     >
       <svg
         class="w-5 h-5 group-hover:rotate-90 transition-transform"
@@ -53,8 +53,9 @@
       class="group relative bg-white/60 backdrop-blur-xl border border-white/50 rounded-3xl p-4 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer animate-fade-in-up"
       [style.animation-delay]="i * 100 + 'ms'"
     >
+      
       <div
-        class="absolute top-7 right-7 z-20 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        class="absolute top-7 right-7 z-20 flex gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300"
       >
         <button
           (click)="openModal(product, $event)"
@@ -112,7 +113,7 @@
         </div>
 
         <div
-          class="absolute inset-0 bg-walnut-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          class="absolute inset-0 bg-walnut-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
         ></div>
       </div>
 
