@@ -1,6 +1,6 @@
 <div class="h-full font-sans text-walnut-900 pb-10">
   <div
-    class="bg-white/80 backdrop-blur-xl border border-cinnamon-100 rounded-3xl shadow-xl p-8 animate-fade-in-up"
+    class="bg-white/80 backdrop-blur-xl border border-cinnamon-100 rounded-3xl shadow-xl p-4 md:p-8 animate-fade-in-up"
   >
     <div class="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8">
       <div>
@@ -8,9 +8,9 @@
         <p class="text-walnut-600 font-medium">Manage your manufacturing partners and clients</p>
       </div>
 
-      <div class="flex items-center gap-3">
+      <div class="flex flex-wrap sm:flex-nowrap items-center gap-3">
         <button
-          class="flex items-center gap-2 px-5 py-2.5 bg-white border border-cinnamon-200 hover:bg-cinnamon-50 text-walnut-800 rounded-xl text-sm font-bold transition-all shadow-sm active:scale-95"
+          class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 bg-white border border-cinnamon-200 hover:bg-cinnamon-50 text-walnut-800 rounded-xl text-sm font-bold transition-all shadow-sm active:scale-95"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -25,7 +25,7 @@
 
         <button
           (click)="openModal()"
-          class="flex items-center gap-2 px-6 py-2.5 bg-walnut-900 hover:bg-walnut-950 text-white rounded-xl text-sm font-bold shadow-lg transition-all active:scale-95"
+          class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 bg-walnut-900 hover:bg-walnut-950 text-white rounded-xl text-sm font-bold shadow-lg transition-all active:scale-95"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -68,7 +68,7 @@
     </div>
 
     <div class="overflow-x-auto pb-4 custom-scrollbar">
-      <table class="w-full text-left whitespace-nowrap">
+      <table class="w-full text-left whitespace-nowrap min-w-[500px]">
         <thead>
           <tr
             class="text-[10px] font-black text-walnut-500 uppercase tracking-wider border-b border-cinnamon-200"
@@ -79,7 +79,7 @@
             <th class="pb-4 px-4">
               Added On <span class="ml-1 inline-block text-walnut-300 font-normal">↑↓</span>
             </th>
-            <th class="pb-4 pr-4 text-right w-28">Actions</th>
+            <th class="pb-4 pr-4 text-right w-32">Actions</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-cinnamon-100">
@@ -94,10 +94,10 @@
             class="hover:bg-cinnamon-50/80 transition-colors group"
           >
             <td class="py-4 pl-2">
-              <div class="flex items-center gap-4">
+              <div class="flex items-center gap-3 md:gap-4">
                 <div
                   *ngIf="client.logoUrl"
-                  class="w-12 h-12 rounded-xl flex items-center justify-center shadow-sm border border-cinnamon-200 overflow-hidden bg-white shrink-0 p-1"
+                  class="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center shadow-sm border border-cinnamon-200 overflow-hidden bg-white shrink-0 p-1"
                 >
                   <img
                     [src]="client.logoUrl"
@@ -108,7 +108,7 @@
 
                 <div
                   *ngIf="!client.logoUrl"
-                  class="w-12 h-12 rounded-xl flex items-center justify-center font-black text-sm shadow-sm shrink-0"
+                  class="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center font-black text-sm shadow-sm shrink-0"
                   [ngClass]="
                     [
                       'bg-teal-100 text-teal-700',
@@ -124,22 +124,23 @@
                 </div>
 
                 <div>
-                  <p class="text-base font-bold text-walnut-950">{{ client.name }}</p>
-                  <p class="text-[11px] font-bold text-walnut-400">ID : {{ client.id }}</p>
+                  <p class="text-sm md:text-base font-bold text-walnut-950">{{ client.name }}</p>
+                  <p class="text-[10px] md:text-[11px] font-bold text-walnut-400">ID : {{ client.id }}</p>
                 </div>
               </div>
             </td>
 
             <td class="py-4 px-4">
-              <span class="text-sm font-medium text-walnut-600">{{
-                client.createdDate | date: 'longDate'
+              <span class="text-xs md:text-sm font-medium text-walnut-600">{{
+                client.createdDate | date: 'mediumDate'
               }}</span>
             </td>
 
             <td class="py-4 pr-4 text-right">
-              <div class="relative flex items-center justify-end h-8">
+              <div class="relative flex items-center justify-end h-8 min-w-[80px]">
+                
                 <div
-                  class="absolute right-0 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none group-hover:pointer-events-auto z-10"
+                  class="absolute right-0 flex items-center gap-1.5 md:gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200 pointer-events-auto md:pointer-events-none md:group-hover:pointer-events-auto z-10"
                 >
                   <button
                     (click)="openModal(client)"
@@ -172,7 +173,7 @@
                 </div>
 
                 <button
-                  class="absolute right-0 p-2 text-walnut-400 group-hover:opacity-0 transition-opacity duration-200 z-0"
+                  class="hidden md:block absolute right-0 p-2 text-walnut-400 group-hover:opacity-0 transition-opacity duration-200 z-0"
                 >
                   <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                     <path
